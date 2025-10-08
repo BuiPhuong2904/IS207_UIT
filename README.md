@@ -35,12 +35,12 @@
 | 3      | 23520039      | Đào Thị Quỳnh Anh      |                                                      |23520039@gm.uit.edu.vn   |
 | 4      | 23520225      | Đỗ Hải Đăng            |                                                      |23520225@gm.uit.edu.vn   |
 | 5      | 23520889      | Trần Hoàng Long        |                                                      |23520889@gm.uit.edu.vn   |
-| 6      | 23521105      | Đỗ Tuyết Nhi           |                                                      |23521105@gm.uit.edu.vn   |
+| 6      | 23521105      | Đỗ Tuyết Nhi           |[tweitnhyy](https://github.com/tweitnhyy)             |23521105@gm.uit.edu.vn   |
 
 ## SEMINAR
 <a name="seminar"></a>
-Seminar nhóm:
+Seminar nhóm: Việc ứng dụng AI vào trang web Thương mại điện tử. Việc này có ưu khuyết điểm gì, có khó khăn gì. Trình bày 1 số giải pháp và cách thực hiện. Ví dụ: Tích hợp AI Chatbot/Agent vào Website, Ứng dụng Recommendation Systems…
 
 ## ĐỒ ÁN MÔN HỌC
 <a name="doan"></a>
-Đồ án Nhóm: 
+Đồ án Nhóm: Xây dựng website thương mại điện tử B2C
