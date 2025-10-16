@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>WebGym - Trang chủ</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    @vite(['resources/css/app.css', 'resources/js/chatbot.js'])
 </head>
 <body>
     <header>
-        <h1>🏋️ WebGym</h1>
+        <h1>WebGym</h1>
         <nav>
             <a href="#">Trang chủ</a>
             <a href="#">Sản phẩm</a>
@@ -46,6 +46,5 @@
         <p>© 2025 WebGym. All rights reserved.</p>
     </footer>
 
-    <script src="{{ asset('js/chatbot.js') }}"></script>
 </body>
 </html>
