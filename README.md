@@ -32,9 +32,9 @@
 | ------ |:-------------:| ----------------------:|-----------------------------------------------------:|-------------------------:
 | 1      | 23521239      | Bùi Phạm Bích Phương   |[BuiPhuong2904](https://github.com/BuiPhuong2904)     |23521239@gm.uit.edu.vn  |
 | 2      | 23520910      | Nguyễn Thị Thanh Mai   |[Mywayyy](https://github.com/Mywayyy)                 |23520910@gm.uit.edu.vn  |
-| 3      | 23520039      | Đào Thị Quỳnh Anh      |                                                      |23520039@gm.uit.edu.vn  |
-| 4      | 23520225      | Đỗ Hải Đăng            |[dohaidang-git](https://github.com/dohaidang-git)  |23520225@gm.uit.edu.vn  |
-| 5      | 23520889      | Trần Hoàng Long        |                                                      |23520889@gm.uit.edu.vn  |
+| 3      | 23520039      | Đào Thị Quỳnh Anh      |[Umashu-QA](https://github.com/Umashu-QA)             |23520039@gm.uit.edu.vn  |
+| 4      | 23520225      | Đỗ Hải Đăng            |[dohaidang-git](https://github.com/dohaidang-git)     |23520225@gm.uit.edu.vn  |
+| 5      | 23520889      | Trần Hoàng Long        |[THoangLong](https://github.com/THoangLong)           |23520889@gm.uit.edu.vn  |
 | 6      | 23521105      | Đỗ Tuyết Nhi           |[tweitnhyy](https://github.com/tweitnhyy)             |23521105@gm.uit.edu.vn  |
 
 ## SEMINAR
