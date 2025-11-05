@@ -15,7 +15,8 @@
         <div class="flex items-center justify-between px-6 md:px-20 py-3">
             <!-- Logo + tên -->
             <a href="{{ url('/') }}" class="flex items-center text-2xl font-bold text-[#0D47A1] gap-2 font-montserrat">
-                <img src="{{ asset('images/home/logo.png') }}" alt="Logo" class="w-10 h-10">
+                <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340096/logo_jhd6zr.png" 
+                    alt="Logo" class="w-10 h-10">
                 GRYND
             </a>
 
@@ -79,13 +80,78 @@
 
     <!-- Tránh header che nội dung -->
     <div class="h-16"></div>
+ 
+    <!-- Banner Carousel -->
+    <section id="banner-carousel" class="relative w-full" data-carousel="slide">
 
-    <!-- Banner -->
-    <section class="relative w-full overflow-hidden">
-        <img src="{{ asset('images/home/banner.png') }}"
-            alt="Banner"
-            class="w-full h-auto max-h-[90vh] object-cover">
-        </section>
+        <!-- Wrapper chứa các slide -->
+        <div class="relative h-[70vh] overflow-hidden">
+
+            <!-- Slide 1 -->
+            <div class="duration-700 ease-in-out" data-carousel-item="active">
+            <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762339078/banner_axqau9.jpg"
+                alt="Banner 1"
+                class="absolute top-0 left-0 w-full h-full object-cover">
+            </div>
+
+            <!-- Slide 2 -->
+            <div class="hidden duration-700 ease-in-out" data-carousel-item>
+            <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762342375/1_a0y9mh.png"
+                alt="Banner 2"
+                class="absolute top-0 left-0 w-full h-full object-cover">
+            </div>
+
+            <!-- Slide 3 -->
+            <div class="hidden duration-700 ease-in-out" data-carousel-item>
+            <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762342371/2_qstugj.png"
+                alt="Banner 3"
+                class="absolute top-0 left-0 w-full h-full object-cover">
+            </div>
+
+            <!-- Slide 4 (video) -->
+            <div class="hidden duration-700 ease-in-out" data-carousel-item>
+            <video autoplay loop muted playsinline
+                class="absolute top-0 left-0 w-full h-full object-cover">
+                <source src="https://res.cloudinary.com/dna9qbejm/video/upload/v1762349999/banner_video.mp4" type="video/mp4">
+                Trình duyệt của bạn không hỗ trợ video.
+            </video>
+            </div>
+        </div>
+
+        <!-- Nút chọn slide -->
+        <div class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
+            <button type="button" class="w-3 h-3 rounded-full" data-carousel-slide-to="0"></button>
+            <button type="button" class="w-3 h-3 rounded-full" data-carousel-slide-to="1"></button>
+            <button type="button" class="w-3 h-3 rounded-full" data-carousel-slide-to="2"></button>
+            <button type="button" class="w-3 h-3 rounded-full" data-carousel-slide-to="3"></button>
+        </div>
+
+        <!-- Nút điều hướng -->
+        <button type="button"
+            class="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
+            data-carousel-prev>
+            <span
+            class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 group-hover:bg-white/50 group-focus:ring-4 group-focus:ring-white">
+            <svg class="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M5 1 1 5l4 4" />
+            </svg>
+            </span>
+        </button>
+
+        <button type="button"
+            class="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
+            data-carousel-next>
+            <span
+            class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 group-hover:bg-white/50 group-focus:ring-4 group-focus:ring-white">
+            <svg class="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 9 4-4-4-4" />
+            </svg>
+            </span>
+        </button>
+
+    </section>
 
     <!-- Đăng ký chi nhánh -->
     <section class="w-full bg-[#E3F2FD] pt-6 pb-6 px-4">
@@ -130,27 +196,33 @@
         <div class="flex justify-center items-center gap-10 md:gap-16 bg-[#ffffff] py-6 px-4 flex-nowrap overflow-x-auto">
 
             <div class="flex justify-center items-center h-12">
-                <img src="{{ asset('images/home/logo_nike.png') }}" alt="Nike" class="h-17 object-contain" />
+                <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340172/logo_nike_pz7mez.png" 
+                    alt="Nike" class="h-17 object-contain" />
             </div>
 
             <div class="flex justify-center items-center h-12">
-                <img src="{{ asset('images/home/logo_adidas.png') }}" alt="Adidas" class="h-17 object-contain" />
+                <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340180/logo_adidas_iwsmdj.png" 
+                    alt="Adidas" class="h-17 object-contain" />
             </div>
 
             <div class="flex justify-center items-center h-12">
-                <img src="{{ asset('images/home/logo_on.png') }}" alt="Optimum Nutrition" class="h-8 object-contain" />
+                <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340271/logo_on_peghag.png" 
+                    alt="Optimum Nutrition" class="h-8 object-contain" />
             </div>
 
             <div class="flex justify-center items-center h-12">
-                <img src="{{ asset('images/home/logo_her.png') }}" alt="Herbalife Nutrition" class="max-h-full max-w-full object-contain" />
+                <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340190/logo_her_tqsvup.png" 
+                    alt="Herbalife Nutrition" class="max-h-full max-w-full object-contain" />
             </div>
 
             <div class="flex justify-center items-center h-12">
-                <img src="{{ asset('images/home/logo_momo.png') }}" alt="MoMo" class="max-h-full max-w-full object-contain" />
+                <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340302/logo_momo_kgi4ul.png" 
+                    alt="MoMo" class="max-h-full max-w-full object-contain" />
             </div>
 
             <div class="flex justify-center items-center h-12">
-                <img src="{{ asset('images/home/logo_vnpay.png') }}" alt="VNPay" class="h-24 object-contain" />
+                <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340307/logo_vnpay_ywpf1u.png" 
+                    alt="VNPay" class="h-24 object-contain" />
             </div>
 
         </div>
@@ -163,19 +235,23 @@
             <div class="relative h-[350px] overflow-hidden rounded-lg shadow-lg">
 
                 <div class="duration-700 ease-in-out" data-carousel-item="active">
-                    <img src="{{ asset('images/home/home_1.jpg') }}" class="absolute block w-full h-full object-cover top-0 left-0" alt="Gym photo 1">
+                    <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340415/home_1_clrdg8.jpg" 
+                        class="absolute block w-full h-full object-cover top-0 left-0" alt="Gym photo 1">
                 </div>
 
                 <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                    <img src="{{ asset('images/home/home.jpg') }}" class="absolute block w-full h-full object-cover top-0 left-0" alt="Gym photo 2">
+                    <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340414/home_nulk3t.jpg" 
+                        class="absolute block w-full h-full object-cover top-0 left-0" alt="Gym photo 2">
                 </div>
 
                 <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                    <img src="{{ asset('images/home/home_2.jpg') }}" class="absolute block w-full h-full object-cover top-0 left-0" alt="Gym photo 3">
+                    <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340416/home_2_khgoxc.jpg" 
+                        class="absolute block w-full h-full object-cover top-0 left-0" alt="Gym photo 3">
                 </div>
 
                 <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                    <img src="{{ asset('images/home/home_3.jpg') }}" class="absolute block w-full h-full object-cover top-0 left-0" alt="Gym photo 4">
+                    <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340417/home_3_jtpn8i.jpg" 
+                        class="absolute block w-full h-full object-cover top-0 left-0" alt="Gym photo 4">
                 </div>
 
             </div>
@@ -197,6 +273,13 @@
                     <span class="sr-only">Next</span>
                 </span>
             </button>
+
+            <div class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
+                <button type="button" class="w-3 h-3 rounded-full" data-carousel-slide-to="0"></button>
+                <button type="button" class="w-3 h-3 rounded-full" data-carousel-slide-to="1"></button>
+                <button type="button" class="w-3 h-3 rounded-full" data-carousel-slide-to="2"></button>
+                <button type="button" class="w-3 h-3 rounded-full" data-carousel-slide-to="3"></button>
+            </div>
         </div>
         <!-- Nội dung giới thiệu -->
         <div class="text-center max-w-md">
@@ -229,7 +312,8 @@
             <!-- Card 1 -->
             <div class="relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-6">
                 <div class="flex flex-col items-center gap-3">
-                    <img src="{{ asset('images/home/home_icon_1.png') }}" alt="Basic Icon" class="w-14 h-14 mb-2">
+                    <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340544/home_icon_1_vwnrex.png" 
+                        alt="Basic Icon" class="w-14 h-14 mb-2">
                     <h4 class="text-lg font-semibold text-[#0D47A1]">Gói Tháng</h4>
                     <p class="text-[#1976D2] font-bold text-xl mb-2">399.000 Đ / gói</p>
                     <ul class="text-[#333333] text-sm space-y-1 mb-4 text-left">
@@ -248,7 +332,8 @@
             <!-- Card 2 -->
             <div class="relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-6">
                 <div class="flex flex-col items-center gap-3">
-                    <img src="{{ asset('images/home/home_icon_5.png') }}" alt="Standard Icon" class="w-14 h-14 mb-2">
+                    <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340552/home_icon_5_ogsfnh.png" 
+                        alt="Standard Icon" class="w-14 h-14 mb-2">
                     <h4 class="text-lg font-semibold text-[#0D47A1]">Gói Quý</h4>
                     <p class="text-[#1976D2] font-bold text-xl mb-2">1.199.000 Đ / gói</p>
                     <ul class="text-[#333333] text-sm space-y-1 mb-4 text-left">
@@ -267,7 +352,8 @@
             <!-- Card 3 -->
             <div class="relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-6">
                 <div class="flex flex-col items-center gap-3">
-                    <img src="{{ asset('images/home/home_icon_3.png') }}" alt="Premium Icon" class="w-14 h-14 mb-2">
+                    <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340545/home_icon_3_i7thpr.png" 
+                        alt="Premium Icon" class="w-14 h-14 mb-2">
                     <h4 class="text-lg font-semibold text-[#0D47A1]">Gói Năm</h4>
                     <p class="text-[#1976D2] font-bold text-xl mb-2">4.599.000đ / gói</p>
                     <ul class="text-[#333333] text-sm space-y-1 mb-4 text-left">
@@ -291,7 +377,8 @@
                 </span>
 
                 <div class="flex flex-col items-center gap-3">
-                    <img src="{{ asset('images/home/home_icon_4.png') }}" alt="VIP Icon" class="w-14 h-14 mb-2">
+                    <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340551/home_icon_4_bnbmxh.png" 
+                        alt="VIP Icon" class="w-14 h-14 mb-2">
                     <h4 class="text-lg font-semibold text-[#0D47A1]">Gói PT Cá Nhân</h4>
                     <p class="text-[#1976D2] font-bold text-xl mb-2">1.599.000đ / gói</p>
                     <ul class="text-[#333333] text-sm space-y-1 mb-4 text-left">
@@ -341,7 +428,7 @@
 
                     <!-- Lớp học 1 -->
                     <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-2 flex-none basis-1/3">
-                        <img src="{{ asset('images/home/class_yoga.jpg') }}" alt="Yoga Class"
+                        <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340664/class_yoga_pnqj0e.jpg" alt="Yoga Class"
                             class="w-full h-40 object-cover rounded-lg mb-4">
                         <h4 class="text-lg font-semibold text-[#0D47A1] mb-2">Lớp Yoga</h4>
                         <p class="text-[#333333] text-sm mb-4">Nơi tâm trí tĩnh lặng và cơ thể được thả lỏng, phục hồi năng lượng.</p>
@@ -353,7 +440,7 @@
 
                     <!-- Lớp học 2 -->
                     <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-2 flex-none basis-1/3">
-                        <img src="{{ asset('images/home/class_gym.jpg') }}" alt="Gym Class"
+                        <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340660/class_gym_zqcmwl.jpg" alt="Gym Class"
                             class="w-full h-40 object-cover rounded-lg mb-4">
                         <h4 class="text-lg font-semibold text-[#0D47A1] mb-2">Lớp Gym</h4>
                         <p class="text-[#333333] text-sm mb-4">Cảm nhận từng thớ cơ mạnh mẽ hơn, định hình vóc dáng sắc nét.</p>
@@ -365,7 +452,7 @@
 
                     <!-- Lớp học 3 -->
                     <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-2 flex-none basis-1/3">
-                        <img src="{{ asset('images/home/class_cardio.jpg') }}" alt="Cardio Class"
+                        <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340669/class_cardio_nhx24a.jpg" alt="Cardio Class"
                             class="w-full h-40 object-cover rounded-lg mb-4">
                         <h4 class="text-lg font-semibold text-[#0D47A1] mb-2">Lớp Cardio</h4>
                         <p class="text-[#333333] text-sm mb-4">Chạy, nhảy và đẩy nhịp tim lên cao nhất để chinh phục sức bền của bạn.</p>
@@ -377,7 +464,7 @@
 
                     <!-- Lớp học 4 -->
                     <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-2 flex-none basis-1/3">
-                        <img src="{{ asset('images/home/class_zumba.jpg') }}" alt="Zumba Class"
+                        <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340666/class_zumba_mdctb7.jpg" alt="Zumba Class"
                             class="w-full h-40 object-cover rounded-lg mb-4">
                         <h4 class="text-lg font-semibold text-[#0D47A1] mb-2">Lớp Zumba</h4>
                         <p class="text-[#333333] text-sm mb-4">Vừa tập vừa vui, đốt mỡ cực nhanh qua điệu nhảy sôi động.</p>
@@ -389,7 +476,7 @@
 
                     <!-- Lớp học 5 -->
                     <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-2 flex-none basis-1/3">
-                        <img src="{{ asset('images/home/class_boxing.jpg') }}" alt="Boxing Class"
+                        <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340668/class_boxing_jgare2.jpg" alt="Boxing Class"
                             class="w-full h-40 object-cover rounded-lg mb-4">
                         <h4 class="text-lg font-semibold text-[#0D47A1] mb-2">Lớp Boxing</h4>
                         <p class="text-[#333333] text-sm mb-4">Tung cú đấm dứt khoát, né đòn nhanh nhẹn và giải tỏa căng thẳng cực đã.</p>
@@ -401,7 +488,7 @@
 
                     <!-- Lớp học 6 -->
                     <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-2 flex-none basis-1/3">
-                        <img src="{{ asset('images/home/class_HIIT.jpg') }}" alt="HIIT Class"
+                        <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340662/class_HIIT_hziu98.jpg" alt="HIIT Class"
                             class="w-full h-40 object-cover rounded-lg mb-4">
                         <h4 class="text-lg font-semibold text-[#0D47A1] mb-2">Lớp HIIT</h4>
                         <p class="text-[#333333] text-sm mb-4">Đốt mỡ ngay cả khi đã nghỉ tập. Hiệu quả tối đa trong thời gian ngắn nhất.</p>
@@ -413,7 +500,7 @@
 
                     <!-- Lớp học 7 -->
                     <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-2 flex-none basis-1/3">
-                        <img src="{{ asset('images/home/class_pilates.jpg') }}" alt="Pilates Class"
+                        <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340663/class_pilates_b1irhb.jpg" alt="Pilates Class"
                             class="w-full h-40 object-cover rounded-lg mb-4">
                         <h4 class="text-lg font-semibold text-[#0D47A1] mb-2">Lớp Pilates</h4>
                         <p class="text-[#333333] text-sm mb-4">Siết chặt cơ lõi, kiểm soát từng chuyển động chậm rãi để có một tư thế chuẩn.</p>
@@ -487,23 +574,28 @@
                 <div class="relative h-[350px] overflow-hidden rounded-lg shadow-lg">
 
                     <div class="duration-700 ease-in-out" data-carousel-item="active">
-                        <img src="{{ asset('images/home/shop_2.jpg') }}" class="absolute block w-full h-full object-cover top-0 left-0" alt="Gym Apparel 1">
+                        <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762341684/shop_1_vfdd5j.jpg" 
+                            class="absolute block w-full h-full object-cover top-0 left-0" alt="Gym Apparel 1">
                     </div>
 
                     <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                        <img src="{{ asset('images/home/shop_1.jpg') }}" class="absolute block w-full h-full object-cover top-0 left-0" alt="Gym Apparel 2">
+                        <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762341191/shop_1_dol83h.jpg" 
+                            class="absolute block w-full h-full object-cover top-0 left-0" alt="Gym Apparel 2">
                     </div>
 
                     <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                        <img src="{{ asset('images/home/shop_3.jpg') }}" class="absolute block w-full h-full object-cover top-0 left-0" alt="Supplements 1">
+                        <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762341192/shop_3_ldc5kj.jpg" 
+                            class="absolute block w-full h-full object-cover top-0 left-0" alt="Supplements 1">
                     </div>
 
                     <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                        <img src="{{ asset('images/home/shop_4.jpg') }}" class="absolute block w-full h-full object-cover top-0 left-0" alt="Accessories 1">
+                        <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762342077/shop_4_sbwoos.jpg" 
+                            class="absolute block w-full h-full object-cover top-0 left-0" alt="Accessories 1">
                     </div>
 
                     <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                        <img src="{{ asset('images/home/shop_5.jpg') }}" class="absolute block w-full h-full object-cover top-0 left-0" alt="Accessories 2">
+                        <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762341195/shop_5_lbdjrz.jpg" 
+                            class="absolute block w-full h-full object-cover top-0 left-0" alt="Accessories 2">
                     </div>
                 </div>
 
@@ -546,7 +638,8 @@
         <div class="grid grid-cols-3 gap-6 max-w-7xl mx-auto">
             <!-- Bài viết 1 -->
             <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-4 text-left">
-                <img src="{{ asset('images/home/blog_1.jpg') }}" alt="Blog 1" class="w-full h-40 object-cover rounded-lg mb-4">
+                <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762341272/blog_1_shlvij.jpg" 
+                    alt="Blog 1" class="w-full h-40 object-cover rounded-lg mb-4">
                 <h4 class="text-lg font-semibold text-[#0D47A1] mb-2">5 Lợi Ích Của Việc Tập Yoga Hàng Ngày</h4>
                 <p class="text-[#333333] text-sm mb-4">Khám phá cách yoga có thể cải thiện sức khỏe thể chất và tinh thần của bạn.</p>
                 <a href="#" class="text-blue-700 font-semibold hover:underline">Đọc thêm →</a>
@@ -554,7 +647,8 @@
 
             <!-- Bài viết 2 -->
             <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-4 text-left">
-                <img src="{{ asset('images/home/blog_2.jpg') }}" alt="Blog 2" class="w-full h-40 object-cover rounded-lg mb-4">
+                <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762341274/blog_2_uugz6s.jpg" 
+                    alt="Blog 2" class="w-full h-40 object-cover rounded-lg mb-4">
                 <h4 class="text-lg font-semibold text-[#0D47A1] mb-2">Chế Độ Dinh Dưỡng Cho Người Tập Gym</h4>
                 <p class="text-[#333333] text-sm mb-4">Tìm hiểu những thực phẩm tốt nhất để hỗ trợ quá trình tập luyện của bạn.</p>
                 <a href="#" class="text-blue-700 font-semibold hover:underline">Đọc thêm →</a>
@@ -562,7 +656,8 @@
 
             <!-- Bài viết 3 -->
             <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-4 text-left">
-                <img src="{{ asset('images/home/blog_3.jpg') }}" alt="Blog 3" class="w-full h-40 object-cover rounded-lg mb-4">
+                <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762341270/blog_3_nravn8.jpg" 
+                    alt="Blog 3" class="w-full h-40 object-cover rounded-lg mb-4">
                 <h4 class="text-lg font-semibold text-[#0D47A1] mb-2">10 Bài Tập Cardio Hiệu Quả Tại Nhà</h4>
                 <p class="text-[#333333] text-sm mb-4">Các bài tập đơn giản giúp bạn đốt cháy calo và cải thiện sức khỏe tim mạch.</p>
                 <a href="#" class="text-blue-700 font-semibold hover:underline">Đọc thêm →</a>
@@ -649,7 +744,8 @@
 
             <div class="bg-white border-b border-gray-100 p-3 rounded-t-lg flex justify-between items-center">
                 <div class="flex items-center gap-2">
-                    <img src="{{ asset('images/mas_head.png') }}" alt="Mascot" class="w-8 h-8">
+                    <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762341328/mas_head_qqc02f.png" 
+                        alt="Mascot" class="w-8 h-8">
                     <h5 class="font-bold text-sm text-[#0D47A1]">GRYND AI Assistant</h5>
                 </div>
                 <button id="close-chatbot" class="text-gray-400 hover:text-gray-600">
@@ -662,7 +758,7 @@
             <div class="flex-1 p-4 overflow-y-auto bg-white">
                 <div class="flex items-start gap-2.5 mb-3">
                     <img class="w-10 h-10 rounded-full ring-1 ring-green-500 ring-offset-2"
-                        src="{{ asset('images/mas_head.png') }}" alt="AI Avatar">
+                        src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762341328/mas_head_qqc02f.png" alt="AI Avatar">
 
                     <div>
                         <p class="bg-gray-100 text-gray-800 text-sm rounded-lg py-2 px-3 inline-block max-w-xs">
@@ -712,8 +808,8 @@
                         rounded-full bg-[#1e87db] opacity-75 animate-ping">
             </span>
 
-            <img src="{{ asset('images/mascot.png') }}" alt="Linh vật GRYND"
-                class="relative z-10 w-20 h-20 drop-shadow-lg">
+            <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762341318/mascot_drm5o0.png" 
+                alt="Linh vật GRYND" class="relative z-10 w-20 h-20 drop-shadow-lg">
         </button>
     </div>
 </body>

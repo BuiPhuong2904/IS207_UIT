@@ -2,7 +2,7 @@
     <div class="flex items-center px-4 py-2">
 
         <div class="-ml-2">
-            <img src="{{ asset('images/logo.png') }}" 
+            <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762341326/logo_x0erjc.png" 
                 alt="Logo" 
                 class="h-20 w-20">
         </div>
