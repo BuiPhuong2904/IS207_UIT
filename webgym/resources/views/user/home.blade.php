@@ -84,40 +84,51 @@
     <!-- Banner Carousel -->
     <section id="banner-carousel" class="relative w-full">
         <!-- Wrapper chứa các slide -->
-        <div class="relative h-[65vh] overflow-hidden">
+        <div class="relative overflow-hidden h-[60vh] sm:h-[50vh] md:h-[60vh] lg:h-[65vh] xl:h-[60vh] 2xl:h-[55vh]">
+
             <!-- Slide 1 -->
             <div class="block duration-700 ease-in-out" data-carousel-item>
-            <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762339078/banner_axqau9.jpg"
+            <img
+                src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762339078/banner_axqau9.jpg"
                 alt="Banner 1"
-                class="absolute top-0 left-0 w-full h-full object-cover">
+                class="absolute top-0 left-0 w-full h-full object-cover object-center">
             </div>
 
             <!-- Slide 2 -->
             <div class="hidden duration-700 ease-in-out" data-carousel-item>
-            <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762412843/banner_1_vs8mtg.png"
+            <img
+                src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762412843/banner_1_vs8mtg.png"
                 alt="Banner 2"
-                class="absolute top-0 left-0 w-full h-full object-cover">
+                class="absolute top-0 left-0 w-full h-full object-cover object-center">
             </div>
 
             <!-- Slide 3 -->
             <div class="hidden duration-700 ease-in-out" data-carousel-item>
-            <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762412842/banner_2_xwpyse.png"
+            <img
+                src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762412842/banner_2_xwpyse.png"
                 alt="Banner 3"
-                class="absolute top-0 left-0 w-full h-full object-cover">
+                class="absolute top-0 left-0 w-full h-full object-cover object-center">
             </div>
 
-            <!-- Slide 4 (video) -->
+            <!-- Slide 4 (YouTube video) -->
             <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                <video autoplay loop muted playsinline
-                        class="absolute top-0 left-0 w-full h-full object-cover">
-                    <source src="https://res.cloudinary.com/dna9qbejm/video/upload/v1762418521/banner_5_yi4l02.mp4" type="video/mp4">
-                    Trình duyệt của bạn không hỗ trợ video.
-                </video>
+                <div class="absolute top-0 left-0 w-full h-full overflow-hidden">
+                    <iframe class="w-full h-full object-cover"
+                        src="https://www.youtube.com/embed/wOngPiiQaJ4?start=32&end=218&autoplay=1&mute=1&loop=1&playlist=wOngPiiQaJ4&controls=0&modestbranding=1&showinfo=0"
+                        title="LUXURIOUS GYM TOUR || MINISTRY OF FITNESS || INTERIOR DESIGN BY AP INTERIOR STUDIO"
+                        frameborder="0"
+                        allow="autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                    </iframe>
+
+                    <!-- Lớp phủ chống click -->
+                    <div class="absolute inset-0 bg-transparent pointer-events-none"></div>
+                </div>
             </div>
         </div>
 
-        <!-- Nút chọn slide -->
-        <div class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
+        <!-- Dots chọn slide -->
+        <div class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3">
             <button type="button" class="w-3 h-3 rounded-full bg-white/50" data-carousel-slide-to="0"></button>
             <button type="button" class="w-3 h-3 rounded-full bg-white/50" data-carousel-slide-to="1"></button>
             <button type="button" class="w-3 h-3 rounded-full bg-white/50" data-carousel-slide-to="2"></button>
@@ -150,6 +161,7 @@
         </button>
 
     </section>
+
 
     <!-- Đăng ký chi nhánh -->
     <section class="w-full bg-[#E3F2FD] pt-6 pb-6 px-4">
