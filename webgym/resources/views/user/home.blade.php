@@ -122,7 +122,7 @@
                     </iframe>
 
                     <!-- Lớp phủ chống click -->
-                    <div class="absolute inset-0 bg-transparent pointer-events-none"></div>
+                    <div class="absolute inset-0 bg-transparent"></div>
                 </div>
             </div>
         </div>
