@@ -82,13 +82,11 @@
     <div class="h-16"></div>
  
     <!-- Banner Carousel -->
-    <section id="banner-carousel" class="relative w-full" data-carousel="slide">
-
+    <section id="banner-carousel" class="relative w-full">
         <!-- Wrapper chứa các slide -->
-        <div class="relative h-[70vh] overflow-hidden">
-
+        <div class="relative h-[65vh] overflow-hidden">
             <!-- Slide 1 -->
-            <div class="duration-700 ease-in-out" data-carousel-item="active">
+            <div class="block duration-700 ease-in-out" data-carousel-item>
             <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762339078/banner_axqau9.jpg"
                 alt="Banner 1"
                 class="absolute top-0 left-0 w-full h-full object-cover">
@@ -96,57 +94,57 @@
 
             <!-- Slide 2 -->
             <div class="hidden duration-700 ease-in-out" data-carousel-item>
-            <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762342375/1_a0y9mh.png"
+            <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762412843/banner_1_vs8mtg.png"
                 alt="Banner 2"
                 class="absolute top-0 left-0 w-full h-full object-cover">
             </div>
 
             <!-- Slide 3 -->
             <div class="hidden duration-700 ease-in-out" data-carousel-item>
-            <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762342371/2_qstugj.png"
+            <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762412842/banner_2_xwpyse.png"
                 alt="Banner 3"
                 class="absolute top-0 left-0 w-full h-full object-cover">
             </div>
 
             <!-- Slide 4 (video) -->
             <div class="hidden duration-700 ease-in-out" data-carousel-item>
-            <video autoplay loop muted playsinline
-                class="absolute top-0 left-0 w-full h-full object-cover">
-                <source src="https://res.cloudinary.com/dna9qbejm/video/upload/v1762349999/banner_video.mp4" type="video/mp4">
-                Trình duyệt của bạn không hỗ trợ video.
-            </video>
+                <video autoplay loop muted playsinline
+                        class="absolute top-0 left-0 w-full h-full object-cover">
+                    <source src="https://res.cloudinary.com/dna9qbejm/video/upload/v1762418521/banner_5_yi4l02.mp4" type="video/mp4">
+                    Trình duyệt của bạn không hỗ trợ video.
+                </video>
             </div>
         </div>
 
         <!-- Nút chọn slide -->
         <div class="absolute z-30 flex -translate-x-1/2 bottom-5 left-1/2 space-x-3 rtl:space-x-reverse">
-            <button type="button" class="w-3 h-3 rounded-full" data-carousel-slide-to="0"></button>
-            <button type="button" class="w-3 h-3 rounded-full" data-carousel-slide-to="1"></button>
-            <button type="button" class="w-3 h-3 rounded-full" data-carousel-slide-to="2"></button>
-            <button type="button" class="w-3 h-3 rounded-full" data-carousel-slide-to="3"></button>
+            <button type="button" class="w-3 h-3 rounded-full bg-white/50" data-carousel-slide-to="0"></button>
+            <button type="button" class="w-3 h-3 rounded-full bg-white/50" data-carousel-slide-to="1"></button>
+            <button type="button" class="w-3 h-3 rounded-full bg-white/50" data-carousel-slide-to="2"></button>
+            <button type="button" class="w-3 h-3 rounded-full bg-white/50" data-carousel-slide-to="3"></button>
         </div>
 
         <!-- Nút điều hướng -->
         <button type="button"
-            class="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
-            data-carousel-prev>
+                class="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
+                data-carousel-prev>
             <span
             class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 group-hover:bg-white/50 group-focus:ring-4 group-focus:ring-white">
             <svg class="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M5 1 1 5l4 4" />
+                    d="M5 1 1 5l4 4" />
             </svg>
             </span>
         </button>
 
         <button type="button"
-            class="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
-            data-carousel-next>
+                class="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
+                data-carousel-next>
             <span
             class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 group-hover:bg-white/50 group-focus:ring-4 group-focus:ring-white">
             <svg class="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="m1 9 4-4-4-4" />
+                    d="m1 9 4-4-4-4" />
             </svg>
             </span>
         </button>
@@ -231,10 +229,10 @@
     <!-- Giới thiệu -->
     <section class="flex flex-wrap justify-center items-center gap-10 bg-[#F5F7FA] px-10 md:px-20 py-12">
         <!-- Carousel hình ảnh -->
-        <div id="default-carousel" class="relative w-full md:w-[420px]" data-carousel="slide">
+        <div id="default-carousel" class="relative w-full md:w-[420px]">
             <div class="relative h-[350px] overflow-hidden rounded-lg shadow-lg">
 
-                <div class="duration-700 ease-in-out" data-carousel-item="active">
+                <div class="duration-700 ease-in-out" data-carousel-item>
                     <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340415/home_1_clrdg8.jpg" 
                         class="absolute block w-full h-full object-cover top-0 left-0" alt="Gym photo 1">
                 </div>
@@ -252,6 +250,14 @@
                 <div class="hidden duration-700 ease-in-out" data-carousel-item>
                     <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340417/home_3_jtpn8i.jpg" 
                         class="absolute block w-full h-full object-cover top-0 left-0" alt="Gym photo 4">
+                </div>
+
+                <div class="hidden duration-700 ease-in-out" data-carousel-item>
+                    <video autoplay loop muted playsinline
+                            class="absolute block w-full h-full object-cover top-0 left-0">
+                        <source src="https://res.cloudinary.com/dna9qbejm/video/upload/v1762418517/banner_6_phplga.mp4" type="video/mp4">
+                        Trình duyệt của bạn không hỗ trợ video.
+                    </video>
                 </div>
 
             </div>
@@ -279,6 +285,7 @@
                 <button type="button" class="w-3 h-3 rounded-full" data-carousel-slide-to="1"></button>
                 <button type="button" class="w-3 h-3 rounded-full" data-carousel-slide-to="2"></button>
                 <button type="button" class="w-3 h-3 rounded-full" data-carousel-slide-to="3"></button>
+                <button type="button" class="w-3 h-3 rounded-full" data-carousel-slide-to="4"></button>
             </div>
         </div>
         <!-- Nội dung giới thiệu -->
@@ -569,11 +576,11 @@
                 </div>
             </div>
 
-            <div id="store-carousel" class="relative w-full md:w-1/2" data-carousel="slide">
-
+            <!-- Carousel hình ảnh cửa hàng -->
+            <div id="store-carousel" class="relative w-full md:w-1/2">
                 <div class="relative h-[350px] overflow-hidden rounded-lg shadow-lg">
 
-                    <div class="duration-700 ease-in-out" data-carousel-item="active">
+                    <div class="duration-700 ease-in-out" data-carousel-item>
                         <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762341684/shop_1_vfdd5j.jpg" 
                             class="absolute block w-full h-full object-cover top-0 left-0" alt="Gym Apparel 1">
                     </div>
