@@ -91,7 +91,7 @@
             <img
                 src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762339078/banner_axqau9.jpg"
                 alt="Banner 1"
-                class="absolute top-0 left-0 w-full h-full object-cover object-center">
+                class="absolute top-0 left-0 w-full h-full object-contain bg-black">
             </div>
 
             <!-- Slide 2 -->
@@ -99,7 +99,7 @@
             <img
                 src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762412843/banner_1_vs8mtg.png"
                 alt="Banner 2"
-                class="absolute top-0 left-0 w-full h-full object-cover object-center">
+                class="absolute top-0 left-0 w-full h-full object-contain bg-black">
             </div>
 
             <!-- Slide 3 -->
@@ -107,7 +107,7 @@
             <img
                 src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762412842/banner_2_xwpyse.png"
                 alt="Banner 3"
-                class="absolute top-0 left-0 w-full h-full object-cover object-center">
+                class="absolute top-0 left-0 w-full h-full object-contain bg-black">
             </div>
 
             <!-- Slide 4 (YouTube video) -->
