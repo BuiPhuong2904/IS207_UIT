@@ -308,7 +308,7 @@
     </section>
 
     <!-- Gói tập nổi bật -->
-    <section class="bg-[#E3F2FD] py-16 px-10 md:px-20 text-center">
+    <section class="bg-[#E3F2FD] py-12 px-10 md:px-20 text-center">
         <h2 class="text-xl md:text-2xl font-bold text-[#0D47A1] mb-2 font-montserrat tracking-wide uppercase">
         GÓI TẬP NỔI BẬT
         </h2>
@@ -407,11 +407,11 @@
     </section>
 
     <!-- Lớp học phổ biến -->
-    <section class="bg-[#F5F7FA] py-16 px-10 md:px-20 text-center">
+    <section class="bg-[#F5F7FA] py-10 px-10 md:px-20 text-center">
         <h2 class="text-xl md:text-2xl font-bold text-[#0D47A1] mb-2 font-montserrat tracking-wide uppercase">
             LỚP HỌC PHỔ BIẾN
         </h2>
-        <div class="w-48 h-[3px] mx-auto mb-10 rounded-full"
+        <div class="w-48 h-[3px] mx-auto mb-8 rounded-full"
             style="background: linear-gradient(90deg, #0D47A1, #42A5F5);"></div>
 
         <h3 class="text-[#1e87db] font-montserrat text-xl font-bold mb-2">
@@ -434,9 +434,9 @@
                         will-change-transform">
 
                     <!-- Lớp học 1 -->
-                    <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-2 flex-none basis-1/3">
+                    <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-4 flex-none basis-1/3 h-[420px]">
                         <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340664/class_yoga_pnqj0e.jpg" alt="Yoga Class"
-                            class="w-full h-40 object-cover rounded-lg mb-4">
+                            class="w-full h-60 object-cover rounded-md mb-2">
                         <h4 class="text-lg font-semibold text-[#0D47A1] mb-2">Lớp Yoga</h4>
                         <p class="text-[#333333] text-sm mb-4">Nơi tâm trí tĩnh lặng và cơ thể được thả lỏng, phục hồi năng lượng.</p>
                         <button
@@ -446,9 +446,9 @@
                     </div>
 
                     <!-- Lớp học 2 -->
-                    <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-2 flex-none basis-1/3">
+                    <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-4 flex-none basis-1/3 h-[420px]">
                         <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340660/class_gym_zqcmwl.jpg" alt="Gym Class"
-                            class="w-full h-40 object-cover rounded-lg mb-4">
+                            class="w-full h-60 object-cover rounded-md mb-2">
                         <h4 class="text-lg font-semibold text-[#0D47A1] mb-2">Lớp Gym</h4>
                         <p class="text-[#333333] text-sm mb-4">Cảm nhận từng thớ cơ mạnh mẽ hơn, định hình vóc dáng sắc nét.</p>
                         <button
@@ -458,9 +458,9 @@
                     </div>
 
                     <!-- Lớp học 3 -->
-                    <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-2 flex-none basis-1/3">
+                    <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-4 flex-none basis-1/3 h-[420px]">
                         <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340669/class_cardio_nhx24a.jpg" alt="Cardio Class"
-                            class="w-full h-40 object-cover rounded-lg mb-4">
+                            class="w-full h-60 object-cover rounded-md mb-2">
                         <h4 class="text-lg font-semibold text-[#0D47A1] mb-2">Lớp Cardio</h4>
                         <p class="text-[#333333] text-sm mb-4">Chạy, nhảy và đẩy nhịp tim lên cao nhất để chinh phục sức bền của bạn.</p>
                         <button
@@ -470,9 +470,9 @@
                     </div>
 
                     <!-- Lớp học 4 -->
-                    <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-2 flex-none basis-1/3">
+                    <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-4 flex-none basis-1/3 h-[420px]">
                         <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340666/class_zumba_mdctb7.jpg" alt="Zumba Class"
-                            class="w-full h-40 object-cover rounded-lg mb-4">
+                            class="w-full h-60 object-cover rounded-md mb-2">
                         <h4 class="text-lg font-semibold text-[#0D47A1] mb-2">Lớp Zumba</h4>
                         <p class="text-[#333333] text-sm mb-4">Vừa tập vừa vui, đốt mỡ cực nhanh qua điệu nhảy sôi động.</p>
                         <button
@@ -482,9 +482,9 @@
                     </div>
 
                     <!-- Lớp học 5 -->
-                    <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-2 flex-none basis-1/3">
+                    <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-4 flex-none basis-1/3 h-[420px]">
                         <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340668/class_boxing_jgare2.jpg" alt="Boxing Class"
-                            class="w-full h-40 object-cover rounded-lg mb-4">
+                            class="w-full h-60 object-cover rounded-md mb-2">
                         <h4 class="text-lg font-semibold text-[#0D47A1] mb-2">Lớp Boxing</h4>
                         <p class="text-[#333333] text-sm mb-4">Tung cú đấm dứt khoát, né đòn nhanh nhẹn và giải tỏa căng thẳng cực đã.</p>
                         <button
@@ -494,9 +494,9 @@
                     </div>
 
                     <!-- Lớp học 6 -->
-                    <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-2 flex-none basis-1/3">
+                    <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-4 flex-none basis-1/3 h-[420px]">
                         <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340662/class_HIIT_hziu98.jpg" alt="HIIT Class"
-                            class="w-full h-40 object-cover rounded-lg mb-4">
+                            class="w-full h-60 object-cover rounded-md mb-2">
                         <h4 class="text-lg font-semibold text-[#0D47A1] mb-2">Lớp HIIT</h4>
                         <p class="text-[#333333] text-sm mb-4">Đốt mỡ ngay cả khi đã nghỉ tập. Hiệu quả tối đa trong thời gian ngắn nhất.</p>
                         <button
@@ -506,9 +506,9 @@
                     </div>
 
                     <!-- Lớp học 7 -->
-                    <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-2 flex-none basis-1/3">
+                    <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-4 flex-none basis-1/3 h-[420px]">
                         <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340663/class_pilates_b1irhb.jpg" alt="Pilates Class"
-                            class="w-full h-40 object-cover rounded-lg mb-4">
+                            class="w-full h-60 object-cover rounded-md mb-2">
                         <h4 class="text-lg font-semibold text-[#0D47A1] mb-2">Lớp Pilates</h4>
                         <p class="text-[#333333] text-sm mb-4">Siết chặt cơ lõi, kiểm soát từng chuyển động chậm rãi để có một tư thế chuẩn.</p>
                         <button
@@ -539,7 +539,7 @@
     </section>
 
     <!-- Cửa hàng -->
-    <section class="bg-[#E3F2FD] py-16 px-10 md:px-20 text-center">
+    <section class="bg-[#E3F2FD] py-14 px-10 md:px-20 text-center">
         <h2 class="text-xl md:text-2xl font-bold text-[#0D47A1] mb-2 font-montserrat tracking-wide uppercase">
             CỬA HÀNG GRYND
         </h2>
@@ -635,7 +635,7 @@
     </section>
 
     <!-- Blog -->
-    <section class="bg-[#F5F7FA] py-16 px-10 md:px-20 text-center">
+    <section class="bg-[#F5F7FA] py-14 px-10 md:px-20 text-center">
         <h2 class="text-xl md:text-2xl font-bold text-[#0D47A1] mb-2 font-montserrat tracking-wide uppercase">
             BÀI VIẾT MỚI NHẤT
         </h2>
@@ -644,27 +644,27 @@
 
         <div class="grid grid-cols-3 gap-6 max-w-7xl mx-auto">
             <!-- Bài viết 1 -->
-            <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-4 text-left">
+            <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-4 text-left h-[420px]">
                 <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762341272/blog_1_shlvij.jpg" 
-                    alt="Blog 1" class="w-full h-40 object-cover rounded-lg mb-4">
+                    alt="Blog 1" class="w-full h-60 object-cover rounded-md mb-2">
                 <h4 class="text-lg font-semibold text-[#0D47A1] mb-2">5 Lợi Ích Của Việc Tập Yoga Hàng Ngày</h4>
                 <p class="text-[#333333] text-sm mb-4">Khám phá cách yoga có thể cải thiện sức khỏe thể chất và tinh thần của bạn.</p>
                 <a href="#" class="text-blue-700 font-semibold hover:underline">Đọc thêm →</a>
             </div>
 
             <!-- Bài viết 2 -->
-            <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-4 text-left">
+            <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-4 text-left h-[420px]">
                 <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762341274/blog_2_uugz6s.jpg" 
-                    alt="Blog 2" class="w-full h-40 object-cover rounded-lg mb-4">
+                    alt="Blog 2" class="w-full h-60 object-cover rounded-md mb-2">
                 <h4 class="text-lg font-semibold text-[#0D47A1] mb-2">Chế Độ Dinh Dưỡng Cho Người Tập Gym</h4>
                 <p class="text-[#333333] text-sm mb-4">Tìm hiểu những thực phẩm tốt nhất để hỗ trợ quá trình tập luyện của bạn.</p>
                 <a href="#" class="text-blue-700 font-semibold hover:underline">Đọc thêm →</a>
             </div>
 
             <!-- Bài viết 3 -->
-            <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-4 text-left">
+            <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-4 text-left h-[420px]">
                 <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762341270/blog_3_nravn8.jpg" 
-                    alt="Blog 3" class="w-full h-40 object-cover rounded-lg mb-4">
+                    alt="Blog 3" class="w-full h-60 object-cover rounded-md mb-2">
                 <h4 class="text-lg font-semibold text-[#0D47A1] mb-2">10 Bài Tập Cardio Hiệu Quả Tại Nhà</h4>
                 <p class="text-[#333333] text-sm mb-4">Các bài tập đơn giản giúp bạn đốt cháy calo và cải thiện sức khỏe tim mạch.</p>
                 <a href="#" class="text-blue-700 font-semibold hover:underline">Đọc thêm →</a>
