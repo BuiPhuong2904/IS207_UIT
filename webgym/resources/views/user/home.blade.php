@@ -97,7 +97,7 @@
             <!-- Slide 2 -->
             <div class="hidden duration-700 ease-in-out" data-carousel-item>
             <img
-                src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762412843/banner_1_vs8mtg.png"
+                src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762429712/banner_3_wlycmf.png"
                 alt="Banner 2"
                 class="absolute top-0 left-0 w-full h-full object-contain bg-black">
             </div>
