@@ -8,7 +8,10 @@
         </div>
         
         <div>
-            <h1 class="text-2xl font-bold text-blue-600">Admin</h1>
+            <h1 class="text-3xl font-extrabold bg-gradient-to-r from-[#0D47A1] to-[#42A5F5] bg-clip-text text-transparent">
+                Admin
+            </h1>
+
             <p class="text-sm text-gray-500">Quản lý phòng gym</p>
         </div>
 
