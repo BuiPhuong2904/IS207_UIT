@@ -7,6 +7,14 @@ use App\Http\Controllers\ChatbotController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/chatbot/message', [ChatbotController::class, 'chat'])->name('chatbot.message');
 
+Route::get('/about', function () {  return view('about');})->name('about');
+Route::get('/contact', function () {  return view('contact');})->name('contact');
+
+//blog
+Route::get('/blog1', function () { return view('blogs.blog_1'); })->name('blog1');
+Route::get('/blog2', function () { return view('blogs.blog_2'); })->name('blog2');
+Route::get('/blog3', function () { return view('blogs.blog_3'); })->name('blog3');
+
 //admin
 // Dòng 1: Để "gọi" bộ não
 use App\Http\Controllers\AdminController; 

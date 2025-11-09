@@ -22,12 +22,12 @@
 
             <!-- Menu desktop -->
             <nav class="hidden md:flex items-center gap-6 text-sm">
-                <a href="#" class="hover:text-blue-700">Về GRYND</a>
+                <a href="{{ route('about') }}" class="hover:text-blue-700">Về GRYND</a>
                 <a href="#" class="hover:text-blue-700">Gói Tập</a>
                 <a href="#" class="hover:text-blue-700">Lớp Tập</a>
                 <a href="#" class="hover:text-blue-700">Cửa Hàng</a>
                 <a href="#" class="hover:text-blue-700">Blog</a>
-                <a href="#" class="hover:text-blue-700">Liên Hệ</a>
+                <a href="{{ route('contact') }}" class="hover:text-blue-700">Liên Hệ</a>
 
                 <!-- Ô tìm kiếm -->
                 <div class="relative">
@@ -661,7 +661,7 @@
                     alt="Blog 1" class="w-full h-60 object-cover rounded-md mb-2">
                 <h4 class="text-lg font-semibold text-[#0D47A1] mb-2">5 Lợi Ích Của Việc Tập Yoga Hàng Ngày</h4>
                 <p class="text-[#333333] text-sm mb-4">Khám phá cách yoga có thể cải thiện sức khỏe thể chất và tinh thần của bạn.</p>
-                <a href="#" class="text-blue-700 font-semibold hover:underline">Đọc thêm →</a>
+                <a href="{{ route('blog1') }}" class="text-blue-700 font-semibold hover:underline">Đọc thêm →</a>
             </div>
 
             <!-- Bài viết 2 -->
@@ -670,7 +670,7 @@
                     alt="Blog 2" class="w-full h-60 object-cover rounded-md mb-2">
                 <h4 class="text-lg font-semibold text-[#0D47A1] mb-2">Chế Độ Dinh Dưỡng Cho Người Tập Gym</h4>
                 <p class="text-[#333333] text-sm mb-4">Tìm hiểu những thực phẩm tốt nhất để hỗ trợ quá trình tập luyện của bạn.</p>
-                <a href="#" class="text-blue-700 font-semibold hover:underline">Đọc thêm →</a>
+                <a href="{{ route('blog2') }}" class="text-blue-700 font-semibold hover:underline">Đọc thêm →</a>
             </div>
 
             <!-- Bài viết 3 -->
@@ -679,7 +679,7 @@
                     alt="Blog 3" class="w-full h-60 object-cover rounded-md mb-2">
                 <h4 class="text-lg font-semibold text-[#0D47A1] mb-2">10 Bài Tập Cardio Hiệu Quả Tại Nhà</h4>
                 <p class="text-[#333333] text-sm mb-4">Các bài tập đơn giản giúp bạn đốt cháy calo và cải thiện sức khỏe tim mạch.</p>
-                <a href="#" class="text-blue-700 font-semibold hover:underline">Đọc thêm →</a>
+                <a href="{{ route('blog3') }}" class="text-blue-700 font-semibold hover:underline">Đọc thêm →</a>
             </div>
         </div>
     </section>
