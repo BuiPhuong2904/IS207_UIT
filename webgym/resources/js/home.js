@@ -69,3 +69,90 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.addEventListener("resize", updateSlider);
 });
+
+// --- Reusable Carousel (Fade + Dot Fixed) ---
+document.addEventListener("DOMContentLoaded", () => {
+
+  // Hàm khởi tạo cho 1 carousel cụ thể
+  function initCarousel(carouselId) {
+    const carousel = document.getElementById(carouselId);
+    if (!carousel) return;
+
+    const slides = carousel.querySelectorAll("[data-carousel-item]");
+    const nextBtn = carousel.querySelector("[data-carousel-next]");
+    const prevBtn = carousel.querySelector("[data-carousel-prev]");
+    const dots = carousel.querySelectorAll("[data-carousel-slide-to]");
+    if (!slides.length) return;
+
+    let currentIndex = 0;
+    let autoPlayInterval;
+
+    // Thêm CSS fade cho từng slide
+    slides.forEach(slide => {
+      slide.classList.add("opacity-0", "transition-opacity", "duration-1000");
+    });
+
+    // Hàm hiển thị slide
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        if (i === index) {
+          slide.classList.remove("hidden");
+          requestAnimationFrame(() => {
+            slide.classList.remove("opacity-0");
+            slide.classList.add("opacity-100");
+          });
+        } else {
+          slide.classList.remove("opacity-100");
+          slide.classList.add("opacity-0");
+          setTimeout(() => {
+            if (slide.classList.contains("opacity-0")) slide.classList.add("hidden");
+          }, 1000);
+        }
+      });
+
+      // Cập nhật dot
+      dots.forEach((dot, i) => {
+        if (i === index) {
+          dot.classList.add("bg-white");
+          dot.classList.remove("bg-white/50", "bg-gray-400");
+        } else {
+          dot.classList.add("bg-white/50");
+          dot.classList.remove("bg-white", "bg-gray-400");
+        }
+      });
+
+      currentIndex = index;
+    }
+
+    // Next / Prev
+    const nextSlide = () => showSlide((currentIndex + 1) % slides.length);
+    const prevSlide = () => showSlide((currentIndex - 1 + slides.length) % slides.length);
+
+    if (nextBtn) nextBtn.addEventListener("click", nextSlide);
+    if (prevBtn) prevBtn.addEventListener("click", prevSlide);
+    dots.forEach((dot, index) => dot.addEventListener("click", () => showSlide(index)));
+
+    // Auto play
+    function startAutoPlay() {
+      stopAutoPlay();
+      autoPlayInterval = setInterval(nextSlide, 5000);
+    }
+    function stopAutoPlay() {
+      if (autoPlayInterval) clearInterval(autoPlayInterval);
+    }
+
+    carousel.addEventListener("mouseenter", stopAutoPlay);
+    carousel.addEventListener("mouseleave", startAutoPlay);
+
+    // Init
+    slides[0].classList.remove("hidden", "opacity-0");
+    slides[0].classList.add("opacity-100");
+    showSlide(currentIndex);
+    startAutoPlay();
+  }
+
+    // --- Khởi tạo cho tất cả carousel ---
+    initCarousel("banner-carousel");
+    initCarousel("default-carousel");
+    initCarousel("store-carousel");
+});

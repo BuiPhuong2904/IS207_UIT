@@ -29,7 +29,8 @@
             
             <!--Thông báo --->
             <button class="p-2 rounded-full bg-gray-100 text-[#FF3B30] hover:bg-gray-200 hover:text-gray-700 relative">
-                <span class="absolute top-2 right-2 block h-2 w-2 rounded-full bg-red-500 hidden"></span>
+                <span x-show="hasNewNotification" 
+                    class="absolute top-2 right-2 block h-2 w-2 rounded-full bg-red-500"></span>
                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
                 </svg>
@@ -42,7 +43,7 @@
                     class="relative block h-12 w-12 rounded-full overflow-hidden border-2 border-transparent 
                         bg-gray-100 hover:bg-gray-200 transition duration-200 ease-in-out
                         focus:outline-none focus:ring-0 focus:border-none">
-                    <img src="{{ asset('images/ava.jpg') }}" 
+                    <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762341321/ava_ntqezy.jpg" 
                         alt="User Avatar" 
                         class="h-full w-full object-cover rounded-full">
                 </button>
