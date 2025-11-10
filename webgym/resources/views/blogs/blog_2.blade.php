@@ -231,14 +231,67 @@
 
         <!-- Bài viết khác -->
         <aside class="w-full md:w-1/3 bg-white p-6 rounded-lg shadow-md self-start sticky top-24">
-            <h4 class="text-xl font-semibold mb-2 font-open-sans text-[#1976D2]">Bài Viết Khác</h4>
+            <h4 class="text-xl font-semibold mb-4 font-open-sans text-[#1976D2] bg-gradient-to-r from-[#0D47A1] to-[#42A5F5] bg-[length:100%_3px] bg-no-repeat bg-bottom inline-block">
+                Bài Viết Khác
+            </h4>
             <ul class="space-y-3">
-                <li><a href="{{ route('blog1') }}" class="font-open-sans text-[#333333] hover:text-[#145ea8]">5 Lợi Ích Của Việc Tập Yoga Hàng Ngày</a></li>
-                <li><a href="{{ route('blog2') }}" class="font-open-sans text-[#333333] hover:text-[#145ea8]">Chế Độ Dinh Dưỡng Cho Người Tập Gym</a></li>
-                <li><a href="{{ route('blog3') }}" class="font-open-sans text-[#333333] hover:text-[#145ea8]">10 Bài Tập Cardio Hiệu Quả Tại Nhà</a></li>
-                <li><a href="#" class="font-open-sans text-[#333333] hover:text-[#145ea8]">Lợi Ích Của Thiền Và Yoga</a></li>
+                <!-- Bài viết 1 -->
+                <li class="flex items-center border-b border-gray-200 pb-2">
+                    <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762341272/blog_1_shlvij.jpg" 
+                         alt="Yoga" 
+                         class="w-15 h-15 mr-3 rounded object-cover flex-shrink-0">
+                    <a href="{{ route('blog1') }}" class="font-open-sans text-[#333333] hover:text-[#145ea8]">
+                        5 Lợi Ích Của Việc Tập Yoga Hàng Ngày
+                    </a>
+                </li>
+                <!-- Bài viết 2 -->
+                <li class="flex items-center border-b border-gray-200 pb-2">
+                    <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762341274/blog_2_uugz6s.jpg"
+                         alt="Gym" 
+                         class="w-15 h-15 mr-3 rounded object-cover flex-shrink-0">
+                    <a href="{{ route('blog2') }}" class="font-open-sans text-[#333333] hover:text-[#145ea8]">
+                        Chế Độ Dinh Dưỡng Cho Người Tập Gym
+                    </a>
+                </li>
+                <!-- Bài viết 3 -->
+                <li class="flex items-center border-b border-gray-200 pb-2">
+                    <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762341270/blog_3_nravn8.jpg"
+                         alt="Cardio" 
+                         class="w-15 h-15 mr-3 rounded object-cover flex-shrink-0">
+                    <a href="{{ route('blog3') }}" class="font-open-sans text-[#333333] hover:text-[#145ea8]">
+                        10 Bài Tập Cardio Hiệu Quả Tại Nhà
+                    </a>
+                </li>
+                <!-- Bài viết 4 -->
+                <li class="flex items-center pb-2">
+                    <img src="{{ asset('images/about/blog_4.jpg') }}" 
+                         alt="Thiền & Yoga" 
+                         class="w-15 h-15 mr-3 rounded object-cover flex-shrink-0">
+                    <a href="#" class="font-open-sans text-[#333333] hover:text-[#145ea8]">
+                        Lợi Ích Của Thiền Và Yoga
+                    </a>
+                </li>
+                <!-- Bài viết 5 -->
+                <li class="flex items-center pb-2">
+                    <img src="{{ asset('images/about/blog_5.jpg') }}" 
+                         alt="Thiền & Yoga" 
+                         class="w-15 h-15 mr-3 rounded object-cover flex-shrink-0">
+                    <a href="#" class="font-open-sans text-[#333333] hover:text-[#145ea8]">
+                        Bài Tập Stretching Giúp Giảm Đau Cơ Và Tăng Linh Hoạt
+                    </a>
+                </li>
+                <!-- Bài viết 6 -->
+                <li class="flex items-center pb-2">
+                    <img src="{{ asset('images/about/blog_6.jpg') }}" 
+                         alt="Thiền & Yoga" 
+                         class="w-15 h-15 mr-3 rounded object-cover flex-shrink-0">
+                    <a href="#" class="font-open-sans text-[#333333] hover:text-[#145ea8]">
+                        Các Bài Tập Toàn Thân Hiệu Quả Chỉ Với 30 Phút Mỗi Ngày
+                    </a>
+                </li>
             </ul>
         </aside>
+
 
     </div>
 
