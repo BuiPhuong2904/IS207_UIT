@@ -46,9 +46,9 @@ Route::get('/admin/promotions', [PromotionController::class, 'index'])->name('ad
 use App\Http\Controllers\RentalController;
 Route::get('/admin/rentals', [RentalController::class, 'index'])->name('admin.rentals');
 
-//admin activities
-use App\Http\Controllers\ActivityController;
-Route::get('/admin/activities', [ActivityController::class, 'index'])->name('admin.activities');
+//admin payment
+use App\Http\Controllers\PaymentController;
+Route::get('/admin/payment', [PaymentController::class, 'index'])->name('admin.payment');
 
 //admin blogs
 use App\Http\Controllers\BlogController;
