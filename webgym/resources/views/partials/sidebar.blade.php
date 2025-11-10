@@ -121,7 +121,8 @@
             </div>
         </a>        
 
-        <a href="{{ route('admin.payment') }}" 
+        <!-- Quản lý thanh toán --->  
+        <a href="{{ route('admin.payments.index') }}" 
         class="flex items-center justify-between px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-medium">
             <div class="flex items-center gap-3">
                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">

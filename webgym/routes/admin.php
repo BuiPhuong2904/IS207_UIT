@@ -11,7 +11,7 @@ use App\Http\Controllers\StoreController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\RentalController;
-use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ClassScheduleController;
@@ -34,7 +34,7 @@ Route::middleware([/*'auth', 'admin.role'*/])->prefix('admin')->name('admin.')->
     Route::resource('orders', OrderController::class);
     Route::resource('promotions', PromotionController::class);
     Route::resource('rentals', RentalController::class);
-    Route::resource('activities', ActivityController::class);
+    Route::resource('payments', PaymentController::class);
     Route::resource('blogs', BlogController::class);
     Route::resource('branches', BranchController::class);
     Route::resource('class_schedule', ClassScheduleController::class);
