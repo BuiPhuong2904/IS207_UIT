@@ -4,6 +4,6 @@
 
 @section('content')
 
-<h1>Đây là nội dung chính activities</h1>
+<h1>Đây là nội dung chính payment</h1>
 
 @endsection
