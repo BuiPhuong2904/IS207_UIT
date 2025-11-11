@@ -7,6 +7,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'GRYND - Trang chủ')</title>
     @vite(['resources/css/app.css', 'resources/js/chatbot.js', 'resources/js/app.js'])
+
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
 <body class="font-open-sans bg-[#F5F7FA] text-[#333333]">
