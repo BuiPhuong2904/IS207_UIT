@@ -18,6 +18,7 @@ use App\Http\Controllers\ClassScheduleController;
 use App\Http\Controllers\ClassListController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\TrainerController;
+use App\Http\Controllers\BorrowReturnController;
 
 // Admin Routes
 // Các route dành cho quản trị viên, bảo vệ bằng middleware 'auth' và 'admin.role'
@@ -41,5 +42,6 @@ Route::middleware([/*'auth', 'admin.role'*/])->prefix('admin')->name('admin.')->
     Route::resource('class_list', ClassListController::class);
     Route::resource('customers', CustomerController::class);
     Route::resource('trainers', TrainerController::class);
+    Route::get('borrow_return', [BorrowReturnController::class, 'index'])->name('borrow_return.index');
 
 });
