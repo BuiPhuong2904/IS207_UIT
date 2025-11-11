@@ -24,7 +24,7 @@ return new class extends Migration
             $table->string('brand')->nullable();
             $table->decimal('weight', 10, 2)->nullable();
             $table->string('unit')->nullable();
-
+            $table->string('status')->nullable();
             $table->foreign('category_id')->references('category_id')->on('product_category')->onDelete('set null');
         });
     }

@@ -14,7 +14,7 @@ class Product extends Model
     protected $fillable = [
         'product_name', 'description', 'price', 'stock', 'image_url',
         'discount_price', 'is_discounted', 'slug', 'category_id',
-        'brand', 'weight', 'unit'
+        'brand', 'weight', 'unit', 'status'
     ];
 
     public $timestamps = false;
