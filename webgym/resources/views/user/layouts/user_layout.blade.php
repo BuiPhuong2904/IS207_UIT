@@ -52,28 +52,30 @@
                             <span class="block text-sm font-semibold text-[#1976D2] mb-1">Trợ lý AI</span>
                             Xin chào! Mình là trợ lý AI của bạn tại GRYND. Hôm nay bạn cần mình hỗ trợ gì?
                         </p>
-
-                        <div id="chatbot-suggestions" class="flex flex-wrap gap-2 mt-3">
-                            <button class="chatbot-suggestion text-sm text-[#1976D2] bg-blue-50 border border-blue-200 rounded-full px-3 py-1 hover:bg-blue-100 transition-colors">
-                                Xem các gói tập
-                            </button>
-                            <button class="chatbot-suggestion text-sm text-[#1976D2] bg-blue-50 border border-blue-200 rounded-full px-3 py-1 hover:bg-blue-100 transition-colors">
-                                Giờ hoạt động?
-                            </button>
-                            <button class="chatbot-suggestion text-sm text-[#1976D2] bg-blue-50 border border-blue-200 rounded-full px-3 py-1 hover:bg-blue-100 transition-colors">
-                                Sản phẩm hot
-                            </button>
-                            <button class="chatbot-suggestion text-sm text-[#1976D2] bg-blue-50 border border-blue-200 rounded-full px-3 py-1 hover:bg-blue-100 transition-colors">
-                                Liên hệ hỗ trợ
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
 
             <div class="p-3 bg-white rounded-b-lg border-t border-gray-100">
+                <div id="chatbot-suggestions" class="flex flex-wrap gap-2 mb-3">
+                    <button class="chatbot-suggestion text-xs text-[#1976D2] bg-blue-50 border border-blue-200 rounded-full px-2.5 py-1 hover:bg-blue-100 transition-colors">
+                        Xem các gói tập
+                    </button>
+                    <button class="chatbot-suggestion text-xs text-[#1976D2] bg-blue-50 border border-blue-200 rounded-full px-2.5 py-1 hover:bg-blue-100 transition-colors">
+                        Giờ hoạt động?
+                    </button>
+                    <button class="chatbot-suggestion text-xs text-[#1976D2] bg-blue-50 border border-blue-200 rounded-full px-2.5 py-1 hover:bg-blue-100 transition-colors">
+                        Các lớp học 
+                    </button>
+                    <button class="chatbot-suggestion text-xs text-[#1976D2] bg-blue-50 border border-blue-200 rounded-full px-2.5 py-1 hover:bg-blue-100 transition-colors">
+                        Liên hệ hỗ trợ
+                    </button>
+                    <button class="chatbot-suggestion text-xs text-[#1976D2] bg-blue-50 border border-blue-200 rounded-full px-2.5 py-1 hover:bg-blue-100 transition-colors">
+                        Huấn luyện viên cá nhân
+                    </button>
+                </div>
+                
                 <div class="flex items-center bg-gray-100 rounded-full p-1">
-
                     <input id="chatbot-input" type="text" placeholder="Nhập tin nhắn..."
                         class="flex-1 bg-transparent border-none focus:ring-0 px-3 py-1 text-sm
                                 text-gray-700 placeholder-gray-500">
