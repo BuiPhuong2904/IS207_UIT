@@ -19,10 +19,9 @@ return new class extends Migration
             $table->integer('max_capacity')->nullable();
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
-            $table->unsignedBigInteger('branch_id')->nullable();
+            $table->timestamps();
 
             $table->foreign('trainer_id')->references('user_id')->on('trainer')->onDelete('set null');
-            $table->foreign('branch_id')->references('branch_id')->on('branch')->onDelete('set null');
         });
     }
 

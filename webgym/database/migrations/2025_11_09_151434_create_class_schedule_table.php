@@ -18,6 +18,7 @@ return new class extends Migration
             $table->time('end_time');
             $table->string('room')->nullable();
             $table->string('status')->nullable();
+            $table->timestamps();
 
             $table->foreign('class_id')->references('class_id')->on('class')->onDelete('cascade');
         });

@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,11 +13,35 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // TẮT KIỂM TRA KHÓA NGOẠI
+        Schema::disableForeignKeyConstraints();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // GỌI TẤT CẢ SEEDER
+        $this->call([
+            UserSeeder::class,
+            BranchSeeder::class,
+            ProductCategorySeeder::class,
+            MembershipPackageSeeder::class,
+            PromotionSeeder::class,
+            TrainerSeeder::class,
+            
+            BlogPostSeeder::class,
+            RentalItemSeeder::class,
+            ProductSeeder::class,
+            ProductVariantSeeder::class,
+            ClassSeeder::class,
+            PromotionTargetSeeder::class,
+
+            // ClassScheduleSeeder::class,
+            // PackageRegistrationSeeder::class,
+            // RentalTransactionSeeder::class,
+            // OrderSeeder::class,
+            // ClassRegistrationSeeder::class,
+            // OrderDetailSeeder::class,
+            // PaymentSeeder::class,
         ]);
+
+        // BẬT LẠI KIỂM TRA KHÓA NGOẠI
+        Schema::enableForeignKeyConstraints();
     }
 }

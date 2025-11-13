@@ -14,16 +14,13 @@ return new class extends Migration
             $table->id('product_id');
             $table->string('product_name');
             $table->text('description')->nullable();
-            $table->decimal('price', 10, 2);
-            $table->integer('stock')->default(0);
             $table->string('image_url')->nullable();
-            $table->decimal('discount_price', 10, 2)->nullable();
-            $table->boolean('is_discounted')->default(false);
             $table->string('slug')->nullable();
             $table->unsignedBigInteger('category_id')->nullable();
             $table->string('brand')->nullable();
-            $table->decimal('weight', 10, 2)->nullable();
-            $table->string('unit')->nullable();
+            $table->string('origin')->nullable();
+            $table->string('status')->default('active');
+            $table->timestamps();
 
             $table->foreign('category_id')->references('category_id')->on('product_category')->onDelete('set null');
         });
