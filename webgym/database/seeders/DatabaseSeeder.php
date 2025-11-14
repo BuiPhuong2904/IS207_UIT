@@ -25,20 +25,20 @@ class DatabaseSeeder extends Seeder
             PromotionSeeder::class,
             TrainerSeeder::class,
             
-            BlogPostSeeder::class,
+            // -- BlogPostSeeder::class,
             RentalItemSeeder::class,
             ProductSeeder::class,
             ProductVariantSeeder::class,
             ClassSeeder::class,
             PromotionTargetSeeder::class,
 
-            // ClassScheduleSeeder::class,
-            // PackageRegistrationSeeder::class,
-            // RentalTransactionSeeder::class,
-            // OrderSeeder::class,
-            // ClassRegistrationSeeder::class,
-            // OrderDetailSeeder::class,
-            // PaymentSeeder::class,
+            ClassScheduleSeeder::class,
+            PackageRegistrationSeeder::class,
+            RentalTransactionSeeder::class,
+            OrderSeeder::class,
+            ClassRegistrationSeeder::class,
+            // -- OrderDetailSeeder::class,
+            PaymentSeeder::class,
         ]);
 
         // BẬT LẠI KIỂM TRA KHÓA NGOẠI

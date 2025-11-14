@@ -14,8 +14,10 @@ return new class extends Migration
             $table->id('class_reg_id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('schedule_id');
-            $table->dateTime('registration_date');
-            $table->string('status')->nullable();
+
+            // $table->dateTime('registration_date');
+            $table->string('status')->nullable(); // 'registered', 'attended', 'cancelled'
+            $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
             $table->foreign('schedule_id')->references('schedule_id')->on('class_schedule')->onDelete('cascade');

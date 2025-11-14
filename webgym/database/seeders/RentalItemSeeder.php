@@ -23,7 +23,7 @@ class RentalItemSeeder extends Seeder
             // === 1. Khăn tắm lớn (3 chi nhánh) ===
             [
                 'item_name' => 'Khăn tắm lớn',
-                'image_url' => null,
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1763142934/item_1_mw0d1r.png',
                 'description' => 'Khăn tắm cotton 100%, kích thước 70x140cm, mềm mại, thấm hút tốt.',
                 'rental_fee' => 20000.00,
                 'quantity_total' => 50,
@@ -35,7 +35,7 @@ class RentalItemSeeder extends Seeder
             ],
             [
                 'item_name' => 'Khăn tắm lớn',
-                'image_url' => null,
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1763142934/item_1_mw0d1r.png',
                 'description' => 'Khăn tắm cotton 100%, kích thước 70x140cm, mềm mại, thấm hút tốt.',
                 'rental_fee' => 20000.00,
                 'quantity_total' => 50,
@@ -47,7 +47,7 @@ class RentalItemSeeder extends Seeder
             ],
             [
                 'item_name' => 'Khăn tắm lớn',
-                'image_url' => null,
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1763142934/item_1_mw0d1r.png',
                 'description' => 'Khăn tắm cotton 100%, kích thước 70x140cm, mềm mại, thấm hút tốt.',
                 'rental_fee' => 20000.00,
                 'quantity_total' => 50,
@@ -61,7 +61,7 @@ class RentalItemSeeder extends Seeder
             // === 2. Bóng Massage (3 chi nhánh) ===
             [
                 'item_name' => 'Bóng Massage',
-                'image_url' => null,
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1763143230/item_2_q39n9c.png',
                 'description' => 'Bóng massage cao su non, đường kính 8cm, dùng để xoa bóp cơ bắp.',
                 'rental_fee' => 15000.00,
                 'quantity_total' => 40,
@@ -73,7 +73,7 @@ class RentalItemSeeder extends Seeder
             ],
             [
                 'item_name' => 'Bóng Massage',
-                'image_url' => null,
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1763143230/item_2_q39n9c.png',
                 'description' => 'Bóng massage cao su non, đường kính 8cm, dùng để xoa bóp cơ bắp.',
                 'rental_fee' => 15000.00,
                 'quantity_total' => 40,
@@ -85,7 +85,7 @@ class RentalItemSeeder extends Seeder
             ],
             [
                 'item_name' => 'Bóng Massage',
-                'image_url' => null,
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1763143230/item_2_q39n9c.png',
                 'description' => 'Bóng massage cao su non, đường kính 8cm, dùng để xoa bóp cơ bắp.',
                 'rental_fee' => 15000.00,
                 'quantity_total' => 40,
@@ -99,8 +99,8 @@ class RentalItemSeeder extends Seeder
             // === 3. Tủ đựng đồ (3 chi nhánh) ===
             [
                 'item_name' => 'Tủ đựng đồ cá nhân',
-                'image_url' => null,
-                'description' => 'Tủ đựng đồ cá nhân bằng nhựa ABS, có khóa an toàn.',
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1763143430/item_3_zk8jhb.png',
+                'description' => 'Tủ đựng đồ thông minh bảo vệ an toàn cho đồ đạc cá nhân của bạn.',
                 'rental_fee' => 50000.00,
                 'quantity_total' => 50,
                 'quantity_available' => 50,
@@ -111,8 +111,8 @@ class RentalItemSeeder extends Seeder
             ],
             [
                 'item_name' => 'Tủ đựng đồ cá nhân',
-                'image_url' => null,
-                'description' => 'Tủ đựng đồ cá nhân bằng nhựa ABS, có khóa an toàn.',
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1763143430/item_3_zk8jhb.png',
+                'description' => 'Tủ đựng đồ thông minh bảo vệ an toàn cho đồ đạc cá nhân của bạn.',
                 'rental_fee' => 50000.00,
                 'quantity_total' => 50,
                 'quantity_available' => 50,
@@ -123,8 +123,8 @@ class RentalItemSeeder extends Seeder
             ],
             [
                 'item_name' => 'Tủ đựng đồ cá nhân',
-                'image_url' => null,
-                'description' => 'Tủ đựng đồ cá nhân bằng nhựa ABS, có khóa an toàn.',
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1763143430/item_3_zk8jhb.png',
+                'description' => 'Tủ đựng đồ thông minh bảo vệ an toàn cho đồ đạc cá nhân của bạn.',
                 'rental_fee' => 50000.00,
                 'quantity_total' => 50,
                 'quantity_available' => 50,
@@ -137,8 +137,8 @@ class RentalItemSeeder extends Seeder
             // === 4. Găng tay Boxing (2 chi nhánh) ===
             [
                 'item_name' => 'Găng tay Boxing (10oz)',
-                'image_url' => null,
-                'description' => 'Găng tay (găng A) dành cho học viên lớp Boxing/Kickboxing.',
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1763143602/item_4_dclfas.png',
+                'description' => 'Găng tay dành cho học viên lớp Boxing/Kickboxing.',
                 'rental_fee' => 30000.00,
                 'quantity_total' => 30,
                 'quantity_available' => 30,
@@ -149,8 +149,8 @@ class RentalItemSeeder extends Seeder
             ],
             [
                 'item_name' => 'Găng tay Boxing (12oz)',
-                'image_url' => null,
-                'description' => 'Găng tay (găng B) dành cho học viên lớp Boxing/Kickboxing.',
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1763143602/item_4_dclfas.png',
+                'description' => 'Găng tay dành cho học viên lớp Boxing/Kickboxing.',
                 'rental_fee' => 30000.00,
                 'quantity_total' => 40,
                 'quantity_available' => 40,
@@ -163,7 +163,7 @@ class RentalItemSeeder extends Seeder
             // === 5. Thảm tập Yoga (2 chi nhánh) ===
             [
                 'item_name' => 'Thảm tập Yoga (Loại dày)',
-                'image_url' => null,
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1763042326/Shop_2_kcbi3y.png',
                 'description' => 'Thảm TPE 8mm cao cấp cho lớp Yoga/Pilates, chống trượt.',
                 'rental_fee' => 15000.00,
                 'quantity_total' => 30,
@@ -175,7 +175,7 @@ class RentalItemSeeder extends Seeder
             ],
             [
                 'item_name' => 'Thảm tập Yoga (Loại dày)',
-                'image_url' => null,
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1763042326/Shop_2_kcbi3y.png',
                 'description' => 'Thảm TPE 8mm cao cấp cho lớp Yoga/Pilates, chống trượt.',
                 'rental_fee' => 15000.00,
                 'quantity_total' => 30,
@@ -189,7 +189,7 @@ class RentalItemSeeder extends Seeder
             // === 6. Đai lưng (2 chi nhánh) ===
             [
                 'item_name' => 'Đai lưng da (Cỡ M)',
-                'image_url' => null,
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1763143881/item_5_ugyijb.png',
                 'description' => 'Đai lưng da cứng, bản 10mm, hỗ trợ Squat/Deadlift nặng.',
                 'rental_fee' => 25000.00,
                 'quantity_total' => 30,
@@ -201,7 +201,7 @@ class RentalItemSeeder extends Seeder
             ],
             [
                 'item_name' => 'Đai lưng da (Cỡ L)',
-                'image_url' => null,
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1763143881/item_5_ugyijb.png',
                 'description' => 'Đai lưng da cứng, bản 10mm, hỗ trợ Squat/Deadlift nặng.',
                 'rental_fee' => 25000.00,
                 'quantity_total' => 20,
@@ -215,7 +215,7 @@ class RentalItemSeeder extends Seeder
             // === 7. Con lăn giãn cơ (2 chi nhánh) ===
             [
                 'item_name' => 'Con lăn giãn cơ',
-                'image_url' => null,
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1763143887/item_6_rhiexy.png',
                 'description' => 'Con lăn EVA cứng, hỗ trợ giãn cơ sau tập luyện.',
                 'rental_fee' => 15000.00,
                 'quantity_total' => 25,
@@ -227,7 +227,7 @@ class RentalItemSeeder extends Seeder
             ],
             [
                 'item_name' => 'Con lăn giãn cơ',
-                'image_url' => null,
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1763143887/item_6_rhiexy.png',
                 'description' => 'Con lăn EVA cứng, hỗ trợ giãn cơ sau tập luyện.',
                 'rental_fee' => 15000.00,
                 'quantity_total' => 35,

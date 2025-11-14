@@ -16,11 +16,17 @@ return new class extends Migration
             $table->date('date');
             $table->time('start_time');
             $table->time('end_time');
+
+            $table->unsignedBigInteger('trainer_id')->nullable();
+            $table->unsignedBigInteger('branch_id')->nullable();
+
             $table->string('room')->nullable();
-            $table->string('status')->nullable();
+            $table->string('status')->nullable(); // 'scheduled', 'cancelled', 'completed'
             $table->timestamps();
 
             $table->foreign('class_id')->references('class_id')->on('class')->onDelete('cascade');
+            $table->foreign('trainer_id')->references('user_id')->on('trainer')->onDelete('set null');
+            $table->foreign('branch_id')->references('branch_id')->on('branch')->onDelete('set null');
         });
     }
 

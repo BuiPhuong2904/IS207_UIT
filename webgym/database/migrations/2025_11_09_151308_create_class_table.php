@@ -14,14 +14,12 @@ return new class extends Migration
             $table->id('class_id');
             $table->string('class_name');
             $table->string('image_url')->nullable();
-            $table->unsignedBigInteger('trainer_id')->nullable();
             $table->string('type')->nullable();
             $table->integer('max_capacity')->nullable();
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
 
-            $table->foreign('trainer_id')->references('user_id')->on('trainer')->onDelete('set null');
         });
     }
 
