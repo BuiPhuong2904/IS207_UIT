@@ -21,39 +21,45 @@
             </p>
     
             <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
-                <h2 class="font-semibold text-lg text-[#292929] font-[Montserrat]">Grynd Gò Vấp</h2>
-                <p class="mt-2 text-[#333333] font-[Open_Sans]">📍 25 Nguyễn Văn Lượng, Phường 6, Quận Gò Vấp, TP. Hồ Chí Minh</p>
-                <p class="text-[#333333] font-[Open_Sans]">📞 (028) 3894 5566</p>
+                <h2 class="font-semibold text-lg text-[#292929] font-[Montserrat]">Chi nhánh Võ Thị Sáu</h2>
+                <p class="mt-2 text-[#333333] font-[Open_Sans]">📍 23/8, Đường Cách Mạng Tháng 8, Phường Võ Thị Sáu, TP.HCM</p>
+                <p class="text-[#333333] font-[Open_Sans]">📞 090 912 3456</p>
             </div>
 
             <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
-                <h2 class="font-semibold text-lg text-[#292929] font-[Montserrat]">Grynd Quận 1</h2>
-                <p class="mt-2 text-[#333333] font-[Open_Sans]">📍 120 Lê Lợi, Phường Bến Thành, Quận 1, TP. Hồ Chí Minh</p>
-                <p class="text-[#333333] font-[Open_Sans]">📞 (028) 3823 7788</p>
+                <h2 class="font-semibold text-lg text-[#292929] font-[Montserrat]">Chi nhánh Lý Thường Kiệt</h2>
+                <p class="mt-2 text-[#333333] font-[Open_Sans]">📍 Số 77, Đường Lý Thường Kiệt, Phường 14, TP.HCM</p>
+                <p class="text-[#333333] font-[Open_Sans]">📞 091 234 5678</p>
             </div>
 
             <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
-                <h2 class="font-semibold text-lg text-[#292929] font-[Montserrat]">Grynd Thủ Đức</h2>
-                <p class="mt-2 text-[#333333] font-[Open_Sans]">📍 45 Võ Văn Ngân, Phường Linh Chiểu, TP. Thủ Đức, TP. Hồ Chí Minh</p>
-                <p class="text-[#333333] font-[Open_Sans]">📞 (028) 3722 9911</p>
+                <h2 class="font-semibold text-lg text-[#292929] font-[Montserrat]">Chi nhánh Linh Xuân</h2>
+                <p class="mt-2 text-[#333333] font-[Open_Sans]">📍 Số 12B, Khu phố 4, Phường Linh Xuân, TP.HCM</p>
+                <p class="text-[#333333] font-[Open_Sans]">📞 093 812 3456</p>
             </div>
 
             <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
-                <h2 class="font-semibold text-lg text-[#292929] font-[Montserrat]">Grynd Bình Thạnh</h2>
-                <p class="mt-2 text-[#333333] font-[Open_Sans]">📍 215 Phan Đăng Lưu, Phường 1, Quận Bình Thạnh, TP. Hồ Chí Minh</p>
-                <p class="text-[#333333] font-[Open_Sans]">📞 (028) 3555 2244</p>
+                <h2 class="font-semibold text-lg text-[#292929] font-[Montserrat]">Chi nhánh Điện Biên</h2>
+                <p class="mt-2 text-[#333333] font-[Open_Sans]">📍 Số 22, Đường Trần Phú, Phường Điện Biên, Thành phố Hà Nội</p>
+                <p class="text-[#333333] font-[Open_Sans]">📞 090 123 4567</p>
             </div>
 
             <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
-                <h2 class="font-semibold text-lg text-[#292929] font-[Montserrat]">Grynd Tân Bình</h2>
-                <p class="mt-2 text-[#333333] font-[Open_Sans]">📍 88 Cộng Hòa, Phường 4, Quận Tân Bình, TP. Hồ Chí Minh</p>
-                <p class="text-[#333333] font-[Open_Sans]">📞 (028) 3811 7733</p>
+                <h2 class="font-semibold text-lg text-[#292929] font-[Montserrat]">Chi nhánh Hoàng Diệu</h2>
+                <p class="mt-2 text-[#333333] font-[Open_Sans]">📍 Số 34, Đường Hoàng Diệu, Phường Điện Biên, Thành phố Hà Nội</p>
+                <p class="text-[#333333] font-[Open_Sans]">📞 090 234 5678</p>
             </div>
 
             <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
-                <h2 class="font-semibold text-lg text-[#292929] font-[Montserrat]">Grynd Hà Nội</h2>
-                <p class="mt-2 text-[#333333] font-[Open_Sans]">📍 18 Trần Duy Hưng, Quận Cầu Giấy, Hà Nội</p>
-                <p class="text-[#333333] font-[Open_Sans]">📞 (024) 3776 8899</p>
+                <h2 class="font-semibold text-lg text-[#292929] font-[Montserrat]">Chi nhánh Trung Hòa</h2>
+                <p class="mt-2 text-[#333333] font-[Open_Sans]">📍 Số 56, Đường Trung Kính, Phường Trung Hòa, Thành phố Hà Nội</p>
+                <p class="text-[#333333] font-[Open_Sans]">📞 090 912 3456</p>
+            </div>
+
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <h2 class="font-semibold text-lg text-[#292929] font-[Montserrat]">Chi nhánh Đà Nẵng</h2>
+                <p class="mt-2 text-[#333333] font-[Open_Sans]">📍 Số 101, Đường Lê Hồng Phong, Phường Phước Ninh, Thành phố Đà Nẵng</p>
+                <p class="text-[#333333] font-[Open_Sans]">📞 098 765 4321</p>
             </div>
         </div>
 

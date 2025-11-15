@@ -16,8 +16,8 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/chatbot/message', [ChatbotController::class, 'chat'])->name('chatbot.message');
 
 // Giới thiệu & Liên hệ
-Route::view('/about', 'about')->name('about');
-Route::view('/contact', 'contact')->name('contact');
+Route::view('/about', 'user.about')->name('about');
+Route::view('/contact', 'user.contact')->name('contact');
 
 // Blog (tĩnh view)
 Route::get('/blog1', function () { return view('blogs.blog_1'); })->name('blog1');
