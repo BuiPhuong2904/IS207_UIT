@@ -12,7 +12,7 @@ class PackageRegistration extends Model
     protected $table = 'package_registration';
     protected $primaryKey = 'registration_id';
     protected $fillable = [
-        'user_id', 'package_id', 'start_date', 'end_date', 'status', 'payment_id'
+        'user_id', 'package_id', 'start_date', 'end_date', 'status'
     ];
 
     public $timestamps = false;
@@ -27,8 +27,4 @@ class PackageRegistration extends Model
         return $this->belongsTo(MembershipPackage::class, 'package_id');
     }
 
-    public function payment()
-    {
-        return $this->belongsTo(Payment::class, 'payment_id');
-    }
 }

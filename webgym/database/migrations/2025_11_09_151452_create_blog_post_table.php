@@ -16,11 +16,13 @@ return new class extends Migration
             $table->string('slug')->nullable();
             $table->text('summary')->nullable();
             $table->text('content')->nullable();
-            $table->string('author_name')->nullable();
+            $table->unsignedBigInteger('author_id')->nullable();
             $table->boolean('is_published')->default(false);
             $table->dateTime('published_at')->nullable();
             $table->string('tags')->nullable();
             $table->string('image_url')->nullable();
+
+            $table->foreign('author_id')->references('id')->on('user')->onDelete('set null');
         });
     }
 

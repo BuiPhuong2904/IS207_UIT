@@ -12,7 +12,7 @@ class ClassSchedule extends Model
     protected $table = 'class_schedule';
     protected $primaryKey = 'schedule_id';
     protected $fillable = [
-        'class_id', 'date', 'start_time', 'end_time', 'room', 'status'
+        'class_id', 'date', 'start_time', 'end_time', 'room', 'status', 'trainer_id', 'branch_id'
     ];
 
     public $timestamps = false;
@@ -25,5 +25,15 @@ class ClassSchedule extends Model
     public function registrations()
     {
         return $this->hasMany(ClassRegistration::class, 'schedule_id');
+    }
+
+    public function trainer()
+    {
+        return $this->belongsTo(Trainer::class, 'trainer_id');
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class, 'branch_id');
     }
 }

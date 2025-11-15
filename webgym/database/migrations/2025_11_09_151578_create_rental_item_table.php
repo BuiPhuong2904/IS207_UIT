@@ -18,6 +18,7 @@ return new class extends Migration
             $table->decimal('rental_fee', 10, 2);
             $table->integer('quantity_total');
             $table->integer('quantity_available');
+            $table->string('status');
             $table->unsignedBigInteger('branch_id')->nullable();
 
             $table->foreign('branch_id')->references('branch_id')->on('branch')->onDelete('set null');

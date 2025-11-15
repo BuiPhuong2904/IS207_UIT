@@ -18,8 +18,12 @@ return new class extends Migration
             $table->time('end_time');
             $table->string('room')->nullable();
             $table->string('status')->nullable();
+            $table->unsignedBigInteger('trainer_id');
+            $table->unsignedBigInteger('branch_id');
 
             $table->foreign('class_id')->references('class_id')->on('class')->onDelete('cascade');
+            $table->foreign('trainer_id')->references('user_id')->on('trainer')->onDelete('cascade');
+            $table->foreign('branch_id')->references('branch_id')->on('branch')->onDelete('cascade');
         });
     }
 

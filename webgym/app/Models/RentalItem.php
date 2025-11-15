@@ -13,7 +13,7 @@ class RentalItem extends Model
     protected $primaryKey = 'item_id';
     protected $fillable = [
         'item_name', 'description', 'rental_fee', 'quantity_total',
-        'quantity_available', 'branch_id','ímage_url'
+        'quantity_available', 'branch_id','ímage_url', 'status'
     ];
 
     public $timestamps = false;
