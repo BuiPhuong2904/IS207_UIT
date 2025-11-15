@@ -14,6 +14,7 @@ return new class extends Migration
             $table->id('order_id');
             $table->unsignedBigInteger('user_id');
             $table->string('order_code')->unique();
+
             $table->dateTime('order_date');
             $table->decimal('total_amount', 10, 2);
             $table->string('status')->nullable(); // e.g., pending, completed, canceled

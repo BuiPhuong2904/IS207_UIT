@@ -20,7 +20,6 @@ return new class extends Migration
             $table->string('status')->nullable();
             $table->timestamps();
 
-
             $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
             $table->foreign('branch_id')->references('branch_id')->on('branch')->onDelete('set null');
         });

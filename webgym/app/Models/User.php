@@ -65,6 +65,7 @@ class User extends Authenticatable
         return $this->hasMany(BlogPost::class, 'author_id');
     }
 
+
     /*
      * Tự động trả về ảnh mặc định nếu 'image_url' là null.
     */
@@ -76,5 +77,6 @@ class User extends Authenticatable
             get: fn ($value) => $value ?? $defaultAvatar,
         );
     }
+
 }
 

@@ -18,7 +18,9 @@ return new class extends Migration
             $table->decimal('rental_fee', 10, 2);
             $table->integer('quantity_total');
             $table->integer('quantity_available');
+
             $table->string('status')->default('active');
+
             $table->unsignedBigInteger('branch_id')->nullable();
             $table->timestamps();
 

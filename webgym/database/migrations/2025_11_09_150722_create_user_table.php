@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('image_url')->nullable();
             $table->string('status')->default('active');
             $table->timestamps();
+
         });
     }
 
