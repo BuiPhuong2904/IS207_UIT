@@ -15,6 +15,7 @@ return new class extends Migration
             $table->unsignedBigInteger('promotion_id');
             $table->string('target_type');
             $table->unsignedBigInteger('target_id')->nullable();
+            $table->timestamps();
 
             $table->foreign('promotion_id')->references('promotion_id')->on('promotion')->onDelete('cascade');
         });

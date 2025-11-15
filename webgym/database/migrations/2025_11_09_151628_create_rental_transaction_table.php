@@ -14,6 +14,7 @@ return new class extends Migration
             $table->id('transaction_id');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('item_id')->nullable();
+            
             $table->integer('quantity');
             $table->date('borrow_date');
             $table->date('return_date')->nullable();

@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->unsignedBigInteger('manager_id')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->timestamps();
 
             $table->foreign('manager_id')->references('id')->on('user')->onDelete('set null');
         });

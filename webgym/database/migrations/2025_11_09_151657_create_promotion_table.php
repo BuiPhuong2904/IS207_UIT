@@ -24,6 +24,7 @@ return new class extends Migration
             $table->integer('usage_limit')->nullable();
             $table->integer('per_user_limit')->nullable();
             $table->boolean('is_active')->default(true);
+            $table->timestamps();
         });
     }
 

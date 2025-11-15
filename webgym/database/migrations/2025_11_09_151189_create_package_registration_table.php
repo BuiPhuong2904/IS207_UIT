@@ -17,6 +17,7 @@ return new class extends Migration
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->string('status')->nullable();
+            $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
             $table->foreign('package_id')->references('package_id')->on('membership_package')->onDelete('cascade');

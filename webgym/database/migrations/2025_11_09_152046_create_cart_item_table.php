@@ -11,10 +11,13 @@ return new class extends Migration
      */
     public function up(): void {
         Schema::create('cart_item', function (Blueprint $table) {
+
+            $table->primary(['cart_id', 'variant_id']);
             $table->unsignedBigInteger('cart_id');
             $table->unsignedBigInteger('variant_id');
             $table->integer('quantity');
             $table->decimal('unit_price', 10, 2);
+            $table->timestamps();
 
             $table->foreign('cart_id')->references('cart_id')->on('cart')->onDelete('cascade');
             $table->foreign('variant_id')->references('variant_id')->on('product_variant')->onDelete('cascade');

@@ -18,6 +18,8 @@ return new class extends Migration
             $table->integer('duration_months')->nullable();
             $table->decimal('price', 10, 2);
             $table->string('slug')->nullable();
+            $table->string('status')->default('active');
+            $table->timestamps();
         });
     }
 

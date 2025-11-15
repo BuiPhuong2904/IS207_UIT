@@ -42,11 +42,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Tạo một hàm riêng để ẩn gợi ý
-        function hideSuggestions() {
-            suggestionContainer.style.display = 'none';
-        }
-
         // Lắng nghe khi bấm nút Gửi
         sendButton.addEventListener('click', hideSuggestions);
 
@@ -60,6 +55,20 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // (Phần code AI chatbot)
     const chatBody = document.querySelector("#chatbot-window .overflow-y-auto");
+
+    // Tạo một hàm riêng để ẩn gợi ý
+    function hideSuggestions() {
+        if (suggestionContainer) {
+            suggestionContainer.style.display = 'none';
+        }
+    }
+
+    // Tạo một hàm riêng để HIỆN gợi ý
+    function showSuggestions() {
+        if (suggestionContainer) {
+            suggestionContainer.style.display = ''; 
+        }
+    }
 
     async function sendMessageToAI(message) {
         // Hiển thị tin nhắn người dùng
@@ -85,19 +94,40 @@ document.addEventListener('DOMContentLoaded', function () {
             if (lastTemp) lastTemp.remove();
 
             appendMessage("GRYND AI", data.reply, "text-left");
-        } catch (error) {
+
+            showSuggestions();
+        } 
+        catch (error) {
             const lastTemp = chatBody.querySelector('[data-temp="true"]');
             if (lastTemp) lastTemp.remove();
 
-            appendMessage("GRYND AI", "Xin lỗi, hệ thống đang tạm bận 😅", "text-left text-red-500");
+            appendMessage("GRYND AI", "Xin lỗi, hệ thống đang tạm bận. Vui lòng thử lại sau!", "text-left text-red-500");
+
+            showSuggestions();
         }
     }
 
-// Hàm hiển thị tin nhắn
+    // Hàm hiển thị tin nhắn (đã có khả năng xử lý Markdown)
     function appendMessage(sender, text, alignClass = "", temporary = false) {
         const div = document.createElement("div");
         div.className = `my-2 ${alignClass}`;
-        div.innerHTML = `<p class="bg-gray-100 rounded-lg p-2 inline-block max-w-[80%]">${text}</p>`;
+        
+        let formattedText = text;
+
+        if (alignClass.includes('text-left')) {
+            
+            // Chuyển **bold** thành thẻ <strong> 
+            formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+            // 2. Chuyển * (dấu bullet) ở đầu dòng thành dấu • 
+            formattedText = formattedText.replace(/^\s*\*\s/gm, '• ');
+
+            // 3. Chuyển dấu xuống dòng (\n) thành thẻ <br> 
+            formattedText = formattedText.replace(/\n/g, '<br>');
+        }
+
+        div.innerHTML = `<p class="bg-gray-100 rounded-lg p-2 inline-block max-w-[80%]">${formattedText}</p>`;
+        
         if (temporary) div.dataset.temp = "true";
         chatBody.appendChild(div);
         chatBody.scrollTop = chatBody.scrollHeight;

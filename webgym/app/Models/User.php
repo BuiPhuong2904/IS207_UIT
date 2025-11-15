@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+// use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable
 {
@@ -57,8 +59,22 @@ class User extends Authenticatable
         return $this->hasMany(RentalTransaction::class, 'user_id');
     }
 
+
     public function blog()
     {
         return $this->hasMany(BlogPost::class, 'author_id');
     }
+
+    /*
+     * Tự động trả về ảnh mặc định nếu 'image_url' là null.
+    */
+    protected function imageUrl(): Attribute
+    {
+        $defaultAvatar = 'https://res.cloudinary.com/dna9qbejm/image/upload/v1762341321/ava_ntqezy.jpg';
+
+        return Attribute::make(
+            get: fn ($value) => $value ?? $defaultAvatar,
+        );
+    }
 }
+
