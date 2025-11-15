@@ -12,8 +12,8 @@ class GymClass extends Model
     protected $table = 'class';
     protected $primaryKey = 'class_id';
     protected $fillable = [
-        'class_name', 'trainer_id', 'type', 'max_capacity',
-        'description', 'is_active', 'branch_id','ímage_url'
+        'class_name', 'type', 'max_capacity',
+        'description', 'is_active', 'ímage_url'
     ];
 
     public $timestamps = false;

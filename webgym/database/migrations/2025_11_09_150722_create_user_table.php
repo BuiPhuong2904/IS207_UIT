@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('gender')->nullable();
             $table->text('address')->nullable();
             $table->string('image_url')->nullable();
+            $table->string('status')->nullable();
         });
     }
 

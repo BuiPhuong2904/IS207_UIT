@@ -14,7 +14,7 @@ class User extends Authenticatable
     protected $primaryKey = 'id';
     protected $fillable = [
         'full_name', 'email', 'password', 'role', 'phone',
-        'birth_date', 'gender', 'address','ímage_url'
+        'birth_date', 'gender', 'address','ímage_url', 'status'
     ];
 
     public function trainer()
@@ -55,5 +55,10 @@ class User extends Authenticatable
     public function rentalTransactions()
     {
         return $this->hasMany(RentalTransaction::class, 'user_id');
+    }
+
+    public function blog()
+    {
+        return $this->hasMany(BlogPost::class, 'author_id');
     }
 }

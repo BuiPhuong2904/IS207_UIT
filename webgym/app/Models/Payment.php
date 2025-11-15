@@ -12,7 +12,7 @@ class Payment extends Model
     protected $table = 'payment';
     protected $primaryKey = 'payment_id';
     protected $fillable = [
-        'user_id', 'payment_type', 'amount', 'method',
+        'user_id', 'payment_type', 'payment_code', 'amount', 'method',
         'payment_date', 'status', 'order_id', 'package_registration_id'
     ];
 
@@ -30,6 +30,6 @@ class Payment extends Model
 
     public function packageRegistration()
     {
-        return $this->belongsTo(PackageRegistration::class, 'package_registration_id');
+        return $this->belongsTo(PackageRegistration::class, 'registration_id');
     }
 }

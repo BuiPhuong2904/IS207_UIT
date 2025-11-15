@@ -12,7 +12,7 @@ class ClassRegistration extends Model
     protected $table = 'class_registration';
     protected $primaryKey = 'class_reg_id';
     protected $fillable = [
-        'user_id', 'schedule_id', 'registration_date', 'status'
+        'user_id', 'schedule_id', 'status'
     ];
 
     public $timestamps = false;

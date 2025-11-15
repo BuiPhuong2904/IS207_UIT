@@ -13,7 +13,7 @@ class BlogPost extends Model
     protected $primaryKey = 'post_id';
     protected $fillable = [
         'title', 'slug', 'summary', 'content',
-        'author_name', 'is_published', 'published_at',
+        'author_id', 'is_published', 'published_at',
         'tags', 'image_url'
     ];
 

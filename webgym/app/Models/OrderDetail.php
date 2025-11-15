@@ -14,7 +14,7 @@ class OrderDetail extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'order_id', 'product_id', 'quantity',
+        'order_id', 'variant_id', 'quantity',
         'unit_price', 'discount_value', 'final_price'
     ];
 
@@ -25,6 +25,6 @@ class OrderDetail extends Model
 
     public function product()
     {
-        return $this->belongsTo(Product::class, 'product_id');
+        return $this->belongsTo(ProductVariant::class, 'variant_id');
     }
 }

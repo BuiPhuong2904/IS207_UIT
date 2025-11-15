@@ -12,12 +12,12 @@ return new class extends Migration
     public function up(): void {
         Schema::create('trainer', function (Blueprint $table) {
             $table->unsignedBigInteger('user_id')->primary();
-            $table->string('specialty')->nullable();
-            $table->integer('experience_years')->nullable();
-            $table->decimal('salary', 10, 2)->nullable();
-            $table->text('work_schedule')->nullable();
+            $table->string('specialty');
+            $table->integer('experience_years');
+            $table->decimal('salary', 10, 2);
+            $table->text('work_schedule');
             $table->unsignedBigInteger('branch_id')->nullable();
-            $table->string('status')->nullable();
+            $table->string('status');
 
             $table->foreign('user_id')->references('id')->on('user')->onDelete('cascade');
             $table->foreign('branch_id')->references('branch_id')->on('branch')->onDelete('set null');

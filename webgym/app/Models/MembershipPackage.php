@@ -12,7 +12,7 @@ class MembershipPackage extends Model
     protected $table = 'membership_package';
     protected $primaryKey = 'package_id';
     protected $fillable = [
-        'package_name', 'description', 'duration_months', 'price', 'slug','ímage_url'
+        'package_name', 'description', 'duration_months', 'price', 'slug','ímage_url', 'status'
     ];
 
     public $timestamps = false;

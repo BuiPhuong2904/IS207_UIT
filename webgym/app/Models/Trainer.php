@@ -10,7 +10,7 @@ class Trainer extends Model
     use HasFactory;
 
     protected $table = 'trainer';
-    protected $primaryKey = 'user_id';
+    protected $primaryKey = ['user_id'];
     protected $fillable = [
         'user_id', 'specialty', 'experience_years', 'salary',
         'work_schedule', 'branch_id', 'status'
