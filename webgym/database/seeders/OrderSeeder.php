@@ -412,5 +412,79 @@ class OrderSeeder extends Seeder
         }
         DB::table('order_detail')->insert($order10_details);
 
+        // === ĐƠN HÀNG 11: (PROCESSING) - (Giảm giá TỪNG MÓN) ===
+        $order11_details = [
+            [
+                'variant_id' => 16, // Whey (Choco, 5 Lbs) - 1.550k
+                'quantity' => 1,
+                'unit_price' => 1550000.00,
+                'discount_value' => 0, 
+                'final_price' => (1550000.00 * 1) - 0,
+            ],
+            [
+                'variant_id' => 7, // Bộ 2 tạ tay Vinyl (Xanh, 1kg) - 150k
+                'quantity' => 1,
+                'unit_price' => 150000.00,
+                'discount_value' => 50000.00, // <-- Giảm riêng 50k
+                'final_price' => (150000.00 * 1) - 50000.00, // 100.000
+            ]
+        ];
+        $order11_total_amount = collect($order11_details)->sum('final_price'); // 1.550.000 + 100.000 = 1.650.000
+        $order11_total_discount = 0;
+        
+        $order11_id = DB::table('order')->insertGetId([
+            'user_id' => 25, // Vũ Thị Ngọc
+            'order_code' => 'GYM-20251116-NEW001',
+            'order_date' => $today->copy()->subDay(),
+            'total_amount' => $order11_total_amount - $order11_total_discount,
+            'status' => 'processing',
+            'shipping_address' => 'Số 22, Đường Trần Phú, Phường Điện Biên, Thành phố Hà Nội',
+            'discount_value' => $order11_total_discount,
+            'promotion_code' => null,
+            'created_at' => $today->copy()->subDay(),
+            'updated_at' => $today->copy()->subDay(),
+        ]);
+        foreach ($order11_details as &$detail) {
+            $detail['order_id'] = $order11_id;
+        }
+        DB::table('order_detail')->insert($order11_details);
+
+        // === ĐƠN HÀNG 12: (COMPLETED) - (Giảm giá TỪNG MÓN) ===
+        $order12_details = [
+            [
+                'variant_id' => 28, // Quần Short (L) - 350k
+                'quantity' => 1,
+                'unit_price' => 350000.00,
+                'discount_value' => 0,
+                'final_price' => (350000.00 * 1) - 0,
+            ],
+            [
+                'variant_id' => 21, // Thanh Protein (Hộp 20) - 1.2M
+                'quantity' => 1,
+                'unit_price' => 1200000.00,
+                'discount_value' => 100000.00, // <-- Giảm riêng 100k
+                'final_price' => (1200000.00 * 1) - 100000.00, // 1.100.000
+            ]
+        ];
+        $order12_total_amount = collect($order12_details)->sum('final_price'); // 350.000 + 1.100.000 = 1.450.000
+        $order12_total_discount = 0; 
+        
+        $order12_id = DB::table('order')->insertGetId([
+            'user_id' => 32, // Trịnh Văn Bình
+            'order_code' => 'GYM-20251111-NEW002',
+            'order_date' => $today->copy()->subDays(4),
+            'total_amount' => $order12_total_amount - $order12_total_discount,
+            'status' => 'completed',
+            'shipping_address' => 'Số 99, Đường Phạm Văn Đồng, Phường Mai Dịch, Thành phố Hà Nội',
+            'discount_value' => $order12_total_discount,
+            'promotion_code' => null,
+            'created_at' => $today->copy()->subDays(4),
+            'updated_at' => $today->copy()->subDays(2),
+        ]);
+        foreach ($order12_details as &$detail) {
+            $detail['order_id'] = $order12_id;
+        }
+        DB::table('order_detail')->insert($order12_details);
+
     }
 }

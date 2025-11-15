@@ -188,7 +188,7 @@ class PaymentSeeder extends Seeder
                 'updated_at' => $today_reg->copy()->subMonths(3),
             ],
 
-            // --- 10 THANH TOÁN CHO ĐƠN HÀNG (từ OrderSeeder) ---
+            // --- 12 THANH TOÁN CHO ĐƠN HÀNG (từ OrderSeeder) ---
             
             [
                 'user_id' => 25,
@@ -319,6 +319,32 @@ class PaymentSeeder extends Seeder
                 'package_registration_id' => null,
                 'created_at' => $today_order->copy()->subDays(10),
                 'updated_at' => $today_order->copy()->subDays(10),
+            ],
+            [
+                'user_id' => 25,
+                'payment_code' => 'PAY-ORD-20251116-011',
+                'payment_type' => 'order',
+                'amount' => 1650000.00, // Order 11
+                'method' => 'VNPay',
+                'payment_date' => $today_order->copy()->subDay(),
+                'status' => 'completed', // Đã thanh toán, đơn đang 'processing'
+                'order_id' => 11,
+                'package_registration_id' => null,
+                'created_at' => $today_order->copy()->subDay(),
+                'updated_at' => $today_order->copy()->subDay(),
+            ],
+            [
+                'user_id' => 32,
+                'payment_code' => 'PAY-ORD-20251111-012',
+                'payment_type' => 'order',
+                'amount' => 1450000.00, // Order 12
+                'method' => 'Thẻ tín dụng',
+                'payment_date' => $today_order->copy()->subDays(4),
+                'status' => 'completed', // Đơn đã 'completed'
+                'order_id' => 12,
+                'package_registration_id' => null,
+                'created_at' => $today_order->copy()->subDays(4),
+                'updated_at' => $today_order->copy()->subDays(4),
             ],
 
         ]);
