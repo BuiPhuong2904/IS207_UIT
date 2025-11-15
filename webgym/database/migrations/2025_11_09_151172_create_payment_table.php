@@ -24,6 +24,7 @@ return new class extends Migration
 
             $table->foreign('user_id')->references('id')->on('user')->onDelete('set null');
             $table->foreign('order_id')->references('order_id')->on('order')->onDelete('set null');
+            $table->foreign('package_registration_id')->references('registration_id')->on('registration')->onDelete('set null');
         });
     }
 
