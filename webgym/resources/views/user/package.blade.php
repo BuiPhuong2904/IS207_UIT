@@ -48,58 +48,52 @@
 
     <!-- Packages Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
-    
-        <div class="relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-6">
-            <div class="flex flex-col items-center gap-3">
-                <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340544/home_icon_1_vwnrex.png" 
-                    alt="Basic Icon" class="w-14 h-14 mb-2">
+
+        @foreach($packages as $package)
+            <div class="relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-6 
+                        @if($package->is_featured) border-t-4 border-[#FFD700] @endif">
+
+                {{-- Hiển thị tag HOT NẾU là 'featured' --}}
+                @if($package->is_featured)
+                <span class="absolute top-3 right-3 bg-[#FFD700] text-[#0D47A1] font-semibold text-xs px-3 py-1 rounded-full shadow">
+                    🔥 HOT
+                </span>
+                @endif
+
+                {{-- Div bọc nội dung --}}
+                <div class="flex flex-col items-center gap-3">
+
+                    <img src="{{ $package->image_url }}" 
+                        alt="{{ $package->package_name }}" class="w-14 h-14 mb-2">
+
+                    <h4 class="text-lg font-semibold text-[#0D47A1]">{{ $package->package_name }}</h4>
+
+                    <p class="text-[#1976D2] font-bold text-xl mb-2">{{ number_format($package->price, 0, ',', '.') }} Đ / gói</p>
+
+                    <ul class="text-[#333333] text-sm space-y-1 mb-4 text-left">
+                        @foreach($package->features_list as $feature)
+                            <li>✔️ {{ $feature }}</li>
+                        @endforeach
+                    </ul>
+
+                    @if($package->is_featured)
+                        {{-- Nút VÀNG cho gói HOT --}}
+                        <button class="font-semibold px-6 py-2 rounded-full text-[#0D47A1]
+                                       transition-all duration-300 shadow-md hover:shadow-lg
+                                       hover:scale-105 active:scale-95"
+                                style="background: linear-gradient(90deg, #FFDD00, #F7B731);">
+                            Đăng ký ngay
+                        </button>
+                    @else
+                        {{-- Nút XANH cho gói thường --}}
+                        <button class="bg-[#1976D2] text-white font-semibold px-5 py-2 rounded-full hover:bg-[#0D47A1] transition">
+                            Đăng ký ngay
+                        </button>
+                    @endif
                 
-                <h4 class="text-lg font-semibold text-[#0D47A1]">Gói Tháng</h4>
-                
-                <p class="text-[#1976D2] font-bold text-xl mb-2">399.000 Đ / gói</p>
-                
-                <ul class="text-[#333333] text-sm space-y-1 mb-4 text-left">
-                    <li>✔️ Thời hạn: 30 ngày</li>
-                    <li>✔️ Tập không giới hạn</li>
-                    <li>✔️ Hỗ trợ PT hướng dẫn</li>
-                    <li>✔️ Miễn phí tủ đồ</li>
-                </ul>
-                
-                <button class="bg-[#1976D2] text-white font-semibold px-5 py-2 rounded-full hover:bg-[#0D47A1] transition">
-                    Đăng ký ngay
-                </button>
+                </div>
             </div>
-        </div>
-
-
-        <div class="relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-6 border-t-4 border-[#FFD700]">
-            <span class="absolute top-3 right-3 bg-[#FFD700] text-[#0D47A1] font-semibold text-xs px-3 py-1 rounded-full shadow">
-                🔥 HOT
-            </span>
-
-            <div class="flex flex-col items-center gap-3">
-                <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340551/home_icon_4_bnbmxh.png" 
-                    alt="VIP Icon" class="w-14 h-14 mb-2">
-                
-                <h4 class="text-lg font-semibold text-[#0D47A1]">Gói PT Cá Nhân</h4>
-                
-                <p class="text-[#1976D2] font-bold text-xl mb-2">1.599.000đ / gói</p>
-                
-                <ul class="text-[#333333] text-sm space-y-1 mb-4 text-left">
-                    <li>✔️ Thời hạn: 30 ngày</li>
-                    <li>✔️ Huấn luyện viên cá nhân</li>
-                    <li>✔️ Có giáo trình tập riêng</li>
-                    <li>✔️ Tư vấn chế độ ăn riêng</li>
-                </ul>
-                
-                <button class="font-semibold px-6 py-2 rounded-full text-[#0D47A1]
-                        transition-all duration-300 shadow-md hover:shadow-lg
-                        hover:scale-105 active:scale-95"
-                        style="background: linear-gradient(90deg, #FFDD00, #F7B731);">
-                    Đăng ký ngay
-                </button>
-            </div>
-        </div>
+        @endforeach
     </div>
 </section>
 

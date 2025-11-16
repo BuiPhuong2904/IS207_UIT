@@ -12,9 +12,7 @@ class UserPackageController extends Controller
      */
     public function index()
     {
-        $packages = MembershipPackage::where('status', 'active')
-                                    ->orderBy('price', 'asc')
-                                    ->get();
+        $packages = MembershipPackage::where('status', 'active')->get();
 
         return view('user.package', [ 
             'packages' => $packages  // Gửi biến $packages vào view
