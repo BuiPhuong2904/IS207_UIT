@@ -33,6 +33,9 @@ Route::get('/package', [UserPackageController::class, 'index'])->name('package')
 // Class 
 Route::get('/class', [UserClassController::class, 'index'])->name('class'); 
 
+// Product
+Route::view('/product', 'user.product')->name('product');
+
 // Authentication Routes
 
 

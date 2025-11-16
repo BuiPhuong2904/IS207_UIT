@@ -11,7 +11,7 @@
             <a href="{{ route('about') }}" class="hover:text-blue-700">Về GRYND</a>
             <a href="{{ route('package') }}" class="hover:text-blue-700">Gói Tập</a>
             <a href="{{ route('class') }}" class="hover:text-blue-700">Lớp Học</a>
-            <a href="#" class="hover:text-blue-700">Cửa Hàng</a>
+            <a href="{{ route('product') }}" class="hover:text-blue-700">Cửa Hàng</a>
             <a href="#" class="hover:text-blue-700">Blog</a>
             <a href="{{ route('contact') }}" class="hover:text-blue-700">Liên Hệ</a>
         </nav>
