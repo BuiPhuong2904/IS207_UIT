@@ -99,29 +99,8 @@
             </div>
         </a>
 
-        <!-- Quản lý khuyến mãi --->
-        <a href="{{ route('admin.promotions.index') }}" 
-        class="flex items-center justify-between px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-medium">
-            <div class="flex items-center gap-3">
-                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m9 14.25 6-6m4.5-3.493V21.75l-3.75-1.5-3.75 1.5-3.75-1.5-3.75 1.5V4.757c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0c1.1.128 1.907 1.077 1.907 2.185ZM9.75 9h.008v.008H9.75V9Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm4.125 4.5h.008v.008h-.008V13.5Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                </svg>
-                <span>Quản lý khuyến mãi</span>
-            </div>
-        </a>
-
-        <!-- Quản lý mượn đồ --->
-        <a href="{{ route('admin.rentals.index') }}" 
-        class="flex items-center justify-between px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-medium">
-            <div class="flex items-center gap-3">
-                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
-                </svg>
-                <span>Quản lý mượn đồ</span>
-            </div>
-        </a>        
-
-        <a href="{{ route('admin.payment') }}" 
+        <!-- Quản lý thanh toán --->  
+        <a href="{{ route('admin.payments.index') }}" 
         class="flex items-center justify-between px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-medium">
             <div class="flex items-center gap-3">
                 <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
@@ -131,6 +110,46 @@
                 <span>Quản lý thanh toán</span>
             </div>
         </a>
+
+        <!-- Quản lý mượn đồ --->
+        <div class="relative">
+            <button id="muondo-btn"
+                class="flex items-center justify-between w-full px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-medium">
+                <div class="flex items-center gap-3">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+                    </svg>
+                    <span>Quản lý mượn đồ</span>
+                </div>
+                <svg id="arrow-muondo" class="h-5 w-5 text-gray-400 transition-transform duration-200"
+                    viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                        d="M7.21 14.77a.75.75 0 0 1 .02-1.06L11.168 10 7.23 6.29a.75.75 0 1 1 1.04-1.08l4.5 4.25a.75.75 0 0 1 0 1.08l-4.5 4.25a.75.75 0 0 1-1.06-.02Z"
+                        clip-rule="evenodd" />
+                </svg>
+            </button>
+
+            <!-- Menu con -->
+            <div id="muondo-menu" class="hidden mt-1 ml-8 bg-white">
+                <a href="{{ route('admin.rentals.index') }}" 
+                class="flex items-center gap-2 px-3 py-2 w-full rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" /></svg>
+                    </svg>                    
+                    <span>Vật dụng</span>
+                </a>
+
+                <a href="{{ route('admin.borrow_return.index') }}" 
+                class="flex items-center gap-2 px-3 py-2 w-full rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                    <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0-3-3m3 3 3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+                    </svg>                    
+                    <span>Giao dịch mượn trả</span>
+                </a>
+            </div>
+        </div>
+        
+        
         
         <!-- Quản lý người dùng có menu con -->
         <div class="relative">
@@ -169,7 +188,18 @@
                 </a>
             </div>
         </div>
-        
+
+        <!-- Quản lý khuyến mãi --->
+        <a href="{{ route('admin.promotions.index') }}" 
+        class="flex items-center justify-between px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-medium">
+            <div class="flex items-center gap-3">
+                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m9 14.25 6-6m4.5-3.493V21.75l-3.75-1.5-3.75 1.5-3.75-1.5-3.75 1.5V4.757c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0c1.1.128 1.907 1.077 1.907 2.185ZM9.75 9h.008v.008H9.75V9Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm4.125 4.5h.008v.008h-.008V13.5Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                </svg>
+                <span>Quản lý khuyến mãi</span>
+            </div>
+        </a>
+
         <!-- Quản lý blogs --->
         <a href="{{ route('admin.blogs.index') }}" 
         class="flex items-center justify-between px-3 py-2 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-gray-900 font-medium">

@@ -18,7 +18,7 @@
     
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-100 ">
 
     <!-- Sidebar -->    
     <div class="flex h-screen gap-2 bg-gray-100">        
@@ -37,45 +37,54 @@
         </div>
     </div>
 
-    <script>
-        <!-- Script cho menu con Lịch lớp -->
-        document.addEventListener('DOMContentLoaded', () => {
-            const lichlopBtn = document.getElementById('lichlop-btn');
-            const lichlopMenu = document.getElementById('lichlop-menu');
-            const lichlopArrow = document.getElementById('arrow-lichlop');
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Định nghĩa tất cả các menu ---
+        // 1. Menu Lịch Lớp
+        const lichlopBtn = document.getElementById('lichlop-btn');
+        const lichlopMenu = document.getElementById('lichlop-menu');
+        const lichlopArrow = document.getElementById('arrow-lichlop');
 
-            lichlopBtn.addEventListener('click', (e) => {
+        // 2. Menu Mượn Đồ
+        const muondoBtn = document.getElementById('muondo-btn');
+        const muondoMenu = document.getElementById('muondo-menu');
+        const muondoArrow = document.getElementById('arrow-muondo');
+
+        // 3. Menu Người Dùng
+        const nguoidungBtn = document.getElementById('nguoidung-btn');
+        const nguoidungMenu = document.getElementById('nguoidung-menu');
+        const nguoidungArrow = document.getElementById('arrow-nguoidung');
+
+        // --- Tạo một mảng chứa tất cả các menu ---
+        const allMenus = [
+            { btn: lichlopBtn, menu: lichlopMenu, arrow: lichlopArrow },
+            { btn: muondoBtn, menu: muondoMenu, arrow: muondoArrow },
+            { btn: nguoidungBtn, menu: nguoidungMenu, arrow: nguoidungArrow }
+        ];
+
+        // --- Thêm sự kiện click cho MỖI menu ---
+        allMenus.forEach(currentMenu => {
+            currentMenu.btn.addEventListener('click', (e) => {
+                // Ngăn sự kiện click lan ra ngoài
                 e.stopPropagation();
-                lichlopMenu.classList.toggle('hidden');
-                lichlopArrow.classList.toggle('rotate-90');
-            });
 
-            window.addEventListener('click', () => {
-                lichlopMenu.classList.add('hidden');
-                lichlopArrow.classList.remove('rotate-90');
-            });
-        });
+                // 1. Đóng TẤT CẢ các menu khác
+                allMenus.forEach(otherMenu => {
+                    // Chỉ đóng nếu đó KHÔNG PHẢI là menu đang được click
+                    if (otherMenu !== currentMenu) {
+                        otherMenu.menu.classList.add('hidden');
+                        otherMenu.arrow.classList.remove('rotate-90');
+                    }
+                });
 
-        <!-- Script cho menu con Quản lý người dùng -->
-        document.addEventListener('DOMContentLoaded', () => {
-            const nguoidungBtn = document.getElementById('nguoidung-btn');
-            const nguoidungMenu = document.getElementById('nguoidung-menu');
-            const nguoidungArrow = document.getElementById('arrow-nguoidung');
-
-            nguoidungBtn.addEventListener('click', () => {
-                nguoidungMenu.classList.toggle('hidden');
-                nguoidungArrow.classList.toggle('rotate-90');
-           });
-
-            window.addEventListener('click', (e) => {
-                if (!nguoidungBtn.contains(e.target)) {
-                        nguoidungMenu.classList.add('hidden');
-                        nguoidungArrow.classList.remove('rotate-90');
-                }
+                // 2. Toggle (đóng/mở) menu hiện tại
+                currentMenu.menu.classList.toggle('hidden');
+                currentMenu.arrow.classList.toggle('rotate-90');
             });
         });
 
-    </script>
+    });
+</script>
 
 
 </body>

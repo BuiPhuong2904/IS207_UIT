@@ -11,13 +11,14 @@ use App\Http\Controllers\StoreController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\RentalController;
-use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ClassScheduleController;
 use App\Http\Controllers\ClassListController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\TrainerController;
+use App\Http\Controllers\BorrowReturnController;
 
 // Admin Routes
 // Các route dành cho quản trị viên, bảo vệ bằng middleware 'auth' và 'admin.role'
@@ -34,12 +35,13 @@ Route::middleware([/*'auth', 'admin.role'*/])->prefix('admin')->name('admin.')->
     Route::resource('orders', OrderController::class);
     Route::resource('promotions', PromotionController::class);
     Route::resource('rentals', RentalController::class);
-    Route::resource('activities', ActivityController::class);
+    Route::resource('payments', PaymentController::class);
     Route::resource('blogs', BlogController::class);
     Route::resource('branches', BranchController::class);
     Route::resource('class_schedule', ClassScheduleController::class);
     Route::resource('class_list', ClassListController::class);
     Route::resource('customers', CustomerController::class);
     Route::resource('trainers', TrainerController::class);
+    Route::get('borrow_return', [BorrowReturnController::class, 'index'])->name('borrow_return.index');
 
 });
