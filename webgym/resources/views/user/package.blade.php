@@ -1,6 +1,6 @@
 @extends('user.layouts.user_layout')
 
-@section('title', 'GRYND - Trang chủ')
+@section('title', 'GRYND - Gói tập')
 
 @section('content')
 
@@ -46,6 +46,7 @@
         style="background: linear-gradient(90deg, #0D47A1, #42A5F5);">
     </div>
 
+    <!-- Packages Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
     
         <div class="relative bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 p-6">

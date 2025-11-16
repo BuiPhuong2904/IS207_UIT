@@ -6,6 +6,9 @@ use App\Http\Controllers\ChatbotController;
 
 use App\Http\Controllers\AuthController;
 
+use App\Http\Controllers\UserPackageController;
+use App\Http\Controllers\UserClassController;
+
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,10 +28,10 @@ Route::get('/blog2', function () { return view('blogs.blog_2'); })->name('blog2'
 Route::get('/blog3', function () { return view('blogs.blog_3'); })->name('blog3');
 
 // Package
-Route::view('/package', 'user.package')->name('package');
+Route::get('/package', [UserPackageController::class, 'index'])->name('package'); 
 
-// Class
-Route::view('/class', 'user.class')->name('class');
+// Class 
+Route::get('/class', [UserClassController::class, 'index'])->name('class'); 
 
 // Authentication Routes
 
