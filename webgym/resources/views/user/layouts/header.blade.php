@@ -1,66 +1,136 @@
+<!-- Header Section -->
 <header class="fixed top-0 left-0 w-full bg-[#F5F7FA] shadow-sm z-50">
     <div class="flex items-center justify-between px-6 md:px-20 py-3">
-        <!-- Logo + tên -->
         <a href="{{ url('/') }}" class="flex items-center text-2xl font-bold text-[#0D47A1] gap-2 font-montserrat">
             <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340096/logo_jhd6zr.png" 
-                alt="Logo" class="w-10 h-10">
+                 alt="Logo" class="w-10 h-10">
             GRYND
         </a>
-
-        <!-- Menu desktop -->
+        <!-- Navigation Links -->
         <nav class="hidden md:flex items-center gap-6 text-sm">
             <a href="{{ route('about') }}" class="hover:text-blue-700">Về GRYND</a>
-            <a href="#" class="hover:text-blue-700">Gói Tập</a>
-            <a href="#" class="hover:text-blue-700">Lớp Tập</a>
+            <a href="{{ route('package') }}" class="hover:text-blue-700">Gói Tập</a>
+            <a href="{{ route('class') }}" class="hover:text-blue-700">Lớp Học</a>
             <a href="#" class="hover:text-blue-700">Cửa Hàng</a>
             <a href="#" class="hover:text-blue-700">Blog</a>
             <a href="{{ route('contact') }}" class="hover:text-blue-700">Liên Hệ</a>
-
-            <!-- Ô tìm kiếm -->
-            <div class="relative">
-                <input type="text" placeholder="Tìm kiếm..."
-                    class="border border-gray-300 rounded-full px-3 py-1 pl-8 focus:outline-none
-                        focus:ring-2 focus:ring-blue-500 w-21 lg:w-35 transition-all duration-300">
-                <svg xmlns="http://www.w3.org/2000/svg"
-                    class="absolute left-2 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
-                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 1110.65 6.65a7.5 7.5 0 016.5 10.5z" />
-                </svg>
-            </div>
         </nav>
+        <!-- Tìm kiếm và nút đăng nhập, đăng ký -->
+        <div class="hidden md:flex items-center gap-4">
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                    </svg>
+                </div>
 
-        <!-- Buttons -->
-        <div class="hidden md:flex items-center gap-3">
-            <button class="border border-gray-300 text-gray-700 px-3 py-1.5 rounded text-sm
-                hover:border-blue-500 hover:text-blue-500 active:bg-blue-50 transition-colors">Đăng nhập</button>
+                <input type="text" placeholder="Tìm kiếm..."
+                    class="border border-gray-300 rounded-lg px-3 py-1 pl-10 focus:outline-none
+                            focus:ring-2 focus:ring-blue-500 w-30 lg:w-42 transition-all duration-300 placeholder:text-sm">
+            </div>
+            <!-- Trường hợp chưa đăng nhập -->
+            @guest
+                <a href="#" class="border border-gray-300 text-gray-700 px-3 py-1.5 rounded text-sm
+                        hover:border-blue-500 hover:text-blue-500 active:bg-blue-50 transition-colors">Đăng nhập</a>
 
-            <button class="bg-[#1976D2] text-white px-3 py-1.5 rounded text-sm hover:bg-blue-700
-                active:bg-blue-800 hover:scale-105 transition-all duration-200 ease-in-out">Đăng ký</button>
+                <a href="#" class="bg-[#1976D2] text-white px-3 py-1.5 rounded text-sm hover:bg-blue-700
+                        active:bg-blue-800 hover:scale-105 transition-all duration-200 ease-in-out">Đăng ký</a>
+            @endguest
+            <!-- Trường hợp đã đăng nhập -->
+            @auth
+                <button class="relative w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full shadow-sm hover:bg-gray-200 focus:outline-none transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                    </svg>
+                    <span class="absolute top-1 right-1 block w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
+                </button>
+                <!-- User Dropdown Menu -->
+                <div x-data="{ open: false }" class="relative">
+                    <button @click="open = !open" class="flex text-sm bg-gray-100 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        <img class="h-10 w-10 rounded-full object-cover" 
+                                src="{{ Auth::user()->image_url ?? 'https://res.cloudinary.com/dna9qbejm/image/upload/v1762341321/ava_ntqezy.jpg' }}" 
+                                alt="User Avatar">
+                    </button>
+
+                    <div x-show="open" 
+                         @click.away="open = false"
+                         x-transition:enter="transition ease-out duration-100"
+                         x-transition:enter-start="transform opacity-0 scale-95"
+                         x-transition:enter-end="transform opacity-100 scale-100"
+                         x-transition:leave="transition ease-in duration-75"
+                         x-transition:leave-start="transform opacity-100 scale-100"
+                         x-transition:leave-end="transform opacity-0 scale-95"
+                         class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 origin-top-right"
+                         style="display: none;"> <div class="px-4 py-2 border-b">
+                            <span class="block text-sm font-medium text-gray-900">{{ Auth::user()->full_name }}</span>
+                            <span class="block text-sm text-gray-500 truncate">{{ Auth::user()->email }}</span>
+                        </div>
+                        
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Hồ sơ</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Gói tập đã mua</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Lớp học đã đăng ký</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Lịch sử đơn hàng</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Lịch sử mượn/trả</a>
+
+                        <!-- Đăng xuất -->
+                        <form method="POST" action="#">
+                            @csrf
+                            <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100">
+                                Đăng xuất
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            @endauth
         </div>
 
-        <!-- Icon menu cho mobile -->
+        <!-- Mobile menu button -->
         <button id="menu-btn" class="md:hidden text-3xl focus:outline-none">☰</button>
     </div>
-
-    <!-- Menu mobile -->
+    <!-- Mobile Menu -->
     <nav id="mobile-menu" class="hidden absolute top-full left-0 w-full flex-col items-start
             bg-white px-6 py-4 space-y-3 shadow-md md:hidden transform origin-top transition-all duration-700 ease-in-out">
-        <a href="#" class="hover:text-blue-700">Về GRYND</a>
+        <a href="{{ route('about') }}" class="hover:text-blue-700">Về GRYND</a>
         <a href="#" class="hover:text-blue-700">Gói Tập</a>
-        <a href="#" class="hover:text-blue-700">Lớp Tập</a>
+        <a href="#" class="hover:text-blue-700">Lớp Học</a>
         <a href="#" class="hover:text-blue-700">Cửa Hàng</a>
         <a href="#" class="hover:text-blue-700">Blog</a>
-        <a href="#" class="hover:text-blue-700">Liên Hệ</a>
+        <a href="{{ route('contact') }}" class="hover:text-blue-700">Liên Hệ</a>
 
-        <!-- Search trong mobile -->
-        <div class="w-full border-t border-gray-200 pt-2">
-            <input type="text" placeholder="Search..."
-                class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <div class="w-full border-t border-gray-200 pt-3">
+            <input type="text" placeholder="Tìm kiếm..."
+                   class="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
 
-        <div class="w-full border-t border-gray-200"></div>
-        <button class="w-full border border-gray-300 px-3 py-1.5 rounded text-sm mb-2">Đăng nhập</button>
-        <button class="w-full bg-blue-700 text-white px-3 py-1.5 rounded text-sm">Đăng ký</button>
+        <div class="w-full border-t border-gray-200 pt-3 space-y-2">
+            @guest
+                <a href="#" class="w-full border border-gray-300 px-3 py-1.5 rounded text-sm">Đăng nhập</a>
+                <a href="#" class="w-full bg-blue-700 text-white px-3 py-1.5 rounded text-sm">Đăng ký</a>
+            @endguest
+
+            @auth
+                <div class="flex items-center gap-3 mb-3">
+                    <img class="h-10 w-10 rounded-full object-cover" 
+                            src="{{ Auth::user()->image_url ?? 'https://res.cloudinary.com/dna9qbejm/image/upload/v1762341321/ava_ntqezy.jpg' }}" 
+                            alt="User Avatar">
+                    <div>
+                        <div class="font-medium text-base text-gray-800">{{ Auth::user()->full_name }}</div>
+                        <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                    </div>
+                </div>
+                <a href="#" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Hồ sơ</a>
+                <a href="#" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Gói tập đã mua</a>
+                <a href="#" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Lớp học đã đăng ký</a>
+                <a href="#" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Lịch sử đơn hàng</a>
+                <a href="#" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Lịch sử mượn/trả</a>   
+                
+                <form method="POST" action="#">
+                    @csrf
+                    <button type="submit" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">
+                        Đăng xuất
+                    </button>
+                </form>
+            @endauth
+        </div>
     </nav>
 </header>
