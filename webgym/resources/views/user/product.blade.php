@@ -166,38 +166,6 @@
             <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 font-open-sans">
 
                 <div class="group flex flex-col rounded-[20px] border border-gray-200 bg-white p-4 shadow-sm transition-all hover:shadow-lg hover:-translate-y-1">
-                    
-                    <div class="relative w-full aspect-square overflow-hidden rounded-[16px] bg-gray-100">
-                        <a href="">
-                            <img class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-                                src=""
-                                alt="">
-                        </a>
-                    </div>
-
-                    <div class="mt-4">
-                        
-                        <h3 class="text-base font-bold text-gray-500 font-['Montserrat']">
-                            <a href="">
-                                Tên sản phẩm mẫu
-                            </a>
-                        </h3>
-
-                        <div class="flex items-center mt-2 space-x-3">
-                            
-                            <p class="text-sm font-bold text-gray-900 font-open-sans">
-                                119.000 VNĐ
-                            </p>
-
-                            <span class="inline-flex items-center justify-center rounded-lg bg-red-50 px-2.5 py-0.5 text-xs font-bold text-red-500">
-                                -%
-                            </span>
-                        </div>
-
-                        <p class="text-sm text-gray-400 line-through italic mt-1">
-                            182.000 VNĐ
-                        </p>
-                    </div>
 
                 </div>
 
