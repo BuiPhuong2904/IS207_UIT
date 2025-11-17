@@ -36,6 +36,11 @@ Route::get('/class', [UserClassController::class, 'index'])->name('class');
 // Product
 Route::view('/product', 'user.product')->name('product');
 
+// Product Details
+Route::get('/san-pham/{id?}', function () {
+    return view('user.product_detail');
+})->name('product_detail');
+
 // Authentication Routes
 
 
