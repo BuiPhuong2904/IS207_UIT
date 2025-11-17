@@ -16,7 +16,7 @@ class Product extends Model
         'slug', 'category_id', 'brand', 'origin', 'status'
     ];
 
-    public $timestamps = false;
+    // public $timestamps = false;
 
     public function category()
     {

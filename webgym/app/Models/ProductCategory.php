@@ -12,7 +12,7 @@ class ProductCategory extends Model
     protected $table = 'product_category';
     protected $primaryKey = 'category_id';
     protected $fillable = ['category_name', 'slug'];
-    public $timestamps = false;
+    // public $timestamps = false;
 
     public function products()
     {
