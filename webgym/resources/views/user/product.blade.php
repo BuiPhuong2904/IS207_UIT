@@ -27,7 +27,7 @@
                     <svg class="w-3 h-3 text-gray-400 mx-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                     </svg>
-                    <span class="ml-1 text-sm font-bold text-gray-900 md:ml-2">Chung</span>
+                    <span class="ml-1 text-sm font-bold text-gray-900 md:ml-2" id="breadcrumb-category">Chung</span>
                 </div>
             </li>
         </ol>
@@ -247,138 +247,168 @@
 
 <!-- JavaScript Section -->
 <script>
-    // ==============================================================
-    // 1. MOCK DATA
-    // ==============================================================
-    const products = [
-        { id: 1, name: "Khăn tập", category: "dung-cu", price: "119.000 VNĐ", originalPrice: "182.000 VNĐ", discount: 35, image: "https://via.placeholder.com/400" },
-        { id: 2, name: "Thảm tập Yoga", category: "dung-cu", price: "399.000 VNĐ", originalPrice: "665.000 VNĐ", discount: 40, image: "https://via.placeholder.com/400" },
-        { id: 3, name: "Whey Protein Gold", category: "thuc-pham", price: "1.500.000 VNĐ", originalPrice: null, discount: 0, image: "https://via.placeholder.com/400" },
-        { id: 4, name: "Áo thun thể thao", category: "quan-ao", price: "250.000 VNĐ", originalPrice: "300.000 VNĐ", discount: 15, image: "https://via.placeholder.com/400" },
-        { id: 5, name: "Tạ tay 5kg", category: "dung-cu", price: "110.000 VNĐ", originalPrice: "122.000 VNĐ", discount: 10, image: "https://via.placeholder.com/400" },
-        { id: 6, name: "Bình nước", category: "phu-kien", price: "149.000 VNĐ", originalPrice: "165.000 VNĐ", discount: 10, image: "https://via.placeholder.com/400" },
-        { id: 7, name: "Băng đô thể thao", category: "phu-kien", price: "50.000 VNĐ", originalPrice: null, discount: 0, image: "https://via.placeholder.com/400" }
-    ];
-
-    // ==============================================================
-    // 2. STATE
-    // ==============================================================
-    const ITEMS_PER_PAGE = 9; 
+    // Đặt các biến trạng thái lọc và phân trang
     let currentPage = 1;
-    let currentCategory = "all"; 
-    let minPrice = 0;
-    let maxPrice = Infinity;
+    let currentCategory = { slug: 'all', name: 'Tất cả sản phẩm' };    
+    let minPrice = "";
+    let maxPrice = "";
     let currentPromotion = "all"; 
 
-    // ==============================================================
-    // 3. HELPER
-    // ==============================================================
-    function parsePrice(priceString) {
-        if (!priceString) return 0;
-        return parseInt(priceString.replace(/\D/g, ''));
+    // URL cơ sở cho API
+    const API_URL = "{{ url('/api/products') }}";
+    const CATEGORY_API_URL = "{{ url('/api/categories') }}";
+    const PRODUCT_DETAIL_URL = "{{ route('product_detail') }}".replace(/\/$/, ""); 
+
+    // Khởi tạo các sự kiện
+    document.addEventListener('DOMContentLoaded', () => {
+        loadCategories(); // Tải danh mục lên sidebar
+        fetchProducts();  // Tải sản phẩm
+    });
+
+    // Tải danh mục từ API
+    async function loadCategories() {
+        try {
+            const response = await fetch(CATEGORY_API_URL);
+            const data = await response.json();
+            const categories = data.categories;
+            
+            const list = document.getElementById('category-list');
+            // Giữ lại mục "Chung"
+            let html = `
+                <li>
+                    <a href="#" data-slug="all" data-name="Tất cả sản phẩm" class="category-link group flex justify-between items-center text-base transition-colors text-blue-600 font-bold">
+                        <span class="font-medium">Chung</span>
+                        <svg class="w-4 h-4 transition-colors text-blue-600" fill="none" stroke="currentColor" 
+                            viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </a>
+                </li>
+            `;
+
+            categories.forEach(cat => {
+                html += `
+                    <li>
+                        <a href="#" data-slug="${cat.slug}" data-name="${cat.category_name}" class="category-link group flex justify-between 
+                            items-center text-base transition-colors text-gray-600 hover:text-blue-600">
+                            <span class="font-medium">${cat.category_name}</span>
+                            <svg class="w-4 h-4 transition-colors text-gray-400 group-hover:text-blue-600" fill="none" 
+                                stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        </a>
+                    </li>
+                `;
+            });
+            list.innerHTML = html;
+            setupCategoryEvents(); // Gán sự kiện click 
+        } catch (error) {
+            console.error('Lỗi tải danh mục:', error);
+        }
     }
 
-    // ==============================================================
-    // 4. RENDER APP
-    // ==============================================================
-    function renderApp() {
+    // Tải sản phẩm từ API
+    async function fetchProducts() {
         const grid = document.getElementById('product-grid');
         const title = document.getElementById('category-title');
         const pagination = document.getElementById('pagination');
-        
-        // --- LỌC SẢN PHẨM (GIỮ NGUYÊN) ---
-        const filteredProducts = products.filter(p => {
-            const matchCategory = (currentCategory === 'all') || (p.category === currentCategory);
-            const productPrice = parsePrice(p.price);
-            const matchPrice = (productPrice >= minPrice) && (productPrice <= maxPrice);
-            let matchPromotion = true;
-            if (currentPromotion === 'on_sale') matchPromotion = p.discount > 0;
-            else if (currentPromotion === 'no_sale') matchPromotion = p.discount === 0;
-            return matchCategory && matchPrice && matchPromotion;
-        });
 
-        const totalPages = Math.ceil(filteredProducts.length / ITEMS_PER_PAGE);
-        if (currentPage > totalPages) currentPage = 1;
+        // Hiển thị loading 
+        grid.innerHTML = '<p class="col-span-full text-center py-10">Đang tải sản phẩm...</p>';
 
-        const start = (currentPage - 1) * ITEMS_PER_PAGE;
-        const end = start + ITEMS_PER_PAGE;
-        const productsToDisplay = filteredProducts.slice(start, end);
+        try {
+            // Xây dựng URL API với các tham số lọc
+            let url = `${API_URL}?page=${currentPage}`;
+            
+            if (currentCategory.slug !== 'all') url += `&category=${currentCategory.slug}`;
+            if (minPrice) url += `&min_price=${minPrice}`;
+            if (maxPrice) url += `&max_price=${maxPrice}`;
+            if (currentPromotion !== 'all') url += `&sale=${currentPromotion}`;
 
-        grid.innerHTML = ''; 
+            // Gọi API
+            const response = await fetch(url);
+            const result = await response.json();
+            const products = result.products; // Mảng sản phẩm từ Controller
+            const meta = result.pagination;   // Thông tin phân trang
 
-        // --- [PHẦN THAY ĐỔI QUAN TRỌNG Ở ĐÂY] ---
-        // Dòng này sẽ tạo ra string kiểu: "http://domain/san-pham"
-        const baseUrl = "{{ route('product_detail') }}".replace(/\/$/, ""); 
+            // Render tiêu đề
+            title.innerText = currentCategory.name;
 
-        if (productsToDisplay.length === 0) {
-            grid.innerHTML = `<div class="col-span-full flex flex-col items-center justify-center py-12 text-gray-500"><p>Không tìm thấy sản phẩm nào.</p></div>`;
-        } 
-        else {
-            productsToDisplay.forEach(product => {
-                
-                // 2. Tạo đường dẫn chi tiết kèm ID (Ví dụ: .../san-pham/1)
-                const detailUrl = `${baseUrl}/${product.id}`;
+            document.getElementById('breadcrumb-category').innerText = currentCategory.name;
 
-                const html = `
-                <div class="group flex flex-col rounded-[20px] border border-gray-200 bg-white p-4 shadow-sm transition-all hover:shadow-lg hover:-translate-y-1">
-                    
-                    <div class="relative w-full aspect-square overflow-hidden rounded-[16px] bg-gray-100">
-                        <a href="${detailUrl}">
-                            <img class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105" 
-                                 src="${product.image}" alt="${product.name}">
-                        </a>
-                    </div>
-
-                    <div class="mt-4">
-                        <h3 class="text-lg font-bold text-gray-900 font-['Montserrat']">
+            // Render sản phẩm
+            grid.innerHTML = '';
+            if (products.length === 0) {
+                grid.innerHTML = `<div class="col-span-full flex flex-col items-center justify-center py-12 text-gray-500"><p>Không tìm thấy sản phẩm nào.</p></div>`;
+            } else {
+                products.forEach(product => {
+                    const detailUrl = `${PRODUCT_DETAIL_URL}/${product.slug}`;
+                    const html = `
+                    <div class="group flex flex-col rounded-[20px] border border-gray-200 bg-white p-4 shadow-sm transition-all hover:shadow-lg hover:-translate-y-1">
+                        <div class="relative w-full aspect-square overflow-hidden rounded-[16px] bg-gray-100">
                             <a href="${detailUrl}">
-                                ${product.name}
+                                <img class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105" 
+                                     src="${product.image}" alt="${product.name}">
                             </a>
-                        </h3>
-
-                        <div class="flex items-center mt-2 space-x-3">
-                            <p class="text-lg font-bold text-gray-900 font-open-sans">
-                                ${product.price}
-                            </p>
-                            ${product.discount > 0 ? `
-                            <span class="inline-flex items-center justify-center rounded-lg bg-red-50 px-2.5 py-0.5 text-xs font-bold text-red-500">
-                                -${product.discount}%
-                            </span>` : ''}
                         </div>
+                        <div class="mt-4">
+                            <h3 class="text-lg font-bold text-gray-900 font-['Montserrat']">
+                                <a href="${detailUrl}">${product.name}</a>
+                            </h3>
+                            <div class="flex items-center mt-2 space-x-3">
+                                <p class="text-lg font-bold text-red-800 font-open-sans">${product.price}</p>
+                                ${product.discount > 0 ? `
+                                <span class="inline-flex items-center justify-center rounded-lg bg-red-50 px-2.5 py-0.5 text-xs font-bold text-red-500">-${product.discount}%</span>` : ''}
+                            </div>
+                            ${product.originalPrice ? `
+                            <p class="text-sm text-gray-400 line-through italic mt-1">${product.originalPrice}</p>` : ''}
+                        </div>
+                    </div>`;
+                    grid.insertAdjacentHTML('beforeend', html);
+                });
+            }
 
-                        ${product.originalPrice ? `
-                        <p class="text-sm text-gray-400 line-through italic mt-1">
-                            ${product.originalPrice}
-                        </p>` : ''}
-                    </div>
+            // Render phân trang
+            renderPagination(meta.last_page, meta.current_page);
 
-                </div>`;
-                grid.insertAdjacentHTML('beforeend', html);
-            });
+        } catch (error) {
+            console.error('Lỗi tải sản phẩm:', error);
+            grid.innerHTML = '<p class="col-span-full text-center text-red-500 py-10">Lỗi khi tải dữ liệu.</p>';
         }
-
-        const categoryMap = { 'all': 'Chung', 'dung-cu': 'Dụng cụ tập luyện', 'thuc-pham': 'Thực phẩm bổ sung', 'quan-ao': 'Quần áo thể thao', 'phu-kien': 'Phụ kiện thể thao' };
-        title.innerText = categoryMap[currentCategory] || 'Sản phẩm';
-        renderPagination(totalPages);
     }
 
-    // ==============================================================
-    // 5. EVENTS
-    // ==============================================================
-    
-    // 5A. Khuyến mãi Radio
+    // Gán sự kiện cho danh mục
+    function setupCategoryEvents() {
+        const links = document.querySelectorAll('.category-link');
+        links.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                // Update UI active state
+                links.forEach(l => {
+                    l.className = 'category-link group flex justify-between items-center text-base transition-colors text-gray-600 hover:text-blue-600';
+                    l.querySelector('svg').setAttribute('class', 'w-4 h-4 transition-colors text-gray-400 group-hover:text-blue-600');
+                });
+                this.className = 'category-link group flex justify-between items-center text-base transition-colors text-blue-600 font-bold';
+                this.querySelector('svg').setAttribute('class', 'w-4 h-4 transition-colors text-blue-600');
+
+                // Update State & Fetch
+                currentCategory.slug = this.getAttribute('data-slug');
+                currentCategory.name = this.getAttribute('data-name');
+                currentPage = 1;
+                fetchProducts();
+            });
+        });
+    }
+
+    // Lọc Khuyến mãi
     const saleRadios = document.querySelectorAll('input[name="filter_sale"]');
     saleRadios.forEach(radio => {
         radio.addEventListener('change', function() {
             if (this.checked) {
                 currentPromotion = this.value;
                 currentPage = 1;
-                renderApp();
+                fetchProducts();
             }
         });
     });
 
-    // 5B. Áp dụng Giá
+    //  Áp dụng Giá
     const btnApplyPrice = document.getElementById('btn-apply-price');
     const errorMsg = document.getElementById('price-error');
     btnApplyPrice.addEventListener('click', function() {
@@ -393,83 +423,67 @@
         } else {
             errorMsg.classList.add('hidden'); 
         }
-        minPrice = minVal;
-        maxPrice = maxVal;
+        minPrice = minInput; // Gửi giá trị gốc lên API
+        maxPrice = maxInput;
         currentPage = 1; 
-        renderApp();     
+        fetchProducts(); 
     });
 
-    // 5C. Xóa Tất Cả (RESET) 
+    // Xóa Tất Cả
     const btnClearAll = document.getElementById('btn-clear-all');
     btnClearAll.addEventListener('click', function() {
-        // Reset State
-        minPrice = 0;
-        maxPrice = Infinity;
+        minPrice = "";
+        maxPrice = "";
         currentPromotion = "all";
+        currentCategory = { slug: 'all', name: 'Tất cả sản phẩm' };
         currentPage = 1;
-        // Reset UI
+        
         document.getElementById('price-min').value = "";
         document.getElementById('price-max').value = "";
         errorMsg.classList.add('hidden');
         saleRadios.forEach(radio => radio.checked = false);
-        // Render
-        renderApp();
+        
+        fetchProducts();
     });
 
-    // 5D. Chuyển trang
-    function changePage(page) {
+    // Chuyển trang
+    window.changePage = function(page) { // Gán vào window 
+        if (page < 1) return;
         currentPage = page;
-        renderApp(); 
+        fetchProducts();
         document.getElementById('category-title').scrollIntoView({ behavior: 'smooth' }); 
     }
 
-    // 5E. Danh mục Sidebar
-    const links = document.querySelectorAll('.category-link');
-    links.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            currentCategory = this.getAttribute('data-category');
-            currentPage = 1;
-            links.forEach(l => {
-                l.className = 'category-link group flex justify-between items-center text-base transition-colors text-gray-600 hover:text-blue-600';
-                l.querySelector('svg').setAttribute('class', 'w-4 h-4 transition-colors text-gray-400 group-hover:text-blue-600');
-            });
-            this.className = 'category-link group flex justify-between items-center text-base transition-colors text-blue-600 font-bold';
-            this.querySelector('svg').setAttribute('class', 'w-4 h-4 transition-colors text-blue-600');
-            renderApp();
-        });
-    });
-
-    // 5F. Render Phân trang
-    function renderPagination(totalPages) {
+    // Render HTML Phân trang
+    function renderPagination(totalPages, current) {
         const pagination = document.getElementById('pagination');
         pagination.innerHTML = ''; 
         if (totalPages <= 1) return; 
-        const prevDisabled = currentPage === 1 ? 'pointer-events-none opacity-50' : '';
-        pagination.insertAdjacentHTML('beforeend', `
-            <a href="#" onclick="changePage(${currentPage - 1}); return false;" class="${prevDisabled} mr-4 flex items-center px-3 py-2 text-gray-600 hover:text-[#1976D2] transition-colors">
+
+        const prevDisabled = current === 1 ? 'pointer-events-none opacity-50' : '';
+        const nextDisabled = current === totalPages ? 'pointer-events-none opacity-50' : '';
+
+        let html = `
+            <a href="#" onclick="changePage(${current - 1}); return false;" class="${prevDisabled} mr-4 flex items-center px-3 py-2 text-gray-600 hover:text-[#1976D2] transition-colors">
                 <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg> Trước
-            </a>`);
-        let pagesHTML = '<div class="flex items-center space-x-2">';
+            </a>
+            <div class="flex items-center space-x-2">`;
+
         for (let i = 1; i <= totalPages; i++) {
-            if (i === currentPage) {
-                pagesHTML += `<span class="inline-flex items-center justify-center w-9 h-9 text-sm font-bold text-white bg-[#1976D2] rounded-full shadow-md cursor-default">${i}</span>`;
-            } 
-            else {
-                pagesHTML += `<a href="#" onclick="changePage(${i}); return false;" class="inline-flex items-center justify-center w-9 h-9 text-sm font-medium text-gray-700 rounded-full hover:bg-gray-100 transition-colors">${i}</a>`;
+            if (i === current) {
+                html += `<span class="inline-flex items-center justify-center w-9 h-9 text-sm font-bold text-white bg-[#1976D2] rounded-full shadow-md cursor-default">${i}</span>`;
+            } else {
+                html += `<a href="#" onclick="changePage(${i}); return false;" class="inline-flex items-center justify-center w-9 h-9 text-sm font-medium text-gray-700 rounded-full hover:bg-gray-100 transition-colors">${i}</a>`;
             }
         }
-        pagesHTML += '</div>';
-        pagination.insertAdjacentHTML('beforeend', pagesHTML);
-        const nextDisabled = currentPage === totalPages ? 'pointer-events-none opacity-50' : '';
-        pagination.insertAdjacentHTML('beforeend', `
-            <a href="#" onclick="changePage(${currentPage + 1}); return false;" class="${nextDisabled} ml-4 flex items-center px-3 py-2 text-gray-600 hover:text-[#1976D2] transition-colors">
-                Sau <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-            </a>`);
-    }
 
-    // INIT
-    renderApp();
+        html += `</div>
+            <a href="#" onclick="changePage(${current + 1}); return false;" class="${nextDisabled} ml-4 flex items-center px-3 py-2 text-gray-600 hover:text-[#1976D2] transition-colors">
+                Sau <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </a>`;
+        
+        pagination.innerHTML = html;
+    }
 </script>
 
 @endsection
