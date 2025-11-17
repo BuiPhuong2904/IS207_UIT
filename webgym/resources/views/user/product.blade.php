@@ -160,7 +160,7 @@
 
         <!-- Main Products Grid -->
         <main class="lg:col-span-3">
-            <h2 class="text-3xl font-semibold text-gray-900 mb-6 font-['Montserrat']" id="category-title">Chung</h2>
+            <h2 class="text-2xl font-semibold text-gray-700 mb-6 font-['Montserrat']" id="category-title">Chung</h2>
 
             <!-- Products Grid -->
             <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 font-open-sans">
@@ -177,7 +177,7 @@
 
                     <div class="mt-4">
                         
-                        <h3 class="text-base font-bold text-gray-900 font-['Montserrat']">
+                        <h3 class="text-base font-bold text-gray-500 font-['Montserrat']">
                             <a href="">
                                 Tên sản phẩm mẫu
                             </a>
