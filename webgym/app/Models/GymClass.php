@@ -13,23 +13,13 @@ class GymClass extends Model
     protected $primaryKey = 'class_id';
     protected $fillable = [
         'class_name', 'type', 'max_capacity',
-        'description', 'is_active', 'ímage_url'
+        'description', 'is_active', 'image_url'
     ];
 
-    public $timestamps = false;
-
-    public function trainer()
-    {
-        return $this->belongsTo(Trainer::class, 'trainer_id');
-    }
+    // public $timestamps = false;
 
     public function schedules()
     {
         return $this->hasMany(ClassSchedule::class, 'class_id');
-    }
-
-    public function branch()
-    {
-        return $this->belongsTo(Branch::class, 'branch_id');
     }
 }
