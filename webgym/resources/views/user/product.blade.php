@@ -123,7 +123,7 @@
                 </p>
 
                 <button id="btn-apply-price" class="w-full bg-white text-[#1976D2] py-2 
-                        rounded-[10px] font-semibold border-2 border-[#1976D2] 
+                        rounded-[10px] font-semibold border-1 border-[#1976D2] 
                         hover:bg-[#1565C0] hover:text-white hover:border-[#1565C0]
                         transition-all shadow-md hover:shadow-lg">
                     ÁP DỤNG
@@ -149,7 +149,7 @@
 
             <div class="pt-6 border-t border-gray-200 mt-6 font-open-sans">
                 <button id="btn-clear-all" class="w-full bg-white text-[#1976D2] py-2 
-                        rounded-[10px] font-semibold border-2 border-[#1976D2] 
+                        rounded-[10px] font-semibold border-1 border-[#1976D2] 
                         hover:bg-[#1565C0] hover:text-white hover:border-[#1565C0]
                         transition-all shadow-md hover:shadow-lg">
                     XÓA TẤT CẢ
@@ -177,7 +177,7 @@
 
                     <div class="mt-4">
                         
-                        <h3 class="text-lg font-bold text-gray-900 font-['Montserrat']">
+                        <h3 class="text-base font-bold text-gray-900 font-['Montserrat']">
                             <a href="">
                                 Tên sản phẩm mẫu
                             </a>
@@ -185,7 +185,7 @@
 
                         <div class="flex items-center mt-2 space-x-3">
                             
-                            <p class="text-lg font-bold text-gray-900 font-open-sans">
+                            <p class="text-sm font-bold text-gray-900 font-open-sans">
                                 119.000 VNĐ
                             </p>
 
