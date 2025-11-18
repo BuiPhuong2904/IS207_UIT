@@ -57,7 +57,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
             <input type="text" class="w-full pl-10 pr-4 py-2.5 border border-[#999999]/50 rounded-2xl shadow-sm focus:outline-none focus:ring-1 focus:ring-black" placeholder="Tìm kiếm ...">
         </div>
     </div>
-    
+
     <div class="flex items-center">
         <div class="flex items-center space-x-3 text-sm text-gray-500 mr-4">
             <span class="font-medium">Hôm nay</span>
@@ -90,7 +90,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                 <tr>
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-[10%]">Mã sản phẩm</th>
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-[15%]">Tên sản phẩm</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-[10%]">Loại</th> 
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-[10%]">Loại</th>
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-[10%]">Thương hiệu</th>
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-[10%]">Nguồn gốc</th>
                     <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-[10%]">Hình</th>
@@ -113,10 +113,10 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                     data-image_url="{{ $product->image_url }}"
                 >
                     <td colspan="8" class="p-0">
-                        <div class="flex w-full rounded-lg items-center 
+                        <div class="flex w-full rounded-lg items-center
                                 {{ $loop->even ? 'bg-white' : 'bg-[#1976D2]/10' }}
                                 shadow-sm overflow-hidden">
-                            
+
                             <div class="px-4 py-3 w-[10%] text-sm font-medium text-gray-900">
                                 {{ $product->product_id }}
                             </div>
@@ -125,7 +125,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                             </div>
                             {{-- Hiển thị tên Loại --}}
                             <div class="px-4 py-3 w-[10%] text-sm text-gray-700">
-                                {{ $categories[$product->category_id] ?? $product->category_id }} 
+                                {{ $categories[$product->category_id] ?? $product->category_id }}
                             </div>
                             <div class="px-4 py-3 w-[10%] text-sm text-gray-700">
                                 {{ $product->brand }}
@@ -147,7 +147,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                                         </a>
                                         @endforeach
                                     </div>
-                                    
+
                                     {{-- Nút Thêm (+) --}}
                                     <button class="open-variant-modal-trigger text-blue-500 hover:text-blue-700" data-product-id="{{ $product->product_id }}" data-mode="add">
                                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd"></path></svg>
@@ -182,13 +182,13 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
 {{-- ----------------- MODAL 1: THÊM SẢN PHẨM (Giữ nguyên) ----------------- --}}
 <div id="addProductModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center">
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-3xl">
-        
-        <h2 class="text-3xl font-bold text-center mb-6 
-                bg-gradient-to-r from-[#0D47A1] to-[#42A5F5] 
+
+        <h2 class="text-3xl font-bold text-center mb-6
+                bg-gradient-to-r from-[#0D47A1] to-[#42A5F5]
                 bg-clip-text text-transparent">
             THÊM SẢN PHẨM
         </h2>
-        
+
         <form>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 {{-- Cột ảnh --}}
@@ -209,7 +209,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                         <label for="add-product_name" class="block text-sm font-medium text-gray-700 mb-1">Tên SP</label>
                         <input type="text" id="add-product_name" class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
                     </div>
-                    
+
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label for="add-category_id" class="block text-sm font-medium text-gray-700 mb-1">Tên loại</label>
@@ -255,7 +255,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                     <textarea id="add-description" rows="5" class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black"></textarea>
                 </div>
 
-                
+
                 <div class="col-span-6"></div>
             </div>
 
@@ -276,13 +276,13 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
 {{-- ----------------- MODAL 2: QUẢN LÝ SẢN PHẨM (Giữ nguyên) ----------------- --}}
 <div id="manageProductModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center">
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-3xl">
-        
-        <h2 class="text-3xl font-bold text-center mb-6 
-                bg-gradient-to-r from-[#0D47A1] to-[#42A5F5] 
+
+        <h2 class="text-3xl font-bold text-center mb-6
+                bg-gradient-to-r from-[#0D47A1] to-[#42A5F5]
                 bg-clip-text text-transparent">
             QUẢN LÝ CỬA HÀNG
         </h2>
-        
+
         <form>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 {{-- Cột ảnh --}}
@@ -309,7 +309,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                             <input type="text" id="manage-product_name" class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
                         </div>
                     </div>
-                    
+
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label for="manage-category_id" class="block text-sm font-medium text-gray-700 mb-1">Tên loại</label>
@@ -354,7 +354,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                 <div class="col-span-10">
                     <textarea id="manage-description" rows="5" class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black"></textarea>
                 </div>
-                
+
                 {{-- Trạng thái --}}
                 <label for="manage-status" class="col-span-2 block text-sm font-medium text-gray-700 whitespace-nowrap pr-2 pt-2.5">Trạng thái</label>
                 <div class="relative custom-multiselect col-span-4" data-select-id="manage-status" data-type="single">
@@ -397,21 +397,21 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
 {{-- ----------------- MODAL 3: MODAL BIẾN THỂ (ĐÃ SỬA TOÀN BỘ GRID ĐỂ THẲNG HÀNG) ----------------- --}}
 <div id="variantModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center">
     {{-- Giữ max-w-7xl --}}
-    <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-7xl"> 
-        
+    <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-7xl">
+
         <div class="flex gap-8">
-            
+
             {{-- === CỘT TRÁI: FORM (2-trong-1) - ĐÃ ĐỒNG BỘ INPUT WIDTH === --}}
             <div class="flex-1">
-                
+
                 {{-- === VIEW 1: QUẢN LÝ BIẾN THỂ (ĐÃ SỬA TOÀN BỘ GRID ĐỂ THẲNG HÀNG) === --}}
                 <div id="manageVariantView">
-                    <h2 class="text-3xl font-bold text-center mb-6 
-                                 bg-gradient-to-r from-[#0D47A1] to-[#42A5F5] 
+                    <h2 class="text-3xl font-bold text-center mb-6
+                                 bg-gradient-to-r from-[#0D47A1] to-[#42A5F5]
                                  bg-clip-text text-transparent">
                         QUẢN LÝ BIẾN THỂ
                     </h2>
-                    
+
                     <form>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                             {{-- Cột ảnh --}}
@@ -428,7 +428,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                             {{-- Cột thông tin (ĐÃ SỬA TOÀN BỘ GRID ĐỂ THẲNG HÀNG) --}}
                             <div class="md:col-span-2">
                                 <div class="grid grid-cols-12 gap-x-6 gap-y-4 items-center">
-                                    
+
                                     {{-- HÀNG 1: ID (Label 3 / Input 9) --}}
                                     <label for="manage-variant-id" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">ID</label>
                                     <input type="text" id="manage-variant-id" class="col-span-9 w-full border border-[#999999]/50 rounded-2xl shadow-sm bg-gray-100 px-4 py-2.5" readonly>
@@ -439,7 +439,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                                     {{-- ĐÃ SỬA: Size Label 2 -> 3, Input 4 -> 3 --}}
                                     <label for="manage-variant-size" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Size</label>
                                     <input type="text" id="manage-variant-size" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
-                                    
+
                                     {{-- HÀNG 3: Giá bán / Tồn kho (Label 3 / Input 3 | Label 3 / Input 3) --}}
                                     <label for="manage-variant-price" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Giá bán (VNĐ)</label>
                                     <input type="number" id="manage-variant-price" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
@@ -518,12 +518,12 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
 
                 {{-- === VIEW 2: THÊM BIẾN THỂ (ĐÃ SỬA TOÀN BỘ GRID ĐỂ THẲNG HÀNG) === --}}
                 <div id="addVariantView" class="hidden">
-                    <h2 class="text-3xl font-bold text-center mb-6 
-                                 bg-gradient-to-r from-[#0D47A1] to-[#42A5F5] 
+                    <h2 class="text-3xl font-bold text-center mb-6
+                                 bg-gradient-to-r from-[#0D47A1] to-[#42A5F5]
                                  bg-clip-text text-transparent">
                         THÊM BIẾN THỂ
                     </h2>
-                    
+
                     <form>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                             {{-- Cột ảnh --}}
@@ -540,14 +540,14 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                             {{-- Cột thông tin (ĐÃ SỬA TOÀN BỘ GRID ĐỂ THẲNG HÀNG) --}}
                             <div class="md:col-span-2">
                                 <div class="grid grid-cols-12 gap-x-6 gap-y-4 items-center">
-                                    
+
                                     {{-- HÀNG 1: Màu / Size (Label 3 / Input 3 | Label 3 / Input 3) --}}
                                     <label for="add-variant-color" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Màu</label>
                                     <input type="text" id="add-variant-color" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
                                     {{-- ĐÃ SỬA: Size Label 2 -> 3, Input 4 -> 3 --}}
                                     <label for="add-variant-size" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Size</label>
                                     <input type="text" id="add-variant-size" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
-                                    
+
                                     {{-- HÀNG 2: Giá bán / Tồn kho (Label 3 / Input 3 | Label 3 / Input 3) --}}
                                     <label for="add-variant-price" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Giá bán (VNĐ)</label>
                                     <input type="number" id="add-variant-price" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
@@ -606,7 +606,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
             <div class="w-full max-w-[300px] h-full">
                 <h3 class="text-xl font-semibold text-gray-700 mb-4 text-center">Các biến thể</h3>
                 <div class="space-y-3 h-[500px] overflow-y-auto pr-2">
-                    
+
                     {{-- Item 1 (Xanh/2kg) --}}
                     <a href="#" class="block p-4 border rounded-lg shadow-sm hover:bg-gray-50 variant-list-item"
                         data-variant-id="BT0001"
@@ -626,7 +626,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                         <p class="text-sm text-gray-600">Giá bán: 120.000 VNĐ</p>
                         <p class="text-sm text-gray-600">Giá giảm: 0 VNĐ</p> {{-- GIÁ GIẢM CÙNG STYLE --}}
                     </a>
-                    
+
                     {{-- Item 2 (Đỏ/2kg) --}}
                     <a href="#" class="block p-4 border rounded-lg shadow-sm hover:bg-gray-50 variant-list-item"
                         data-variant-id="BT0002"
@@ -665,7 +665,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                         <p class="text-sm text-gray-600">Giá bán: 250.000 VNĐ</p>
                         <p class="text-sm text-gray-600">Giá giảm: 0 VNĐ</p>
                     </a>
-                    
+
                     {{-- Item 4 (Biến thể thêm) --}}
                     <a href="#" class="block p-4 border rounded-lg shadow-sm hover:bg-gray-50 variant-list-item"
                         data-variant-id="BT0004"
@@ -703,7 +703,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                         <p class="text-sm text-gray-600">Giá bán: 130.000 VNĐ</p>
                         <p class="text-sm text-gray-600">Giá giảm: 0 VNĐ</p>
                     </a>
-                    
+
                 </div>
             </div>
 
@@ -719,18 +719,18 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
 
 /* Màu Hover: Xám (#999999) 50% opacity */
 .custom-multiselect-option:hover {
-    @apply bg-[#999999]/50 text-gray-900; 
+    @apply bg-[#999999]/50 text-gray-900;
 }
 .custom-multiselect-option:hover span {
-    @apply text-gray-900; 
+    @apply text-gray-900;
 }
 
 /* Màu Selected: Xanh Blue 50% opacity */
 .custom-multiselect-option.bg-blue-100 {
-    @apply bg-blue-500/50 text-gray-900; 
+    @apply bg-blue-500/50 text-gray-900;
 }
 .custom-multiselect-option.bg-blue-100 span {
-    @apply text-gray-900; 
+    @apply text-gray-900;
 }
 
 /* Khi hover lên mục đã chọn, áp dụng style hover xám 50% */
@@ -753,7 +753,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
 }
 .space-y-3.h-\[500px\].overflow-y-auto::-webkit-scrollbar-thumb {
     /* Màu #999999 với độ mờ 50% (50/255 = 0.5) */
-    background: rgba(153, 153, 153, 0.5); 
+    background: rgba(153, 153, 153, 0.5);
     border-radius: 4px;
 }
 .space-y-3.h-\[500px\].overflow-y-auto::-webkit-scrollbar-thumb:hover {
@@ -772,7 +772,7 @@ function updateMultiselectDisplay(multiselectContainer) {
     const hiddenSelect = multiselectContainer.querySelector('select');
     const displaySpan = multiselectContainer.querySelector('.custom-multiselect-display');
     const selectedOptions = Array.from(hiddenSelect.selectedOptions);
-    
+
     // Đảm bảo placeholder
     const placeholder = displaySpan.dataset.placeholder || 'Chọn...';
 
@@ -793,11 +793,11 @@ function setCustomMultiselectValues(multiselectContainer, valuesString, delimite
 
     const hiddenSelect = multiselectContainer.querySelector('select');
     const optionsList = multiselectContainer.querySelector('.custom-multiselect-list');
-    
+
     const selectedValues = valuesString ? String(valuesString).split(delimiter).map(v => v.trim()) : [];
-    
+
     // 1. Reset tất cả các lựa chọn cũ
-    if (optionsList) { 
+    if (optionsList) {
         optionsList.querySelectorAll('.custom-multiselect-option').forEach(li => {
             const highlightClass = li.dataset.highlightClass || 'bg-blue-100';
             li.classList.remove(highlightClass);
@@ -808,13 +808,13 @@ function setCustomMultiselectValues(multiselectContainer, valuesString, delimite
     // 2. Đặt các giá trị mới (so khớp bằng VALUE)
     selectedValues.forEach(value => {
         const trimmedValue = value.trim();
-        
+
         const option = hiddenSelect.querySelector(`option[value="${trimmedValue}"]`);
         if (option) {
             option.selected = true;
         }
-        
-        if (optionsList) { 
+
+        if (optionsList) {
             const li = optionsList.querySelector(`.custom-multiselect-option[data-value="${trimmedValue}"]`);
             if (li) {
                 const highlightClass = li.dataset.highlightClass || 'bg-blue-100';
@@ -838,7 +838,7 @@ function initializeCustomMultiselects() {
         const optionsList = container.querySelector('.custom-multiselect-list');
         const hiddenSelect = container.querySelector('select');
         const displaySpan = container.querySelector('.custom-multiselect-display');
-        
+
         if (displaySpan) {
             displaySpan.dataset.placeholder = displaySpan.textContent;
         }
@@ -850,7 +850,7 @@ function initializeCustomMultiselects() {
                 document.querySelectorAll('.custom-multiselect-panel').forEach(p => {
                     if (p !== panel) p.classList.add('hidden');
                 });
-                if (panel) { 
+                if (panel) {
                     panel.classList.toggle('hidden');
                 }
             });
@@ -861,7 +861,7 @@ function initializeCustomMultiselects() {
             optionsList.querySelectorAll('.custom-multiselect-option').forEach(li => {
                 li.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    
+
                     const value = li.dataset.value;
                     const option = hiddenSelect.querySelector(`option[value="${value}"]`);
                     const highlightClass = li.dataset.highlightClass || 'bg-blue-100/50';
@@ -874,8 +874,8 @@ function initializeCustomMultiselects() {
                             otherLi.classList.remove(otherHighlightClass);
                         });
                         li.classList.add(highlightClass);
-                        if (panel) { 
-                            panel.classList.add('hidden'); 
+                        if (panel) {
+                            panel.classList.add('hidden');
                         }
                     } else {
                         // === LOGIC CHO MULTI-SELECT ===
@@ -884,12 +884,12 @@ function initializeCustomMultiselects() {
                             li.classList.toggle(highlightClass, option.selected);
                         }
                     }
-                    
+
                     updateMultiselectDisplay(container);
                 });
             });
         }
-        
+
         // Khởi tạo giá trị hiển thị ban đầu
         updateMultiselectDisplay(container);
     });
@@ -909,9 +909,9 @@ document.addEventListener('click', (e) => {
 
 // --- SCRIPT QUẢN LÝ MODAL (ĐÃ CẬP NHẬT) ---
 document.addEventListener('DOMContentLoaded', function() {
-    
-    initializeCustomMultiselects(); 
-    
+
+    initializeCustomMultiselects();
+
     const addProductModal = document.getElementById('addProductModal');
     const manageProductModal = document.getElementById('manageProductModal');
     const variantModal = document.getElementById('variantModal');
@@ -938,7 +938,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // --- LOGIC CHO MODAL 3: BIẾN THỂ (PHỨC TẠP) ---
-    
+
     function showVariantView(viewToShow) {
         if (viewToShow === 'add') {
             addVariantView.classList.remove('hidden');
@@ -952,7 +952,7 @@ document.addEventListener('DOMContentLoaded', function() {
             manageVariantView.classList.remove('hidden');
         }
     }
-    
+
     function populateManageVariantForm(data) {
         // Điền input text
         document.getElementById('manage-variant-id').value = data.variantId || '';
@@ -961,8 +961,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('manage-variant-promo-price').value = data.promoPrice || '';
         document.getElementById('manage-variant-weight').value = data.weight || '';
         document.getElementById('manage-variant-unit').value = data.unit || '';
-        document.getElementById('manage-variant-color').value = data.color || ''; 
-        document.getElementById('manage-variant-size').value = data.size || ''; 
+        document.getElementById('manage-variant-color').value = data.color || '';
+        document.getElementById('manage-variant-size').value = data.size || '';
 
 
         // ĐẶT GIÁ TRỊ CUSTOM SELECT
@@ -975,10 +975,10 @@ document.addEventListener('DOMContentLoaded', function() {
         trigger.addEventListener('click', function(e) {
             e.preventDefault();
             e.stopPropagation();
-            
+
             const mode = this.dataset.mode;
             const productId = this.dataset.productId;
-            
+
             // Xóa highlight cũ
             document.querySelectorAll('.variant-list-item').forEach(item => item.classList.remove('bg-gray-100'));
 
@@ -993,7 +993,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     firstVariant.classList.add('bg-gray-100');
                 }
             }
-            
+
             openModal(variantModal);
         });
     });
@@ -1004,17 +1004,17 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             document.querySelectorAll('.variant-list-item').forEach(i => i.classList.remove('bg-gray-100'));
             this.classList.add('bg-gray-100');
-            
+
             const data = this.dataset;
-            populateManageVariantForm(data); 
-            showVariantView('manage'); 
+            populateManageVariantForm(data);
+            showVariantView('manage');
         });
     });
-    
+
     // 3. Kích hoạt chuyển đổi view (từ QL sang Thêm và ngược lại)
     if (switchToAddBtn) {
         switchToAddBtn.addEventListener('click', function() {
-            showVariantView('add'); 
+            showVariantView('add');
         });
     }
 
@@ -1042,27 +1042,27 @@ document.addEventListener('DOMContentLoaded', function() {
             if (e.target.closest('.open-variant-modal-trigger')) {
                 return;
             }
-            
+
             const data = this.dataset;
-            
+
             document.getElementById('manage-product_id').value = data.product_id;
             document.getElementById('manage-product_name').value = data.product_name;
             document.getElementById('manage-origin').value = data.origin;
             document.getElementById('manage-description').value = data.description;
             document.getElementById('manage-brand').value = data.brand; // Input text
-            
+
             const img = document.getElementById('manage-image_url');
             img.src = data.image_url ? data.image_url : 'https://via.placeholder.com/160x160.png?text=Image';
 
             setCustomMultiselectValues(document.querySelector('[data-select-id="manage-category_id"]'), data.category_id);
             setCustomMultiselectValues(document.querySelector('[data-select-id="manage-status"]'), data.status);
-            
+
             openModal(manageProductModal);
         });
     });
 
     // --- LOGIC ĐÓNG MODAL CHUNG ---
-    
+
     closeTriggers.forEach(trigger => {
         trigger.addEventListener('click', function() {
             const modal = this.closest('.modal-container');
