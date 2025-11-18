@@ -182,32 +182,42 @@ class StoreController extends Controller
     }
 
     // Variant: Store variant cho product
-    public function storeVariant(Request $request, $productId)
+    public function variants(Request $request, Product $product)
     {
-        $validator = Validator::make($request->all(), [
-            'color' => 'required|string',
-            'size' => 'required|string',
-            'price' => 'required|numeric|min:0',
-            'discount_price' => 'nullable|numeric|lt:price',
-            'is_discounted' => 'boolean',
-            'stock' => 'required|integer|min:0',
-            'image_url' => 'nullable|url',
-            'status' => 'in:active,inactive',
-            'weight' => 'nullable|numeric',
-            'unit' => 'nullable|string',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+        // Kiểm tra product tồn tại
+        if (!$product->exists) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Sản phẩm không tồn tại'
+            ], 404);
         }
 
-        $product = Product::findOrFail($productId);
-        $variant = $product->variants()->create($request->only([
-            'color', 'size', 'price', 'discount_price', 'is_discounted', 'stock',
-            'image_url', 'status', 'weight', 'unit'
-        ]));
+        // Lấy variants kèm thông tin cần thiết
+        $variants = $product->variants()
+            ->select([
+                'variant_id',
+                'product_id',
+                'color',
+                'size',
+                'price',
+                'discount_price',
+                'is_discounted',
+                'stock',
+                'image_url',
+                'status',
+                'weight',
+                'unit'
+            ])
+            ->orderBy('color')
+            ->orderBy('size')
+            ->get();
 
-        return response()->json(['success' => true, 'variant' => $variant]);
+        return response()->json([
+            'success'   => true,
+            'product_id'=> $product->product_id,
+            'product_name'=> $product->product_name,
+            'variants'  => $variants->isEmpty() ? [] : $variants
+        ]);
     }
 
     // Variant: Update

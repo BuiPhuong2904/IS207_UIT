@@ -42,10 +42,13 @@ Route::middleware([/*'auth', 'admin.role'*/])->prefix('admin')->name('admin.')->
         Route::resource('products', StoreController::class)->except(['index']); // Index dùng chung, tránh conflict
         // Hoặc nếu muốn resource đầy đủ: Route::resource('products', StoreController::class);
 
+
         // Nested routes cho Variants (CRUD con của Product)
         Route::prefix('products/{product}')->name('products.')->group(function () {
             Route::resource('variants', StoreController::class)->only(['store', 'update', 'destroy']);
             Route::delete('variants/{variant}', [StoreController::class, 'destroyVariant']);
+            Route::get('variants', [StoreController::class, 'variants'])
+                ->name('variants.index');
         });
     });
 
