@@ -49,10 +49,10 @@
     <!-- Product Details -->
     <section class="bg-white py-8 font-['Roboto']">
         <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div class="grid grid-cols-1 lg:grid-cols-7 gap-12">
                 
                 <!-- Hình ảnh sản phẩm -->
-                <div id="product-gallery" class="w-full">
+                <div id="product-gallery" class="w-full lg:col-span-3">
                     <div class="relative aspect-square w-full overflow-hidden rounded-[24px] mb-6 bg-[#F4F4F4]">
                         <img id="main-image" src="{{ $product->image_url }}" 
                             alt="{{ $product->product_name }}" 
@@ -98,7 +98,7 @@
                 </div>
 
                 <!-- Thông tin sản phẩm -->
-                <div class="flex flex-col pt-2 font-montserrat">
+                <div class="flex flex-col pt-2 font-montserrat lg:col-span-4">
                     <h1 class="text-[40px] leading-tight font-extrabold text-[#350504] mb-2 tracking-tight drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
                         {{ $product->product_name }}
                     </h1>
