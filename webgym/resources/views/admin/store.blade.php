@@ -182,7 +182,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
 {{-- ================================================================= --}}
 
 {{-- ----------------- MODAL 1: THÊM SẢN PHẨM (Giữ nguyên) ----------------- --}}
-<div id="addProductModal" class="modal-container hidden fixed inset-0 z-50 flex items-center justify-center">
+<div id="addProductModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center">
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-3xl">
         
         <h2 class="text-3xl font-bold text-center mb-6 
@@ -276,7 +276,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
 </div>
 
 {{-- ----------------- MODAL 2: QUẢN LÝ SẢN PHẨM (Giữ nguyên) ----------------- --}}
-<div id="manageProductModal" class="modal-container hidden fixed inset-0 z-50 flex items-center justify-center">
+<div id="manageProductModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center">
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-3xl">
         
         <h2 class="text-3xl font-bold text-center mb-6 
@@ -397,7 +397,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
 </div>
 
 {{-- ----------------- MODAL 3: MODAL BIẾN THỂ (ĐÃ SỬA TOÀN BỘ GRID ĐỂ THẲNG HÀNG) ----------------- --}}
-<div id="variantModal" class="modal-container hidden fixed inset-0 z-50 flex items-center justify-center">
+<div id="variantModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center">
     {{-- Giữ max-w-7xl --}}
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-7xl"> 
         

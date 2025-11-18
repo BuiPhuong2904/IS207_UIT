@@ -180,7 +180,7 @@ $status_options = [
 
 
 {{-- ----------------- MODAL 1: THÊM GÓI TẬP (GIỮ NGUYÊN) ----------------- --}}
-<div id="addPackageModal" class="modal-container hidden fixed inset-0 z-50 flex items-center justify-center">
+<div id="addPackageModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center">
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-3xl"> 
         
         <h2 class="text-3xl font-bold text-center mb-6 
@@ -256,7 +256,7 @@ $status_options = [
 </div>
 
 {{-- ----------------- MODAL 2: QUẢN LÝ GÓI TẬP (CẬP NHẬT TRẠNG THÁI) ----------------- --}}
-<div id="managePackageModal" class="modal-container hidden fixed inset-0 z-50 flex items-center justify-center">
+<div id="managePackageModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center">
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-3xl"> 
         
         <h2 class="text-3xl font-bold text-center mb-6 

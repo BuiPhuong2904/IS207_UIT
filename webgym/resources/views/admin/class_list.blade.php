@@ -147,7 +147,7 @@
 {{-- ================================================================= --}}
 
 {{-- ----------------- MODAL 1: THÊM LỚP (ĐÃ BỎ HLV) ----------------- --}}
-<div id="addClassModal" class="modal-container hidden fixed inset-0 z-50 flex items-center justify-center">
+<div id="addClassModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center">
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-2xl">
         
         <h2 class="text-2xl font-bold text-center mb-6
@@ -241,7 +241,7 @@
 </div>
 
 {{-- ----------------- MODAL 2: QUẢN LÝ (ĐÃ BỎ HLV) ----------------- --}}
-<div id="manageClassModal" class="modal-container hidden fixed inset-0 z-50 flex items-center justify-center">
+<div id="manageClassModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center">
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-2xl">
         
         <h2 class="text-2xl font-bold text-center mb-6
@@ -370,7 +370,7 @@
 
 
 {{-- ----------------- MODAL 3: DANH SÁCH NGƯỜI ĐĂNG KÝ (GIỮ NGUYÊN) ----------------- --}}
-<div id="registrationsModal" class="modal-container hidden fixed inset-0 z-50 flex items-center justify-center">
+<div id="registrationsModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center">
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-2xl">
         
         <h2 class="text-2xl font-bold text-center mb-6
