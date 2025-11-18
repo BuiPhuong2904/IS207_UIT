@@ -178,7 +178,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
 ---
 
 {{-- ================================================================= --}}
-{{-- =================== HTML CHO CÁC MODAL (ĐÃ SỬA) ================= --}}
+{{-- =================== HTML CHO CÁC MODAL (Giữ nguyên) ================= --}}
 {{-- ================================================================= --}}
 
 {{-- ----------------- MODAL 1: THÊM SẢN PHẨM (Giữ nguyên) ----------------- --}}
@@ -257,28 +257,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                     <textarea id="add-description" rows="5" class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black"></textarea>
                 </div>
 
-                {{-- Trạng thái (MỚI) --}}
-                <label for="add-status" class="col-span-2 block text-sm font-medium text-gray-700 whitespace-nowrap pr-2 pt-2.5">Trạng thái</label>
-                <div class="relative custom-multiselect col-span-4" data-select-id="add-status" data-type="single">
-                    <select id="add-status" class="hidden">
-                        @foreach($statuses as $id => $name)
-                        <option value="{{ $id }}">{{ $name }}</option>
-                        @endforeach
-                    </select>
-                    <button type="button" class="custom-multiselect-trigger w-full bg-white border border-[#999999]/50 rounded-2xl shadow-sm text-left px-4 py-2.5 flex items-center justify-between focus:outline-none focus:ring-1 focus:ring-black">
-                        <span class="custom-multiselect-display text-gray-500">Chọn trạng thái...</span>
-                        <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
-                    </button>
-                    <div class="custom-multiselect-panel hidden absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
-                        <ul class="custom-multiselect-list max-h-48 overflow-y-auto">
-                            @foreach($statuses as $id => $name)
-                            <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" data-value="{{ $id }}" data-highlight-class="bg-blue-100/50">
-                                <span class="text-sm font-medium text-gray-900">{{ $name }}</span>
-                            </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
+                
                 <div class="col-span-6"></div>
             </div>
 
@@ -296,7 +275,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
     </div>
 </div>
 
-{{-- ----------------- MODAL 2: QUẢN LÝ SẢN PHẨM ----------------- --}}
+{{-- ----------------- MODAL 2: QUẢN LÝ SẢN PHẨM (Giữ nguyên) ----------------- --}}
 <div id="manageProductModal" class="modal-container hidden fixed inset-0 z-50 flex items-center justify-center">
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-3xl">
         
@@ -417,7 +396,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
     </div>
 </div>
 
-{{-- ----------------- MODAL 3: MODAL BIẾN THỂ (ĐÃ NÂNG CẤP) ----------------- --}}
+{{-- ----------------- MODAL 3: MODAL BIẾN THỂ (ĐÃ SỬA TOÀN BỘ GRID ĐỂ THẲNG HÀNG) ----------------- --}}
 <div id="variantModal" class="modal-container hidden fixed inset-0 z-50 flex items-center justify-center">
     {{-- Giữ max-w-7xl --}}
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-7xl"> 
@@ -425,9 +404,9 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
         <div class="flex gap-8">
             
             {{-- === CỘT TRÁI: FORM (2-trong-1) - ĐÃ ĐỒNG BỘ INPUT WIDTH === --}}
-            <div class="flex-1 border-r border-gray-300 pr-6"> {{-- Đã thêm border-r và pr-6 để ngăn cách --}}
+            <div class="flex-1">
                 
-                {{-- === VIEW 1: QUẢN LÝ BIẾN THỂ (ĐÃ TỐI ƯU LAYOUT) === --}}
+                {{-- === VIEW 1: QUẢN LÝ BIẾN THỂ (ĐÃ SỬA TOÀN BỘ GRID ĐỂ THẲNG HÀNG) === --}}
                 <div id="manageVariantView">
                     <h2 class="text-3xl font-bold text-center mb-6 
                                  bg-gradient-to-r from-[#0D47A1] to-[#42A5F5] 
@@ -448,29 +427,31 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                                 </button>
                             </div>
 
-                            {{-- Cột thông tin (ĐÃ ĐỒNG BỘ HÓA INPUTS VÀ TỐI ƯU KHOẢNG CÁCH) --}}
+                            {{-- Cột thông tin (ĐÃ SỬA TOÀN BỘ GRID ĐỂ THẲNG HÀNG) --}}
                             <div class="md:col-span-2">
                                 <div class="grid grid-cols-12 gap-x-6 gap-y-4 items-center">
                                     
-                                    {{-- HÀNG 1: ID --}}
+                                    {{-- HÀNG 1: ID (Label 3 / Input 9) --}}
                                     <label for="manage-variant-id" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">ID</label>
                                     <input type="text" id="manage-variant-id" class="col-span-9 w-full border border-[#999999]/50 rounded-2xl shadow-sm bg-gray-100 px-4 py-2.5" readonly>
 
-                                    {{-- HÀNG 2: Màu / Size --}}
+                                    {{-- HÀNG 2: Màu / Size (Label 3 / Input 3 | Label 3 / Input 3) --}}
                                     <label for="manage-variant-color" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Màu</label>
-                                    <input type="text" id="manage-variant-color" class="col-span-4 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
-                                    <label for="manage-variant-size" class="col-span-2 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Size</label>
+                                    <input type="text" id="manage-variant-color" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                                    {{-- ĐÃ SỬA: Size Label 2 -> 3, Input 4 -> 3 --}}
+                                    <label for="manage-variant-size" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Size</label>
                                     <input type="text" id="manage-variant-size" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
                                     
-                                    {{-- HÀNG 3: Giá bán / Tồn kho --}}
+                                    {{-- HÀNG 3: Giá bán / Tồn kho (Label 3 / Input 3 | Label 3 / Input 3) --}}
                                     <label for="manage-variant-price" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Giá bán (VNĐ)</label>
-                                    <input type="number" id="manage-variant-price" class="col-span-4 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
-                                    <label for="manage-variant-stock" class="col-span-2 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Tồn kho</label>
+                                    <input type="number" id="manage-variant-price" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                                    {{-- ĐÃ SỬA: Tồn kho Label 2 -> 3, Input 4 -> 3 --}}
+                                    <label for="manage-variant-stock" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Tồn kho</label>
                                     <input type="number" id="manage-variant-stock" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
 
-                                    {{-- HÀNG 4: Áp dụng KM / Giá giảm --}}
+                                    {{-- HÀNG 4: Áp dụng KM / Giá giảm (Label 3 / Dropdown 3 | Label 3 / Input 3) --}}
                                     <label for="manage-variant-promo" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Áp dụng KM</label>
-                                    <div class="relative custom-multiselect col-span-4" data-select-id="manage-variant-promo" data-type="single">
+                                    <div class="relative custom-multiselect col-span-3" data-select-id="manage-variant-promo" data-type="single">
                                         <select id="manage-variant-promo" class="hidden">
                                             @foreach($variant_promos as $name)
                                             <option value="{{ $name }}">{{ $name }}</option>
@@ -490,19 +471,20 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                                             </ul>
                                         </div>
                                     </div>
-                                    {{-- NHÃN GIÁ GIẢM (ĐÃ TĂNG KHOẢNG CÁCH) --}}
-                                    <label for="manage-variant-promo-price" class="col-span-2 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Giá giảm (VNĐ)</label>
+                                    {{-- Giữ nguyên Label 3 / Input 3 --}}
+                                    <label for="manage-variant-promo-price" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Giá giảm (VNĐ)</label>
                                     <input type="number" id="manage-variant-promo-price" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm bg-gray-100 px-4 py-2.5" readonly>
 
-                                    {{-- HÀNG 5: Trọng lượng / Đơn vị tính --}}
+                                    {{-- HÀNG 5: Trọng lượng / Đơn vị tính (Label 3 / Input 3 | Label 3 / Input 3) --}}
                                     <label for="manage-variant-weight" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Trọng lượng</label>
-                                    <input type="number" id="manage-variant-weight" class="col-span-4 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
-                                    <label for="manage-variant-unit" class="col-span-2 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Đơn vị tính</label>
+                                    <input type="number" id="manage-variant-weight" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                                    {{-- ĐÃ SỬA: Đơn vị tính Label 2 -> 3, Input 4 -> 3 --}}
+                                    <label for="manage-variant-unit" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Đơn vị tính</label>
                                     <input type="text" id="manage-variant-unit" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
 
-                                    {{-- HÀNG 6: Trạng thái --}}
+                                    {{-- HÀNG 6: Trạng thái (Label 3 / Dropdown 3 / Khoảng trống 6) --}}
                                     <label for="manage-variant-status" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Trạng thái</label>
-                                    <div class="relative custom-multiselect col-span-4" data-select-id="manage-variant-status" data-type="single">
+                                    <div class="relative custom-multiselect col-span-3" data-select-id="manage-variant-status" data-type="single">
                                         <select id="manage-variant-status" class="hidden">
                                             @foreach($statuses as $id => $name)
                                             <option value="{{ $id }}">{{ $name }}</option>
@@ -522,7 +504,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                                             </ul>
                                         </div>
                                     </div>
-                                    <div class="col-span-5"></div>
+                                    <div class="col-span-6"></div>
 
                                 </div>
                             </div>
@@ -536,7 +518,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                     </form>
                 </div>
 
-                {{-- === VIEW 2: THÊM BIẾN THỂ (ĐÃ TỐI ƯU LAYOUT) === --}}
+                {{-- === VIEW 2: THÊM BIẾN THỂ (ĐÃ SỬA TOÀN BỘ GRID ĐỂ THẲNG HÀNG) === --}}
                 <div id="addVariantView" class="hidden">
                     <h2 class="text-3xl font-bold text-center mb-6 
                                  bg-gradient-to-r from-[#0D47A1] to-[#42A5F5] 
@@ -557,25 +539,27 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                                 </button>
                             </div>
 
-                            {{-- Cột thông tin (ĐÃ ĐỒNG BỘ HÓA INPUTS VÀ TỐI ƯU KHOẢNG CÁCH) --}}
+                            {{-- Cột thông tin (ĐÃ SỬA TOÀN BỘ GRID ĐỂ THẲNG HÀNG) --}}
                             <div class="md:col-span-2">
                                 <div class="grid grid-cols-12 gap-x-6 gap-y-4 items-center">
                                     
-                                    {{-- HÀNG 1: Màu / Size --}}
+                                    {{-- HÀNG 1: Màu / Size (Label 3 / Input 3 | Label 3 / Input 3) --}}
                                     <label for="add-variant-color" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Màu</label>
-                                    <input type="text" id="add-variant-color" class="col-span-4 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
-                                    <label for="add-variant-size" class="col-span-2 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Size</label>
+                                    <input type="text" id="add-variant-color" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                                    {{-- ĐÃ SỬA: Size Label 2 -> 3, Input 4 -> 3 --}}
+                                    <label for="add-variant-size" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Size</label>
                                     <input type="text" id="add-variant-size" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
                                     
-                                    {{-- HÀNG 2: Giá bán / Tồn kho --}}
+                                    {{-- HÀNG 2: Giá bán / Tồn kho (Label 3 / Input 3 | Label 3 / Input 3) --}}
                                     <label for="add-variant-price" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Giá bán (VNĐ)</label>
-                                    <input type="number" id="add-variant-price" class="col-span-4 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
-                                    <label for="add-variant-stock" class="col-span-2 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Tồn kho</label>
+                                    <input type="number" id="add-variant-price" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                                    {{-- ĐÃ SỬA: Tồn kho Label 2 -> 3, Input 4 -> 3 --}}
+                                    <label for="add-variant-stock" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Tồn kho</label>
                                     <input type="number" id="add-variant-stock" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
 
-                                    {{-- HÀNG 3: Áp dụng KM / Giá giảm --}}
+                                    {{-- HÀNG 3: Áp dụng KM / Giá giảm (Label 3 / Dropdown 3 | Label 3 / Input 3) --}}
                                     <label for="add-variant-promo" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Áp dụng KM</label>
-                                    <div class="relative custom-multiselect col-span-4" data-select-id="add-variant-promo" data-type="single">
+                                    <div class="relative custom-multiselect col-span-3" data-select-id="add-variant-promo" data-type="single">
                                         <select id="add-variant-promo" class="hidden">
                                             @foreach($variant_promos as $name)
                                             <option value="{{ $name }}">{{ $name }}</option>
@@ -595,14 +579,15 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                                             </ul>
                                         </div>
                                     </div>
-                                    {{-- NHÃN GIÁ GIẢM (ĐÃ TĂNG KHOẢNG CÁCH) --}}
-                                    <label for="add-variant-promo-price" class="col-span-2 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Giá giảm (VNĐ)</label>
+                                    {{-- Giữ nguyên Label 3 / Input 3 --}}
+                                    <label for="add-variant-promo-price" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Giá giảm (VNĐ)</label>
                                     <input type="number" id="add-variant-promo-price" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm bg-gray-100 px-4 py-2.5" readonly>
 
-                                    {{-- HÀNG 4: Trọng lượng / Đơn vị tính --}}
+                                    {{-- HÀNG 4: Trọng lượng / Đơn vị tính (Label 3 / Input 3 | Label 3 / Input 3) --}}
                                     <label for="add-variant-weight" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Trọng lượng</label>
-                                    <input type="number" id="add-variant-weight" class="col-span-4 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
-                                    <label for="add-variant-unit" class="col-span-2 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Đơn vị tính</label>
+                                    <input type="number" id="add-variant-weight" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                                    {{-- ĐÃ SỬA: Đơn vị tính Label 2 -> 3, Input 4 -> 3 --}}
+                                    <label for="add-variant-unit" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Đơn vị tính</label>
                                     <input type="text" id="add-variant-unit" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
 
                                 </div>
@@ -619,7 +604,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                 </div>
             </div>
 
-            {{-- === CỘT PHẢI: DANH SÁCH BIẾN THỂ (ĐÃ THU HẸP) === --}}
+            {{-- === CỘT PHẢI: DANH SÁCH BIẾN THỂ (Giữ nguyên) === --}}
             <div class="w-full max-w-[300px] h-full">
                 <h3 class="text-xl font-semibold text-gray-700 mb-4 text-center">Các biến thể</h3>
                 <div class="space-y-3 h-[500px] overflow-y-auto pr-2">
