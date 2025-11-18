@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 
 use App\Http\Controllers\UserPackageController;
 use App\Http\Controllers\UserClassController;
+use App\Http\Controllers\UserStoreController;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -37,9 +38,8 @@ Route::get('/class', [UserClassController::class, 'index'])->name('class');
 Route::view('/product', 'user.product')->name('product');
 
 // Product Details
-Route::get('/san-pham/{id?}', function () {
-    return view('user.product_detail');
-})->name('product_detail');
+Route::get('/san-pham/{slug}', [UserStoreController::class, 'detail'])->name('product.detail');
+Route::get('/api/related-products', [UserStoreController::class, 'loadMoreRelated'])->name('api.related_products');
 
 // Authentication Routes
 
