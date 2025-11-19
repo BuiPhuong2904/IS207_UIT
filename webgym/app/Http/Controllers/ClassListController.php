@@ -39,30 +39,30 @@ class ClassListController extends Controller
             'image_url'     => 'nullable|url|max:500',
         ]);
 
-        $gymClass = GymClass::create($validated);
+        $class_list = GymClass::create($validated);
 
         return response()->json([
             'success' => true,
             'message' => 'Thêm lớp học thành công!',
-            'data'    => $gymClass
+            'data'    => $class_list
         ], 201);
     }
 
     // 4. API: Lấy chi tiết 1 lớp
-    public function show(GymClass $gymClass)
+    public function show(GymClass $class_list)
     {
 
         return response()->json([
             'success' => true,
-            'data'    => $gymClass
+            'data'    => $class_list
         ]);
     }
 
     // 5. API: Cập nhật lớp
-    public function update(Request $request, GymClass $gymClass)
+    public function update(Request $request, GymClass $class_list)
     {
         $validated = $request->validate([
-            'class_name'    => 'required|string|max:255|unique:class,class_name,' . $gymClass->class_id . ',class_id',
+            'class_name'    => 'required|string|max:255|unique:class,class_name,' . $class_list->class_id . ',class_id',
             'type'          => 'required|string|max:100',
             'max_capacity'  => 'required|integer|min:1|max:100',
             'description'   => 'nullable|string',
@@ -70,27 +70,27 @@ class ClassListController extends Controller
             'image_url'     => 'nullable|url|max:500',
         ]);
 
-        $gymClass->update($validated);
+        $class_list->update($validated);
 
         return response()->json([
             'success' => true,
             'message' => 'Cập nhật lớp học thành công!',
-            'data'    => $gymClass->fresh()
+            'data'    => $class_list->fresh()
         ]);
     }
 
     // 6. API: Xóa lớp (kiểm tra nếu đang có lịch dạy thì không cho xóa)
-    public function destroy(GymClass $gymClass)
+    public function destroy(GymClass $class_list)
     {
         // Kiểm tra nếu lớp này đang có lịch dạy → không cho xóa
-        if ($gymClass->schedules()->exists()) {
+        if ($class_list->schedules()->exists()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Không thể xóa! Lớp này đang có lịch dạy.'
             ], 400);
         }
 
-        $gymClass->delete();
+        $class_list->delete();
 
         return response()->json([
             'success' => true,

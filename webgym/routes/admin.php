@@ -59,21 +59,7 @@ Route::middleware([/*'auth', 'admin.role'*/])->prefix('admin')->name('admin.')->
     Route::resource('blogs', BlogController::class);
     Route::resource('branches', BranchController::class);
     Route::resource('class_schedule', ClassScheduleController::class);
-
-
-    // Chỉnh class_list do không lấy id được
-    Route::prefix('class_list')->name('class_list.')->group(function () {
-        Route::get('/', [ClassListController::class, 'index'])->name('index'); // trang view
-        Route::get('/data', [ClassListController::class, 'list'])->name('data');
-        Route::post('/', [ClassListController::class, 'store'])->name('store');
-
-        // Các route dùng class_id làm key
-        Route::get('/{gymClass:class_id}', [ClassListController::class, 'show'])->name('show');
-        Route::put('/{gymClass:class_id}', [ClassListController::class, 'update'])->name('update');
-        Route::delete('/{gymClass:class_id}', [ClassListController::class, 'destroy'])->name('destroy');
-    });
-
-
+    Route::resource('class_list', ClassListController::class);
     Route::resource('customers', CustomerController::class);
     Route::resource('trainers', TrainerController::class);
     Route::get('borrow_return', [BorrowReturnController::class, 'index'])->name('borrow_return.index');
