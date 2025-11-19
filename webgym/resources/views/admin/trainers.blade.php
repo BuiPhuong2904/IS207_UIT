@@ -903,12 +903,12 @@
             const selectedBranches = Array.from(branchSelect.selectedOptions).map(opt => opt.value);
 
             const newTrainer = {
-                user_id: document.getElementById('add-user_id').value, // Nếu user đã tồn tại
+                user_id: '3', // Nếu user đã tồn tại, chỗ này đang để cố định do chưa có api thêm user
                 specialty: document.getElementById('add-specialty').value,
                 experience_years: document.getElementById('add-experience_years').value,
                 salary: document.getElementById('add-salary').value,
                 work_schedule: document.getElementById('add-work_schedule').value,
-                branch_id: selectedBranches,
+                branch_id: '2', // Cũng cố định do chưa có crud branch
                 status: 'active',
             };
 
