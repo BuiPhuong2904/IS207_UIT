@@ -5,30 +5,20 @@
 @section('content')
 
 <!-- Background Section -->
-<section class="bg-[#F5F7FA] grid grid-cols-1 md:grid-cols-12 items-start">
-  
-    <div class="md:col-span-7 pt-8 sm:pt-16 pb-16 sm:pb-24 px-4 sm:px-6 lg:px-8 text-center md:text-left">
-        <h2 class="font-extrabold tracking-tight font-montserrat text-[60px] bg-gradient-to-b from-[#0D47A1] to-[#42A5F5] bg-clip-text text-transparent">
-            <span class="block">GIỚI THIỆU</span>
-            <span class="block">CÁC KHÓA HỌC</span>
-        </h2>
-        
-        <p class="mt-6 text-lg text-black leading-relaxed text-justify font-open-sans">
-            Grynd mang đến hệ thống các khóa học đa dạng như Gym, Yoga, Zumba, Cardio 
-            cùng nhiều chương trình rèn luyện chuyên sâu khác, phù hợp với mọi độ tuổi, 
-            thể trạng và mục tiêu tập luyện. Tại đây, mỗi khóa học không chỉ dừng lại ở những buổi tập đơn thuần 
-            mà còn là một hành trình trải nghiệm toàn diện, nơi bạn được lắng nghe cơ thể, 
-            chinh phục giới hạn và nuôi dưỡng lối sống khỏe mạnh, tích cực.
-        </p>
-    </div>
+<div class="relative w-full 
+            aspect-[4/3] 
+            sm:aspect-video 
+            md:aspect-[21/9] 
+            lg:aspect-[1920/540] 
+            overflow-hidden">
+            
+    <div class="absolute inset-0 bg-black opacity-10 z-10"></div>
     
-    <div class="md:col-span-5 h-full"> 
-        <img src="{{ asset('images/package/background.png') }}"
-            alt="Nữ vận động viên mỉm cười cầm chai nước" 
-            class="w-full h-full object-cover object-top" 
-            style="max-height: 500px;" >
-    </div>  
-</section>
+    <img
+        src="{{ asset('images/class/background_1.png') }}"
+        alt="GRYND - Background"
+        class="absolute inset-0 h-full w-full object-cover object-center lg:object-top opacity-90">
+</div>
 
 <!-- Classes Section -->
 <section class="bg-white pt-10 pb-16 sm:pb-24">
