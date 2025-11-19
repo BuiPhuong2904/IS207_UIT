@@ -10,7 +10,8 @@ class Trainer extends Model
     use HasFactory;
 
     protected $table = 'trainer';
-    protected $primaryKey = ['user_id'];
+    protected $primaryKey = 'user_id';
+    public $incrementing = false;
     protected $fillable = [
         'user_id', 'specialty', 'experience_years', 'salary',
         'work_schedule', 'branch_id', 'status'
@@ -28,8 +29,8 @@ class Trainer extends Model
         return $this->belongsTo(Branch::class, 'branch_id');
     }
 
-    public function classes()
+    public function classSchedule()
     {
-        return $this->hasMany(GymClass::class, 'trainer_id');
+        return $this->hasMany(ClassSchedule::class, 'trainer_id');
     }
 }
