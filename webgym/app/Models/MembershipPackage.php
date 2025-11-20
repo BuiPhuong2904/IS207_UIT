@@ -40,4 +40,9 @@ class MembershipPackage extends Model
             }
         );
     }
+
+    public function getRouteKeyName()
+    {
+        return 'package_id';
+    }
 }

@@ -100,4 +100,82 @@ class UserStoreController extends Controller
         $categories = ProductCategory::orderBy('category_name', 'asc')->get();
         return response()->json(['categories' => $categories]);
     }
+
+    // Hiển thị trang chi tiết sản phẩm
+    public function detail($slug)
+    {
+        // Lấy sản phẩm theo slug
+        $product = Product::where('slug', $slug)
+            ->with(['variants', 'category'])
+            ->firstOrFail();
+
+        // Lấy danh sách màu và size
+        $colors = $product->variants->pluck('color')->unique()->filter(); 
+        $sizes = $product->variants->pluck('size')->unique()->filter();
+
+        // Lấy giá
+        $minPrice = $product->variants->min('price');
+        $maxPrice = $product->variants->max('price');
+
+        // Lấy sản phẩm liên quan
+        $relatedProducts = Product::where('category_id', $product->category_id)
+            ->where('product_id', '!=', $product->product_id)
+            ->take(4)
+            ->get();
+
+        return view('user.product_detail', compact('product', 'colors', 'sizes', 'minPrice', 'maxPrice', 'relatedProducts'));
+    }
+
+    // API Load thêm sản phẩm liên quan (ĐÃ CẬP NHẬT LOGIC GIẢM GIÁ)
+    public function loadMoreRelated(Request $request)
+    {
+        $categoryId = $request->input('category_id');
+        $currentProductId = $request->input('product_id');
+        $skip = $request->input('skip', 0);
+
+        $products = Product::where('category_id', $categoryId)
+            ->where('product_id', '!=', $currentProductId)
+            ->with('variants')
+            ->skip($skip)
+            ->take(4)
+            ->get();
+
+        // Transform dữ liệu chuẩn format giống trang chủ
+        $data = $products->map(function($product) {
+            $firstVariant = $product->variants->first();
+            
+            $price = 0;
+            $originalPrice = null;
+            $discount = 0;
+
+            if ($firstVariant) {
+                $price = $firstVariant->price;
+                
+                // Kiểm tra logic giảm giá
+                if ($firstVariant->is_discounted && $firstVariant->discount_price > 0) {
+                    $price = $firstVariant->discount_price;
+                    $originalPrice = $firstVariant->price;
+                    
+                    if ($originalPrice > 0) {
+                        $discount = round((($originalPrice - $price) / $originalPrice) * 100);
+                    }
+                }
+            }
+
+            return [
+                'name' => $product->product_name,
+                'slug' => $product->slug,
+                'image' => $product->image_url,
+                'price' => number_format($price, 0, ',', '.') . ' VNĐ',
+                'originalPrice' => $originalPrice ? number_format($originalPrice, 0, ',', '.') . ' VNĐ' : null,
+                'discount' => $discount,
+                'detail_url' => route('product.detail', $product->slug)
+            ];
+        });
+
+        return response()->json([
+            'products' => $data,
+            'hasMore' => $products->count() === 4
+        ]);
+    }
 }

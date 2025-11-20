@@ -232,7 +232,7 @@
                     <div class="w-40 h-40 bg-gray-200 rounded-lg flex items-center justify-center mb-3">
                         <img id="add-image_url_preview" src="https://via.placeholder.com/160x160.png?text=Image" alt="Avatar" class="w-full h-full object-cover rounded-lg">
                     </div>
-                    <button type="button" class="w-full flex items-center justify-center px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600">
+                    <button type="button" id="add-upload-btn" class="w-full flex items-center justify-center px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600">
                         <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
                         Upload ảnh
                     </button>
@@ -245,7 +245,7 @@
                     {{-- Hàng Họ và tên (Label w-24) --}}
                     <div class="flex items-center">
                         <label for="add-full_name" class="w-24 flex-shrink-0 text-sm font-medium text-gray-700">Họ và tên</label>
-                        <input type="text" id="add-full_name" class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                        <input type="text" id="add-full_name" required class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
                     </div>
 
                     {{-- Hàng Ngày sinh + Giới tính --}}
@@ -269,7 +269,6 @@
                             </div>
                         </div>
                     </div>
-
                     {{-- Hàng Mật khẩu + SĐT (SỬA: Kích thước input bằng nhau, nhãn căn chỉnh) --}}
                     <div class="flex items-center space-x-6">
                         <div class="flex items-center flex-1">
@@ -302,11 +301,11 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
                 <div class="flex items-center">
                     <label for="add-specialty" class="text-sm font-medium text-gray-700 mr-3 flex-shrink-0">Chuyên môn</label>
-                    <input type="text" id="add-specialty" class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                    <input type="text" id="add-specialty" required class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black"> {{-- ĐÃ THÊM required --}}
                 </div>
                 <div class="flex items-center">
                     <label for="add-experience_years" class="text-sm font-medium text-gray-700 mr-3 whitespace-nowrap flex-shrink-0">Số năm kinh nghiệm</label>
-                    <input type="number" id="add-experience_years" class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                    <input type="number" id="add-experience_years" min="0" class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
                 </div>
                 <div class="flex items-center">
                     <label for="add-salary" class="text-sm font-medium text-gray-700 mr-3 whitespace-nowrap flex-shrink-0">Lương (VNĐ)</label>
@@ -316,13 +315,11 @@
 
             {{-- Các hàng 1 cột --}}
             <div class="flex flex-col space-y-4">
-
                 {{-- Lịch làm việc (Input) --}}
                 <div class="flex items-center">
                     <label for="add-work_schedule" class="w-40 flex-shrink-0 text-sm font-medium text-gray-700">Lịch làm việc</label>
                     <input type="text" id="add-work_schedule" class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
                 </div>
-
                 {{-- Chi nhánh làm việc (Multiselect) --}}
                 <div class="flex items-center">
                     <label for="add-branch_id" class="w-40 flex-shrink-0 text-sm font-medium text-gray-700">Chi nhánh làm việc</label>
@@ -394,13 +391,12 @@
                     <div class="w-40 h-40 bg-gray-200 rounded-lg flex items-center justify-center mb-3">
                         <img id="manage-image_url_preview" src="https://via.placeholder.com/160x160.png?text=Image" alt="Avatar" class="w-full h-full object-cover rounded-lg">
                     </div>
-                    <button type="button" class="w-full flex items-center justify-center px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600">
+                    <button type="button" id="manage-upload-btn" class="w-full flex items-center justify-center px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600">
                         <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
                         Upload ảnh
                     </button>
-                    <input type="file" id="manage-image_url" class="hidden">
+                    <input type="file" id="manage-image_url" class="hidden" accept="image/*">
                 </div>
-
                 {{-- Cột thông tin (Phải - ĐÃ CHỈNH SỬA) --}}
                 <div class="flex-1 flex flex-col space-y-4">
 
@@ -412,7 +408,7 @@
                         </div>
                         <div class="flex items-center flex-1">
                             <label for="manage-full_name" class="w-16 flex-shrink-0 text-sm font-medium text-gray-700">Họ và tên</label>
-                            <input type="text" id="manage-full_name" class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                            <input type="text" id="manage-full_name" required class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
                         </div>
                     </div>
 
@@ -436,7 +432,6 @@
                             </div>
                         </div>
                     </div>
-
                     {{-- Hàng Mật khẩu + SĐT (SỬA: Kích thước input bằng nhau, nhãn căn chỉnh) --}}
                     <div class="flex items-center space-x-6">
                         <div class="flex items-center flex-1">
@@ -452,7 +447,7 @@
                     {{-- Hàng Email --}}
                     <div class="flex items-center">
                         <label for="manage-email" class="w-24 flex-shrink-0 text-sm font-medium text-gray-700">Email</label>
-                        <input type="email" id="manage-email" class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                            <input type="email" id="manage-email" class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
                     </div>
 
                     {{-- Hàng Địa chỉ --}}
@@ -470,11 +465,11 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
                 <div class="flex items-center">
                     <label for="manage-specialty" class="text-sm font-medium text-gray-700 mr-3 flex-shrink-0">Chuyên môn</label>
-                    <input type="text" id="manage-specialty" class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                    <input type="text" id="manage-specialty" required class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black"> {{-- ĐÃ THÊM required --}}
                 </div>
                 <div class="flex items-center">
                     <label for="manage-experience_years" class="text-sm font-medium text-gray-700 mr-3 whitespace-nowrap flex-shrink-0">Số năm kinh nghiệm</label>
-                    <input type="number" id="manage-experience_years" class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                    <input type="number" id="manage-experience_years" min="0" class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
                 </div>
                 <div class="flex items-center">
                     <label for="manage-salary" class="text-sm font-medium text-gray-700 mr-3 whitespace-nowrap flex-shrink-0">Lương (VNĐ)</label>
@@ -490,7 +485,6 @@
                     <label for="manage-work_schedule" class="w-40 flex-shrink-0 text-sm font-medium text-gray-700">Lịch làm việc</label>
                     <input type="text" id="manage-work_schedule" class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
                 </div>
-
                 <div class="flex items-center">
                     <label for="manage-branch_id" class="w-40 flex-shrink-0 text-sm font-medium text-gray-700">Chi nhánh làm việc</label>
                     <div class="relative custom-multiselect flex-1" data-select-id="manage-branch_id">
@@ -563,7 +557,7 @@
                 <button type="button" class="close-modal px-8 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400">
                     Hủy
                 </button>
-                <button type="submit" class="px-8 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                <button type="submit" class="px-8 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"> {{-- ĐỔI MÀU NÚT --}}
                     Lưu thông tin
                 </button>
             </div>
@@ -578,6 +572,29 @@
 {{-- ================================================================= --}}
 
 @push('scripts')
+<style>
+/* Đảm bảo style cho multiselect vẫn hoạt động */
+.custom-multiselect-option.bg-blue-100 {
+    /* Màu Selected: Xanh Blue 50% opacity */
+    @apply bg-blue-500/50 text-gray-900; 
+}
+.custom-multiselect-option.bg-blue-100 span {
+    @apply text-gray-900; 
+}
+.custom-multiselect-option:hover {
+    /* Màu Hover: Xám (#999999) 50% opacity */
+    @apply bg-[#999999]/50 text-gray-900; 
+}
+.custom-multiselect-option:hover span {
+    @apply text-gray-900; 
+}
+.custom-multiselect-option.bg-blue-100:hover {
+    @apply bg-[#999999]/50 text-gray-900;
+}
+.custom-multiselect-option {
+    @apply bg-white text-gray-900;
+}
+</style>
 <script>
     // --- DỮ LIỆU MOCK TỪ PHP ---
     const MOCK_TRAINERS = @json($trainers_data);
@@ -858,11 +875,26 @@
             document.getElementById('manage-salary').value = data.salary;
             document.getElementById('manage-image_url_preview').src = data.imageUrl;
 
-            // Set radio
-            const genderRadio = document.querySelector(`input[name="manage-gender"][value="${data.gender}"]`);
-            if (genderRadio) {
-                genderRadio.checked = true;
-            }
+        const newTrainer = {
+            user_id: generateNewTrainerId(),
+            full_name: fullName,
+            email: document.getElementById('add-email').value.trim() || '', 
+            password: document.getElementById('add-password').value.trim() || 'Mật khẩu tạm thời', 
+            salary: document.getElementById('add-salary').value.trim(),
+            specialty: specialty,
+            work_schedule: scheduleInput,
+            schedule_display: scheduleInput, 
+            status: 'active',
+            birth_date: document.getElementById('add-birth_date').value.trim(),
+            gender: document.querySelector('input[name="add-gender"]:checked').value,
+            phone: document.getElementById('add-phone').value.trim(),
+            address: document.getElementById('add-address').value.trim(),
+            experience_years: document.getElementById('add-experience_years').value.trim(),
+            branch_id: selectedBranches,
+            image_url: addImagePreview.src, 
+        };
+        
+        trainerMap.set(newTrainer.user_id, newTrainer);
 
             // Set value cho input Lịch làm việc
             document.getElementById('manage-work_schedule').value = data.workSchedule;

@@ -6,31 +6,44 @@
 
 @php
 // Dữ liệu mẫu (Đã làm sạch ký tự khoảng trắng không hợp lệ)
+// **SỬA ĐỔI: Thêm ID cho Biến thể (variant_id) để mô phỏng dữ liệu thực tế**
 $products = [
     (object)[
         'product_id' => 'SP0001', 'product_name' => 'Cục tạ', 'category_id' => 'CAT01', 'brand' => 'Brand A', 'origin' => 'Việt Nam',
         'image_url' => 'https://via.placeholder.com/80x60/F0E68C/000000?text=Ta', 'status' => 'active',
-        'variants' => [(object)['name' => 'Xanh/2kg'], (object)['name' => 'Đỏ/2kg']],
+        // THÊM: variant_id, color, size, price, stock, promo, promo_price, weight, unit, image_url (giả)
+        'variants' => [
+            (object)['variant_id' => 'BT0001', 'name' => 'Xanh/2kg', 'color' => 'Xanh', 'size' => 'k', 'price' => 120000, 'stock' => 100, 'promo' => 'Không', 'promo_price' => 0, 'weight' => 2, 'unit' => 'kg', 'status' => 'active', 'image_url' => 'https://via.placeholder.com/160x160/F0E68C/000000?text=Ta+Xanh'],
+            (object)['variant_id' => 'BT0002', 'name' => 'Đỏ/2kg', 'color' => 'Đỏ', 'size' => 'k', 'price' => 125000, 'stock' => 50, 'promo' => 'Có', 'promo_price' => 112500, 'weight' => 2, 'unit' => 'kg', 'status' => 'active', 'image_url' => 'https://via.placeholder.com/160x160/FF6347/FFFFFF?text=Ta+Do'],
+        ],
         'description' => 'Mô tả cho cục tạ 1...', 'slug' => 'cuc-ta-1'
     ],
-    // ... (các sản phẩm khác giữ nguyên)
 
     (object)[
         'product_id' => 'SP0002', 'product_name' => 'Bóng tập Yoga', 'category_id' => 'CAT01', 'brand' => 'Brand A', 'origin' => 'Trung Quốc',
         'image_url' => 'https://via.placeholder.com/80x60/2E8B57/FFFFFF?text=Bong', 'status' => 'active',
-        'variants' => [(object)['name' => 'Xanh/5kg'], (object)['name' => 'Vàng/5kg'], (object)['name' => 'Đen/10kg']],
+        // THÊM: variant_id, color, size, price, stock, promo, promo_price, weight, unit, image_url (giả)
+        'variants' => [
+            (object)['variant_id' => 'BT0003', 'name' => 'Xanh/5kg', 'color' => 'Xanh', 'size' => 'l', 'price' => 250000, 'stock' => 80, 'promo' => 'Không', 'promo_price' => 0, 'weight' => 5, 'unit' => 'kg', 'status' => 'active', 'image_url' => 'https://via.placeholder.com/160x160/2E8B57/FFFFFF?text=Bong+Xanh'],
+            (object)['variant_id' => 'BT0004', 'name' => 'Vàng/5kg', 'color' => 'Vàng', 'size' => 'l', 'price' => 250000, 'stock' => 70, 'promo' => 'Có', 'promo_price' => 200000, 'weight' => 5, 'unit' => 'kg', 'status' => 'active', 'image_url' => 'https://via.placeholder.com/160x160/FFD700/000000?text=Bong+Vang'],
+            (object)['variant_id' => 'BT0005', 'name' => 'Đen/10kg', 'color' => 'Đen', 'size' => 'm', 'price' => 500000, 'stock' => 20, 'promo' => 'Có', 'promo_price' => 400000, 'weight' => 10, 'unit' => 'kg', 'status' => 'active', 'image_url' => 'https://via.placeholder.com/160x160/000000/FFFFFF?text=Bong+Den'],
+        ],
         'description' => 'Mô tả cho bóng tập...', 'slug' => 'bong-tap'
     ],
     (object)[
         'product_id' => 'SP0003', 'product_name' => 'Khăn Microfiber', 'category_id' => 'CAT02', 'brand' => 'Brand B', 'origin' => 'Việt Nam',
         'image_url' => 'https://via.placeholder.com/80x60/98FB98/000000?text=Khan', 'status' => 'active',
-        'variants' => [(object)['name' => 'Xanh/1kg']],
+        'variants' => [
+            (object)['variant_id' => 'BT0006', 'name' => 'Xanh/1kg', 'color' => 'Xanh', 'size' => 'l', 'price' => 50000, 'stock' => 200, 'promo' => 'Không', 'promo_price' => 0, 'weight' => 1, 'unit' => 'kg', 'status' => 'active', 'image_url' => 'https://via.placeholder.com/160x160/98FB98/000000?text=Khan+Xanh'],
+        ],
         'description' => 'Mô tả cho khăn...', 'slug' => 'khan-tap'
     ],
     (object)[
         'product_id' => 'SP0005', 'product_name' => 'Bình nước giữ nhiệt', 'category_id' => 'CAT03', 'brand' => 'Brand C', 'origin' => 'Hàn Quốc',
         'image_url' => 'https://via.placeholder.com/80x60/FFB6C1/000000?text=Binh', 'status' => 'inactive',
-        'variants' => [(object)['name' => 'Hồng/1kg']],
+        'variants' => [
+            (object)['variant_id' => 'BT0007', 'name' => 'Hồng/1kg', 'color' => 'Hồng', 'size' => 'l', 'price' => 300000, 'stock' => 0, 'promo' => 'Không', 'promo_price' => 0, 'weight' => 1, 'unit' => 'kg', 'status' => 'inactive', 'image_url' => 'https://via.placeholder.com/160x160/FFB6C1/000000?text=Binh+Hong'],
+        ],
         'description' => 'Mô tả cho bình nước...', 'slug' => 'binh-nuoc'
     ],
 ];
@@ -41,7 +54,8 @@ $statuses = [ 'active' => 'Còn hàng', 'inactive' => 'Hết hàng' ];
 
 $variant_colors = ['Vàng', 'Xanh', 'Trắng', 'Hồng', 'Đỏ', 'Đen'];
 $variant_sizes = ['k', 'l', 'm'];
-$variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
+// SỬA: Thay thế danh sách khuyến mãi bằng Có/Không
+$variant_promos = ['Có', 'Không']; 
 @endphp
 
 {{-- Header (Giữ nguyên) --}}
@@ -80,7 +94,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
     </div>
 </div>
 
-{{-- Bảng danh sách Cửa hàng ONLINE (Giữ nguyên) --}}
+{{-- Bảng danh sách Cửa hàng ONLINE (ĐÃ THÊM ID CHO TBODY) --}}
 <div class="bg-white p-6 rounded-lg shadow-xl">
     <h2 class="text-xl font-semibold text-gray-800 mb-4">Cửa hàng ONLINE</h2>
 
@@ -99,8 +113,9 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                 </tr>
             </thead>
 
-            <tbody>
+            <tbody id="product-list-body">
                 @foreach ($products as $product)
+                {{-- ĐÃ SỬA: Thay đổi data-status sang data-product_status để tránh nhầm lẫn --}}
                 <tr class="transition duration-150 cursor-pointer product-row-trigger"
                     data-product_id="{{ $product->product_id }}"
                     data-product_name="{{ $product->product_name }}"
@@ -108,9 +123,10 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                     data-origin="{{ $product->origin }}"
                     data-brand="{{ $product->brand }}"
                     data-description="{{ $product->description }}"
-                    data-status="{{ $product->status }}"
+                    data-product_status="{{ $product->status }}" 
                     data-slug="{{ $product->slug }}"
                     data-image_url="{{ $product->image_url }}"
+                    data-variants='@json($product->variants)' {{-- CHUYỂN DỮ LIỆU BIẾN THỂ SANG JSON CHO JS --}}
                 >
                     <td colspan="8" class="p-0">
                         <div class="flex w-full rounded-lg items-center
@@ -120,7 +136,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                             <div class="px-4 py-3 w-[10%] text-sm font-medium text-gray-900">
                                 {{ $product->product_id }}
                             </div>
-                            <div class="px-4 py-3 w-[15%] text-sm text-gray-700">
+                            <div class="px-4 py-3 w-[15%] text-sm text-gray-700 product-name-display">
                                 {{ $product->product_name }}
                             </div>
                             {{-- Hiển thị tên Loại --}}
@@ -134,15 +150,18 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                                 {{ $product->origin }}
                             </div>
                             <div class="px-4 py-3 w-[10%]">
-                                <img src="{{ $product->image_url }}" alt="{{ $product->product_name }}" class="w-16 h-12 object-cover rounded-md">
+                                <img src="{{ $product->image_url }}" alt="{{ $product->product_name }}" class="w-16 h-12 object-cover rounded-md product-image-display">
                             </div>
 
-                            {{-- Biến thể --}}
-                            <div class="px-4 py-3 flex-1 text-sm text-gray-700">
+                            {{-- Biến thể (ĐÃ THÊM CLASS ĐỂ CẬP NHẬT DỄ HƠN) --}}
+                            <div class="px-4 py-3 flex-1 text-sm text-gray-700 product-variants-display">
                                 <div class="flex items-center space-x-2">
-                                    <div class="flex flex-col">
+                                    <div class="flex flex-col variant-links-container">
                                         @foreach ($product->variants as $variant)
-                                        <a href="#" class="text-purple-600 font-medium hover:underline open-variant-modal-trigger" data-product-id="{{ $product->product_id }}" data-mode="manage">
+                                        <a href="#" class="text-purple-600 font-medium hover:underline open-variant-modal-trigger variant-link"
+                                            data-product-id="{{ $product->product_id }}"
+                                            data-variant-id="{{ $variant->variant_id }}" {{-- THÊM data-variant-id --}}
+                                            data-mode="manage">
                                             {{ $variant->name }}
                                         </a>
                                         @endforeach
@@ -155,13 +174,13 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                                 </div>
                             </div>
 
-                            <div class="px-4 py-3 w-[12%] text-sm text-right">
+                            <div class="px-4 py-3 w-[12%] text-sm text-right product-status-display">
                                 @if ($product->status == 'active')
-                                    <span class="inline-flex px-3 py-1 text-xs font-semibold leading-5 rounded-full bg-green-100 text-green-800">
+                                    <span class="inline-flex px-3 py-1 text-xs font-semibold leading-5 rounded-full bg-green-100 text-green-800 product-status-badge" data-status-id="active">
                                         Còn hàng
                                     </span>
                                 @else
-                                    <span class="inline-flex px-3 py-1 text-xs font-semibold leading-5 rounded-full bg-gray-200 text-gray-800">
+                                    <span class="inline-flex px-3 py-1 text-xs font-semibold leading-5 rounded-full bg-gray-200 text-gray-800 product-status-badge" data-status-id="inactive">
                                         Hết hàng
                                     </span>
                                 @endif
@@ -179,7 +198,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
 {{-- =================== HTML CHO CÁC MODAL (Giữ nguyên) ================= --}}
 {{-- ================================================================= --}}
 
-{{-- ----------------- MODAL 1: THÊM SẢN PHẨM (Giữ nguyên) ----------------- --}}
+{{-- ----------------- MODAL 1: THÊM SẢN PHẨM (ĐÃ THÊM ID CHO FORM) ----------------- --}}
 <div id="addProductModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center">
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-3xl">
 
@@ -196,11 +215,13 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                     <div class="w-40 h-40 bg-gray-200 rounded-lg flex items-center justify-center mb-3">
                         <img id="add-image_url_preview" src="https://via.placeholder.com/160x160.png?text=Image" alt="Product Image" class="w-full h-full object-cover rounded-lg">
                     </div>
-                    <button type="button" class="flex items-center px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600">
+                    <button type="button" id="add-image-upload-btn" class="flex items-center px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600">
                         <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
                         Upload ảnh
                     </button>
-                    <input type="file" id="add-image_url" class="hidden">
+                    <input type="file" id="add-image_url_input" class="hidden" accept="image/*">
+                    {{-- THÊM INPUT ẨN CHO URL (DÙNG CHO MOCK DATA) --}}
+                    <input type="hidden" id="add-image_url" value="https://via.placeholder.com/80x60/CCCCCC/000000?text=New">
                 </div>
 
                 {{-- Cột thông tin --}}
@@ -215,6 +236,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                             <label for="add-category_id" class="block text-sm font-medium text-gray-700 mb-1">Tên loại</label>
                             <div class="relative custom-multiselect" data-select-id="add-category_id" data-type="single">
                                 <select id="add-category_id" class="hidden">
+                                    <option value="" selected disabled>Chọn loại...</option>
                                     @foreach($categories as $id => $name)
                                     <option value="{{ $id }}">{{ $name }}</option>
                                     @endforeach
@@ -242,7 +264,6 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
 
                     <div>
                         <label for="add-brand" class="block text-sm font-medium text-gray-700 mb-1">Thương hiệu</label>
-                        {{-- ĐÃ SỬA: Chuyển từ dropdown sang input text --}}
                         <input type="text" id="add-brand" class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
                     </div>
                 </div>
@@ -254,7 +275,6 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                 <div class="col-span-10">
                     <textarea id="add-description" rows="5" class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black"></textarea>
                 </div>
-
 
                 <div class="col-span-6"></div>
             </div>
@@ -273,7 +293,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
     </div>
 </div>
 
-{{-- ----------------- MODAL 2: QUẢN LÝ SẢN PHẨM (Giữ nguyên) ----------------- --}}
+{{-- ----------------- MODAL 2: QUẢN LÝ SẢN PHẨM (ĐÃ THÊM ID CHO FORM) ----------------- --}}
 <div id="manageProductModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center">
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-3xl">
 
@@ -288,13 +308,14 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                 {{-- Cột ảnh --}}
                 <div class="md:col-span-1 flex flex-col items-center">
                     <div class="w-40 h-40 bg-gray-200 rounded-lg flex items-center justify-center mb-3">
-                        <img id="manage-image_url" src="https://via.placeholder.com/160x160.png?text=Image" alt="Product Image" class="w-full h-full object-cover rounded-lg">
+                        <img id="manage-image_url_preview" src="https://via.placeholder.com/160x160.png?text=Image" alt="Product Image" class="w-full h-full object-cover rounded-lg">
                     </div>
-                    <button type="button" class="flex items-center px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600">
+                    <button type="button" id="manage-image-upload-btn" class="flex items-center px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600">
                         <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
                         Upload ảnh
                     </button>
-                    <input type="file" id="manage-image_url_input" class="hidden">
+                    <input type="file" id="manage-image_url_input" class="hidden" accept="image/*">
+                    <input type="hidden" id="manage-image_url_hidden">
                 </div>
 
                 {{-- Cột thông tin --}}
@@ -315,9 +336,10 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                             <label for="manage-category_id" class="block text-sm font-medium text-gray-700 mb-1">Tên loại</label>
                             <div class="relative custom-multiselect" data-select-id="manage-category_id" data-type="single">
                                 <select id="manage-category_id" class="hidden">
-                                    @foreach($categories as $id => $name)
-                                    <option value="{{ $id }}">{{ $name }}</option>
-                                    @endforeach
+                                       <option value="" selected disabled>Chọn loại...</option>
+                                        @foreach($categories as $id => $name)
+                                        <option value="{{ $id }}">{{ $name }}</option>
+                                        @endforeach
                                 </select>
                                 <button type="button" class="custom-multiselect-trigger w-full bg-white border border-[#999999]/50 rounded-2xl shadow-sm text-left px-4 py-2.5 flex items-center justify-between focus:outline-none focus:ring-1 focus:ring-black">
                                     <span class="custom-multiselect-display text-gray-500">Chọn loại...</span>
@@ -342,7 +364,6 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
 
                     <div>
                         <label for="manage-brand" class="block text-sm font-medium text-gray-700 mb-1">Thương hiệu</label>
-                           {{-- ĐÃ SỬA: Chuyển từ dropdown sang input text --}}
                         <input type="text" id="manage-brand" class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
                     </div>
                 </div>
@@ -359,7 +380,8 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                 <label for="manage-status" class="col-span-2 block text-sm font-medium text-gray-700 whitespace-nowrap pr-2 pt-2.5">Trạng thái</label>
                 <div class="relative custom-multiselect col-span-4" data-select-id="manage-status" data-type="single">
                     <select id="manage-status" class="hidden">
-                        @foreach($statuses as $id => $name)
+                           <option value="" selected disabled>Chọn trạng thái...</option>
+                         @foreach($statuses as $id => $name)
                         <option value="{{ $id }}">{{ $name }}</option>
                         @endforeach
                     </select>
@@ -394,7 +416,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
     </div>
 </div>
 
-{{-- ----------------- MODAL 3: MODAL BIẾN THỂ (ĐÃ SỬA TOÀN BỘ GRID ĐỂ THẲNG HÀNG) ----------------- --}}
+{{-- ----------------- MODAL 3: MODAL BIẾN THỂ ----------------- --}}
 <div id="variantModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center">
     {{-- Giữ max-w-7xl --}}
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-7xl">
@@ -417,15 +439,17 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                             {{-- Cột ảnh --}}
                             <div class="md:col-span-1 flex flex-col items-center">
                                 <div class="w-40 h-40 bg-gray-200 rounded-lg flex items-center justify-center mb-3">
-                                    <img src="https://via.placeholder.com/160x160.png?text=Image" alt="Variant Image" class="w-full h-full object-cover rounded-lg">
+                                    <img id="manage-variant-image-preview" src="https://via.placeholder.com/160x160.png?text=Image" alt="Variant Image" class="w-full h-full object-cover rounded-lg">
                                 </div>
-                                <button type="button" class="flex items-center px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600">
+                                <button type="button" id="manage-variant-image-upload-btn" class="flex items-center px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600">
                                     <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
                                     Upload ảnh
                                 </button>
+                                <input type="file" id="manage-variant-image-url-input" class="hidden" accept="image/*">
+                                <input type="hidden" id="manage-variant-image-url">
                             </div>
 
-                            {{-- Cột thông tin (ĐÃ SỬA TOÀN BỘ GRID ĐỂ THẲNG HÀNG) --}}
+                            {{-- Cột thông tin --}}
                             <div class="md:col-span-2">
                                 <div class="grid grid-cols-12 gap-x-6 gap-y-4 items-center">
 
@@ -436,14 +460,12 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                                     {{-- HÀNG 2: Màu / Size (Label 3 / Input 3 | Label 3 / Input 3) --}}
                                     <label for="manage-variant-color" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Màu</label>
                                     <input type="text" id="manage-variant-color" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
-                                    {{-- ĐÃ SỬA: Size Label 2 -> 3, Input 4 -> 3 --}}
                                     <label for="manage-variant-size" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Size</label>
                                     <input type="text" id="manage-variant-size" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
 
                                     {{-- HÀNG 3: Giá bán / Tồn kho (Label 3 / Input 3 | Label 3 / Input 3) --}}
                                     <label for="manage-variant-price" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Giá bán (VNĐ)</label>
                                     <input type="number" id="manage-variant-price" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
-                                    {{-- ĐÃ SỬA: Tồn kho Label 2 -> 3, Input 4 -> 3 --}}
                                     <label for="manage-variant-stock" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Tồn kho</label>
                                     <input type="number" id="manage-variant-stock" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
 
@@ -451,8 +473,9 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                                     <label for="manage-variant-promo" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Áp dụng KM</label>
                                     <div class="relative custom-multiselect col-span-3" data-select-id="manage-variant-promo" data-type="single">
                                         <select id="manage-variant-promo" class="hidden">
+                                            <option value="Không" selected>Không</option>
                                             @foreach($variant_promos as $name)
-                                            <option value="{{ $name }}">{{ $name }}</option>
+                                                <option value="{{ $name }}">{{ $name }}</option>
                                             @endforeach
                                         </select>
                                         <button type="button" class="custom-multiselect-trigger w-full bg-white border border-[#999999]/50 rounded-2xl shadow-sm text-left px-4 py-2.5 flex items-center justify-between focus:outline-none focus:ring-1 focus:ring-black">
@@ -469,14 +492,12 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                                             </ul>
                                         </div>
                                     </div>
-                                    {{-- Giữ nguyên Label 3 / Input 3 --}}
                                     <label for="manage-variant-promo-price" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Giá giảm (VNĐ)</label>
-                                    <input type="number" id="manage-variant-promo-price" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm bg-gray-100 px-4 py-2.5" readonly>
-
+                                    <input type="number" id="manage-variant-promo-price" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                                    
                                     {{-- HÀNG 5: Trọng lượng / Đơn vị tính (Label 3 / Input 3 | Label 3 / Input 3) --}}
                                     <label for="manage-variant-weight" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Trọng lượng</label>
                                     <input type="number" id="manage-variant-weight" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
-                                    {{-- ĐÃ SỬA: Đơn vị tính Label 2 -> 3, Input 4 -> 3 --}}
                                     <label for="manage-variant-unit" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Đơn vị tính</label>
                                     <input type="text" id="manage-variant-unit" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
 
@@ -484,6 +505,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                                     <label for="manage-variant-status" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Trạng thái</label>
                                     <div class="relative custom-multiselect col-span-3" data-select-id="manage-variant-status" data-type="single">
                                         <select id="manage-variant-status" class="hidden">
+                                            <option value="" selected disabled>Chọn...</option>
                                             @foreach($statuses as $id => $name)
                                             <option value="{{ $id }}">{{ $name }}</option>
                                             @endforeach
@@ -510,13 +532,13 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                         {{-- Nút bấm --}}
                         <div class="flex justify-center space-x-4 mt-8">
                             <button type="button" class="close-modal px-8 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400">Hủy</button>
-                            <button type="button" id="switchToAddeVariantBtn" class="px-8 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">Thêm thông tin</button>
+                            <button type="button" id="switchToAddeVariantBtn" class="px-8 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">Thêm biến thể</button>
                             <button type="submit" class="px-8 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">Lưu thông tin</button>
                         </div>
                     </form>
                 </div>
 
-                {{-- === VIEW 2: THÊM BIẾN THỂ (ĐÃ SỬA TOÀN BỘ GRID ĐỂ THẲNG HÀNG) === --}}
+                {{-- === VIEW 2: THÊM BIẾN THỂ === --}}
                 <div id="addVariantView" class="hidden">
                     <h2 class="text-3xl font-bold text-center mb-6
                                  bg-gradient-to-r from-[#0D47A1] to-[#42A5F5]
@@ -529,29 +551,29 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                             {{-- Cột ảnh --}}
                             <div class="md:col-span-1 flex flex-col items-center">
                                 <div class="w-40 h-40 bg-gray-200 rounded-lg flex items-center justify-center mb-3">
-                                    <img src="https://via.placeholder.com/160x160.png?text=Image" alt="Variant Image" class="w-full h-full object-cover rounded-lg">
+                                    <img id="add-variant-image-preview" src="https://via.placeholder.com/160x160.png?text=Image" alt="Variant Image" class="w-full h-full object-cover rounded-lg">
                                 </div>
-                                <button type="button" class="flex items-center px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600">
+                                <button type="button" id="add-variant-image-upload-btn" class="flex items-center px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600">
                                     <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
                                     Upload ảnh
                                 </button>
+                                <input type="file" id="add-variant-image-url-input" class="hidden" accept="image/*">
+                                <input type="hidden" id="add-variant-image-url" value="https://via.placeholder.com/160x160.png?text=New+Variant">
                             </div>
 
-                            {{-- Cột thông tin (ĐÃ SỬA TOÀN BỘ GRID ĐỂ THẲNG HÀNG) --}}
+                            {{-- Cột thông tin --}}
                             <div class="md:col-span-2">
                                 <div class="grid grid-cols-12 gap-x-6 gap-y-4 items-center">
 
                                     {{-- HÀNG 1: Màu / Size (Label 3 / Input 3 | Label 3 / Input 3) --}}
                                     <label for="add-variant-color" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Màu</label>
                                     <input type="text" id="add-variant-color" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
-                                    {{-- ĐÃ SỬA: Size Label 2 -> 3, Input 4 -> 3 --}}
                                     <label for="add-variant-size" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Size</label>
                                     <input type="text" id="add-variant-size" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
 
                                     {{-- HÀNG 2: Giá bán / Tồn kho (Label 3 / Input 3 | Label 3 / Input 3) --}}
                                     <label for="add-variant-price" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Giá bán (VNĐ)</label>
                                     <input type="number" id="add-variant-price" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
-                                    {{-- ĐÃ SỬA: Tồn kho Label 2 -> 3, Input 4 -> 3 --}}
                                     <label for="add-variant-stock" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Tồn kho</label>
                                     <input type="number" id="add-variant-stock" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
 
@@ -559,8 +581,9 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                                     <label for="add-variant-promo" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Áp dụng KM</label>
                                     <div class="relative custom-multiselect col-span-3" data-select-id="add-variant-promo" data-type="single">
                                         <select id="add-variant-promo" class="hidden">
+                                            <option value="Không" selected>Không</option>
                                             @foreach($variant_promos as $name)
-                                            <option value="{{ $name }}">{{ $name }}</option>
+                                                <option value="{{ $name }}">{{ $name }}</option>
                                             @endforeach
                                         </select>
                                         <button type="button" class="custom-multiselect-trigger w-full bg-white border border-[#999999]/50 rounded-2xl shadow-sm text-left px-4 py-2.5 flex items-center justify-between focus:outline-none focus:ring-1 focus:ring-black">
@@ -577,16 +600,39 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                                             </ul>
                                         </div>
                                     </div>
-                                    {{-- Giữ nguyên Label 3 / Input 3 --}}
                                     <label for="add-variant-promo-price" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Giá giảm (VNĐ)</label>
-                                    <input type="number" id="add-variant-promo-price" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm bg-gray-100 px-4 py-2.5" readonly>
+                                    <input type="number" id="add-variant-promo-price" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
 
                                     {{-- HÀNG 4: Trọng lượng / Đơn vị tính (Label 3 / Input 3 | Label 3 / Input 3) --}}
                                     <label for="add-variant-weight" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Trọng lượng</label>
                                     <input type="number" id="add-variant-weight" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
-                                    {{-- ĐÃ SỬA: Đơn vị tính Label 2 -> 3, Input 4 -> 3 --}}
                                     <label for="add-variant-unit" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Đơn vị tính</label>
                                     <input type="text" id="add-variant-unit" class="col-span-3 w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+
+                                    {{-- THÊM HÀNG 5: Trạng thái --}}
+                                    <label for="add-variant-status" class="col-span-3 block text-sm font-medium text-gray-700 whitespace-nowrap text-left pr-4">Trạng thái</label>
+                                    <div class="relative custom-multiselect col-span-3" data-select-id="add-variant-status" data-type="single">
+                                        <select id="add-variant-status" class="hidden">
+                                            <option value="active" selected>Còn hàng</option>
+                                            @foreach($statuses as $id => $name)
+                                                <option value="{{ $id }}" {{ $id === 'active' ? 'selected' : '' }}>{{ $name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <button type="button" class="custom-multiselect-trigger w-full bg-white border border-[#999999]/50 rounded-2xl shadow-sm text-left px-4 py-2.5 flex items-center justify-between focus:outline-none focus:ring-1 focus:ring-black">
+                                            <span class="custom-multiselect-display text-gray-500">Chọn...</span>
+                                            <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
+                                        </button>
+                                        <div class="custom-multiselect-panel hidden absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
+                                            <ul class="custom-multiselect-list max-h-48 overflow-y-auto">
+                                                @foreach($statuses as $id => $name)
+                                                <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" data-value="{{ $id }}" data-highlight-class="bg-blue-100/50">
+                                                    <span class="text-sm font-medium text-gray-900">{{ $name }}</span>
+                                                </li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="col-span-6"></div>
 
                                 </div>
                             </div>
@@ -602,7 +648,7 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
                 </div>
             </div>
 
-            {{-- === CỘT PHẢI: DANH SÁCH BIẾN THỂ (Giữ nguyên) === --}}
+            {{-- === CỘT PHẢI: DANH SÁCH BIẾN THỂ (ĐÃ THÊM ID CHO CONTAINER) === --}}
             <div class="w-full max-w-[300px] h-full">
                 <h3 class="text-xl font-semibold text-gray-700 mb-4 text-center">Các biến thể</h3>
                 <div class="space-y-3 h-[500px] overflow-y-auto pr-2">
@@ -745,25 +791,50 @@ $variant_promos = ['Không', 'Giảm 10%', 'Giảm 20%'];
 
 /* === BẮT ĐẦU: SCROLLBAR STYLES (#999999 - [50] | Đã loại bỏ lệnh ẩn hoàn toàn) === */
 /* Kích thước và màu sắc cho WebKit (Chrome/Safari/Edge) */
-.space-y-3.h-\[500px\].overflow-y-auto::-webkit-scrollbar {
+.space-y-3.h-\[500px\].overflow-y-auto::-webkit-scrollbar,
+#variant-sidebar-list::-webkit-scrollbar {
     width: 8px; /* Chiều rộng thanh cuộn dọc */
 }
-.space-y-3.h-\[500px\].overflow-y-auto::-webkit-scrollbar-track {
+.space-y-3.h-\[500px\].overflow-y-auto::-webkit-scrollbar-track,
+#variant-sidebar-list::-webkit-scrollbar-track {
     background: transparent; /* Nền của track */
 }
-.space-y-3.h-\[500px\].overflow-y-auto::-webkit-scrollbar-thumb {
+.space-y-3.h-\[500px\].overflow-y-auto::-webkit-scrollbar-thumb,
+#variant-sidebar-list::-webkit-scrollbar-thumb {
     /* Màu #999999 với độ mờ 50% (50/255 = 0.5) */
     background: rgba(153, 153, 153, 0.5);
     border-radius: 4px;
 }
-.space-y-3.h-\[500px\].overflow-y-auto::-webkit-scrollbar-thumb:hover {
+.space-y-3.h-\[500px\].overflow-y-auto::-webkit-scrollbar-thumb:hover,
+#variant-sidebar-list::-webkit-scrollbar-thumb:hover {
     background: #777777; /* Màu khi hover (tăng độ đậm) */
 }
 /* === KẾT THÚC: SCROLLBAR STYLES === */
 
 </style>
 <script>
-// --- START: CUSTOM MULTISELECT SCRIPT ---
+// Dữ liệu mock PHP được chuyển đổi thành JSON
+const MOCK_PRODUCTS_DATA = @json($products);
+const MOCK_CATEGORIES_DATA = @json($categories);
+const MOCK_STATUS_DATA = @json($statuses);
+const DEFAULT_IMAGE = 'https://via.placeholder.com/160x160.png?text=Image';
+
+// Biến toàn cục để lưu trữ dữ liệu sản phẩm/biến thể (dạng Map để dễ truy cập)
+let productMap = new Map();
+let variantIdCounter = 7; // Bắt đầu từ BT0008 (BT0001-BT0007 đã dùng)
+let productIdCounter = 5; // Bắt đầu từ SP0006 (SP0001-SP0005 đã dùng)
+
+// Khởi tạo Map từ dữ liệu PHP
+MOCK_PRODUCTS_DATA.forEach(product => {
+    product.variants = product.variants.map(v => ({
+        ...v,
+        price: v.price / 1000, // Chuyển sang K (ví dụ)
+        promo_price: v.promo_price / 1000 // Chuyển sang K (ví dụ)
+    }));
+    productMap.set(product.product_id, product);
+});
+
+// --- START: CUSTOM MULTISELECT SCRIPT (Giữ nguyên) ---
 
 /**
  * Cập nhật văn bản hiển thị
@@ -817,7 +888,7 @@ function setCustomMultiselectValues(multiselectContainer, valuesString, delimite
         if (optionsList) {
             const li = optionsList.querySelector(`.custom-multiselect-option[data-value="${trimmedValue}"]`);
             if (li) {
-                const highlightClass = li.dataset.highlightClass || 'bg-blue-100';
+                const highlightClass = li.dataset.highlightClass || 'bg-blue-100/50';
                 li.classList.add(highlightClass);
             }
         }
@@ -834,7 +905,6 @@ function initializeCustomMultiselects() {
     document.querySelectorAll('.custom-multiselect').forEach(container => {
         const trigger = container.querySelector('.custom-multiselect-trigger');
         const panel = container.querySelector('.custom-multiselect-panel');
-        const searchInput = container.querySelector('.custom-multiselect-search');
         const optionsList = container.querySelector('.custom-multiselect-list');
         const hiddenSelect = container.querySelector('select');
         const displaySpan = container.querySelector('.custom-multiselect-display');
@@ -868,7 +938,11 @@ function initializeCustomMultiselects() {
 
                     if (container.dataset.type === 'single') {
                         // === LOGIC CHO SINGLE-SELECT ===
-                        hiddenSelect.value = value;
+                        // Cập nhật giá trị của select ẩn
+                        Array.from(hiddenSelect.options).forEach(opt => {
+                             opt.selected = (opt.value === value);
+                        });
+
                         optionsList.querySelectorAll('.custom-multiselect-option').forEach(otherLi => {
                             const otherHighlightClass = otherLi.dataset.highlightClass || 'bg-blue-100/50';
                             otherLi.classList.remove(otherHighlightClass);
@@ -886,6 +960,12 @@ function initializeCustomMultiselects() {
                     }
 
                     updateMultiselectDisplay(container);
+
+                    // KÍCH HOẠT EVENT NẾU CÓ THAY ĐỔI ĐỂ TẮT/BẬT INPUT GIÁ GIẢM
+                    if (hiddenSelect.id.includes('-promo')) {
+                          const event = new Event('change', { bubbles: true });
+                          hiddenSelect.dispatchEvent(event);
+                    }
                 });
             });
         }
@@ -916,26 +996,66 @@ document.addEventListener('DOMContentLoaded', function() {
     const manageProductModal = document.getElementById('manageProductModal');
     const variantModal = document.getElementById('variantModal');
 
-    const addVariantView = document.getElementById('addVariantView');
-    const manageVariantView = document.getElementById('manageVariantView');
+// Hàm tạo ID mới (tạm thời)
+function generateNewId(prefix, counter) {
+    return prefix + String(counter).padStart(4, '0');
+}
 
-    const openAddProductBtn = document.getElementById('openAddProductModalBtn');
-    const productRowTriggers = document.querySelectorAll('.product-row-trigger');
-    const variantModalTriggers = document.querySelectorAll('.open-variant-modal-trigger');
-    const variantListItems = document.querySelectorAll('.variant-list-item');
-    const switchToAddBtn = document.getElementById('switchToAddeVariantBtn');
-    const switchBackBtn = document.getElementById('switchBackToManageBtn');
+// Hàm format tiền tệ (cho display)
+function formatCurrency(amount) {
+    if (typeof amount !== 'number') return '0 VNĐ';
+    return amount.toLocaleString('vi-VN') + ' VNĐ';
+}
 
+// Hàm render một biến thể trong cột phải (sidebar)
+function renderVariantListItem(variant, productId) {
+    const promoPriceDisplay = formatCurrency(variant.promo_price * 1000); // Nhân 1000 lại để hiển thị
+    const listItem = document.createElement('a');
+    listItem.href = '#';
+    listItem.classList.add('block', 'p-4', 'border', 'rounded-lg', 'shadow-sm', 'hover:bg-gray-50', 'variant-list-item');
+    listItem.dataset.variantId = variant.variant_id;
+    listItem.dataset.productId = productId;
+    listItem.dataset.color = variant.color;
+    listItem.dataset.size = variant.size;
+    listItem.dataset.price = variant.price;
+    listItem.dataset.stock = variant.stock;
+    listItem.dataset.promo = variant.promo;
+    listItem.dataset.promoPrice = variant.promo_price;
+    listItem.dataset.weight = variant.weight;
+    listItem.dataset.unit = variant.unit;
+    listItem.dataset.status = variant.status;
+    listItem.dataset.imageUrl = variant.image_url;
 
-    const closeTriggers = document.querySelectorAll('.close-modal');
-    const modalContainers = document.querySelectorAll('.modal-container');
+    // Gán sự kiện click cho item mới
+    listItem.addEventListener('click', handleVariantListItemClick);
 
-    function openModal(modal) {
-        if (modal) modal.classList.remove('hidden');
+    listItem.innerHTML = `
+        <h4 class="font-bold text-gray-800">${variant.name}</h4>
+        <p class="text-sm text-gray-600">ID: ${variant.variant_id}</p>
+        <p class="text-sm text-gray-600">Màu: ${variant.color} | Size: ${variant.size} (${variant.weight}${variant.unit})</p>
+        <p class="text-sm text-gray-600">Giá bán: ${formatCurrency(variant.price * 1000)}</p>
+        <p class="text-sm text-gray-600 variant-promo-price-display">Giá giảm: ${promoPriceDisplay}</p>
+    `;
+    return listItem;
+}
+
+// Hàm render lại danh sách biến thể trong modal (cột phải)
+function renderVariantList(productId) {
+    const listContainer = document.getElementById('variant-sidebar-list');
+    listContainer.innerHTML = ''; // Xóa nội dung cũ
+
+    const product = productMap.get(productId);
+    if (product && product.variants) {
+        document.getElementById('variant-product-name').textContent = product.product_name; // Cập nhật tên sản phẩm
+        // Đảo ngược thứ tự để hiển thị biến thể mới nhất ở trên cùng
+        [...product.variants].reverse().forEach(variant => {
+            const listItem = renderVariantListItem(variant, productId);
+            listContainer.appendChild(listItem);
+        });
+    } else {
+        document.getElementById('variant-product-name').textContent = 'Không có sản phẩm';
     }
-    function closeModal(modal) {
-        if (modal) modal.classList.add('hidden');
-    }
+}
 
     // --- LOGIC CHO MODAL 3: BIẾN THỂ (PHỨC TẠP) ---
 
@@ -1018,29 +1138,442 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Quay lại Quản lý từ view Thêm
-    const backBtn = document.getElementById('switchBackToManageBtn');
-    if (backBtn) {
-        backBtn.addEventListener('click', function() {
-            showVariantView('manage');
-        });
+// Hàm xử lý khi click vào dòng sản phẩm trong bảng chính (mở modal quản lý)
+function handleProductRowClick(e) {
+    if (e.target.closest('.open-variant-modal-trigger')) {
+        return; // Bỏ qua nếu click vào nút/link biến thể
     }
+    
+    const data = this.dataset;
+    
+    document.getElementById('manage-product_id').value = data.product_id;
+    document.getElementById('manage-product_name').value = data.product_name;
+    document.getElementById('manage-origin').value = data.origin;
+    document.getElementById('manage-description').value = data.description;
+    document.getElementById('manage-brand').value = data.brand; // Input text
+    
+    // Ảnh
+    const imageUrl = data.image_url ? data.image_url : DEFAULT_IMAGE;
+    document.getElementById('manage-image_url_preview').src = imageUrl;
+    document.getElementById('manage-image_url_hidden').value = imageUrl; // Cập nhật input ẩn
 
-    // === LOGIC CHO MODAL 1 & 2 ===
-    if (openAddProductBtn) {
-        openAddProductBtn.addEventListener('click', function() {
-            document.querySelector('#addProductModal form').reset();
-            document.querySelectorAll('#addProductModal .custom-multiselect').forEach(sel => {
-                setCustomMultiselectValues(sel, '');
-            });
-            openModal(addProductModal);
-        });
+    setCustomMultiselectValues(document.querySelector('[data-select-id="manage-category_id"]'), data.category_id);
+    // LƯU Ý: Đổi data-status thành data-product_status trong PHP để tránh nhầm lẫn.
+    setCustomMultiselectValues(document.querySelector('[data-select-id="manage-status"]'), data.product_status);
+    
+    openModal(manageProductModal);
+}
+
+// Hàm chuyển đổi view trong modal biến thể
+function showVariantView(viewToShow) {
+    if (viewToShow === 'add') {
+        addVariantView.classList.remove('hidden');
+        manageVariantView.classList.add('hidden');
+        document.querySelector('#addVariantForm').reset();
+        document.getElementById('add-variant-image-preview').src = DEFAULT_IMAGE;
+        document.getElementById('add-variant-image-url').value = DEFAULT_IMAGE;
+        
+        // Cập nhật select trạng thái mặc định cho form thêm
+        setCustomMultiselectValues(document.querySelector('#addVariantView [data-select-id="add-variant-status"]'), 'active');
+        setCustomMultiselectValues(document.querySelector('#addVariantView [data-select-id="add-variant-promo"]'), 'Không');
+        document.getElementById('add-variant-promo-price').value = 0;
+        document.getElementById('add-variant-promo-price').classList.add('bg-gray-100');
+        document.getElementById('add-variant-promo-price').readOnly = true;
+    } else if (viewToShow === 'manage') {
+        addVariantView.classList.add('hidden');
+        manageVariantView.classList.remove('hidden');
     }
+}
 
-    productRowTriggers.forEach(row => {
-        row.addEventListener('click', function(e) {
-            if (e.target.closest('.open-variant-modal-trigger')) {
-                return;
+// Hàm xử lý Upload Ảnh
+function handleImageUpload(inputElementId, previewElementId, hiddenElementId) {
+    const input = document.getElementById(inputElementId);
+    const preview = document.getElementById(previewElementId);
+    const hidden = document.getElementById(hiddenElementId);
+
+    input.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                preview.src = e.target.result;
+                hidden.value = e.target.result; // Lưu Base64 URL vào input ẩn
+            };
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+}
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    
+    initializeCustomMultiselects(); 
+
+    // --- KHỞI TẠO LOGIC UPLOAD ẢNH CHO CÁC MODAL ---
+    
+    // 1. Modal Thêm Sản phẩm
+    document.getElementById('add-image-upload-btn').addEventListener('click', () => document.getElementById('add-image_url_input').click());
+    handleImageUpload('add-image_url_input', 'add-image_url_preview', 'add-image_url');
+
+    // 2. Modal Quản lý Sản phẩm
+    document.getElementById('manage-image-upload-btn').addEventListener('click', () => document.getElementById('manage-image_url_input').click());
+    handleImageUpload('manage-image_url_input', 'manage-image_url_preview', 'manage-image_url_hidden');
+
+    // 3. Modal Thêm Biến thể
+    document.getElementById('add-variant-image-upload-btn').addEventListener('click', () => document.getElementById('add-variant-image-url-input').click());
+    handleImageUpload('add-variant-image-url-input', 'add-variant-image-preview', 'add-variant-image-url');
+    
+    // 4. Modal Quản lý Biến thể
+    document.getElementById('manage-variant-image-upload-btn').addEventListener('click', () => document.getElementById('manage-variant-image-url-input').click());
+    handleImageUpload('manage-variant-image-url-input', 'manage-variant-image-preview', 'manage-variant-image-url');
+
+
+    // Gán lại sự kiện cho các trigger/link ban đầu (từ PHP)
+    document.getElementById('openAddProductModalBtn').addEventListener('click', function() {
+        document.querySelector('#addProductModal form').reset();
+        document.getElementById('add-image_url_preview').src = DEFAULT_IMAGE;
+        document.getElementById('add-image_url').value = 'https://via.placeholder.com/80x60/CCCCCC/000000?text=New';
+        setCustomMultiselectValues(document.querySelector('[data-select-id="add-category_id"]'), '');
+        setCustomMultiselectValues(document.querySelector('[data-select-id="add-product-status"]'), 'active');
+        openModal(addProductModal);
+    });
+
+    document.querySelectorAll('.product-row-trigger').forEach(row => {
+        row.addEventListener('click', handleProductRowClick);
+    });
+
+    document.querySelectorAll('.open-variant-modal-trigger').forEach(trigger => {
+        trigger.addEventListener('click', handleVariantModalTriggerClick);
+    });
+
+    // Cần render lại list cho item đầu tiên để có item để click
+    const firstProduct = productMap.values().next().value;
+    if (firstProduct) {
+        renderVariantList(firstProduct.product_id); 
+    }
+    
+    // Gán sự kiện click cho các item đã được render lần đầu (nếu có)
+    document.querySelectorAll('.variant-list-item').forEach(item => {
+        item.addEventListener('click', handleVariantListItemClick);
+    });
+
+    // Logic chuyển đổi view trong modal biến thể
+    document.getElementById('switchToAddeVariantBtn').addEventListener('click', function() {
+        showVariantView('add'); 
+    });
+
+    document.getElementById('switchBackToManageBtn').addEventListener('click', function() {
+        showVariantView('manage');
+    });
+
+    // --- XỬ LÝ SỰ KIỆN SUBMIT FORM ---
+
+    // 1. FORM THÊM SẢN PHẨM
+    addProductForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Lấy dữ liệu
+        const newProductId = generateNewId('SP', ++productIdCounter);
+        const productName = document.getElementById('add-product_name').value;
+        const categoryId = document.getElementById('add-category_id').value;
+        const origin = document.getElementById('add-origin').value;
+        const brand = document.getElementById('add-brand').value;
+        const description = document.getElementById('add-description').value;
+        const imageUrl = document.getElementById('add-image_url').value;
+        const status = document.getElementById('add-product-status').value;
+        const categoryName = MOCK_CATEGORIES_DATA[categoryId] || categoryId;
+
+        if (!productName || !categoryId) {
+            alert('Vui lòng nhập Tên SP và chọn Tên loại.');
+            return;
+        }
+
+        const newProduct = {
+            product_id: newProductId,
+            product_name: productName,
+            category_id: categoryId,
+            brand: brand,
+            origin: origin,
+            image_url: imageUrl,
+            status: status,
+            variants: [], // Sản phẩm mới chưa có biến thể
+            description: description,
+            slug: productName.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '')
+        };
+
+        // Cập nhật Map dữ liệu ảo
+        productMap.set(newProduct.product_id, newProduct);
+
+        // Render dòng mới vào bảng
+        const newRow = renderProductRow(newProduct);
+        document.getElementById('product-list-body').prepend(newRow);
+
+        closeModal(addProductModal);
+        alert(`Đã thêm sản phẩm: ${productName} (ID: ${newProductId})`);
+    });
+
+    // 2. FORM THÊM BIẾN THỂ
+    addVariantForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const currentProductId = document.getElementById('current-product-id').value;
+        const product = productMap.get(currentProductId);
+
+        if (!product) {
+            alert('Lỗi: Không tìm thấy sản phẩm.');
+            return;
+        }
+
+        // Lấy dữ liệu
+        const newVariantId = generateNewId('BT', ++variantIdCounter);
+        const color = document.getElementById('add-variant-color').value;
+        const size = document.getElementById('add-variant-size').value;
+        const price = parseInt(document.getElementById('add-variant-price').value) || 0;
+        const stock = parseInt(document.getElementById('add-variant-stock').value) || 0;
+        const promo = document.getElementById('add-variant-promo').value;
+        const weight = document.getElementById('add-variant-weight').value;
+        const unit = document.getElementById('add-variant-unit').value;
+        const status = document.getElementById('add-variant-status').value;
+        const imageUrl = document.getElementById('add-variant-image-url').value;
+        // SỬA: Lấy giá giảm thủ công
+        const promoPrice = parseInt(document.getElementById('add-variant-promo-price').value) || 0; 
+
+
+        if (!color || !size || price <= 0 || stock < 0) {
+            alert('Vui lòng nhập đầy đủ Màu, Size, Giá bán (>0) và Tồn kho (>=0).');
+            return;
+        }
+        
+        // Kiểm tra logic giá giảm
+        if (promo === 'Có' && promoPrice >= price) {
+             alert('Giá giảm phải nhỏ hơn Giá bán khi áp dụng Khuyến mãi.');
+             return;
+        }
+        if (promo === 'Không' && promoPrice > 0) {
+             alert('Không thể có Giá giảm khi không áp dụng Khuyến mãi. Vui lòng đặt Giá giảm về 0 hoặc chọn "Có".');
+             return;
+        }
+
+
+        const variantName = `${color}/${weight}${unit}`;
+
+        const newVariant = {
+            variant_id: newVariantId,
+            name: variantName,
+            color: color,
+            size: size,
+            price: price / 1000, // Lưu với đơn vị K (như mock data)
+            stock: stock,
+            promo: promo,
+            promo_price: promoPrice / 1000, // Lưu với đơn vị K (như mock data)
+            weight: weight,
+            unit: unit,
+            status: status,
+            image_url: imageUrl
+        };
+
+        // Cập nhật Map dữ liệu ảo
+        product.variants.push(newVariant);
+        // Đặt lại trạng thái sản phẩm nếu cần (logic giữ nguyên)
+        if (status === 'active' && product.status === 'inactive') {
+            product.status = 'active';
+        } else if (status === 'inactive') {
+            const hasActiveVariant = product.variants.some(v => v.status === 'active');
+            product.status = hasActiveVariant ? 'active' : 'inactive';
+        }
+        
+        // Cập nhật hiển thị trạng thái sản phẩm trong bảng chính
+        const productRow = document.querySelector(`.product-row-trigger[data-product_id="${currentProductId}"]`);
+        if (productRow) {
+             productRow.dataset.product_status = product.status;
+             const badge = productRow.querySelector('.product-status-badge');
+             badge.classList.remove('bg-green-100', 'text-green-800', 'bg-gray-200', 'text-gray-800');
+             badge.classList.add(product.status === 'active' ? 'bg-green-100' : 'bg-gray-200');
+             badge.classList.add(product.status === 'active' ? 'text-green-800' : 'text-gray-800');
+             badge.textContent = MOCK_STATUS_DATA[product.status];
+        }
+        
+        // Render lại danh sách biến thể trong modal (cột phải)
+        renderVariantList(currentProductId);
+
+        // Cập nhật link biến thể trong bảng chính
+        updateProductRowVariantLinks(currentProductId, product.variants);
+
+        // Chuyển về chế độ quản lý sau khi thêm thành công
+        showVariantView('manage'); 
+        alert(`Đã thêm biến thể: ${variantName} (ID: ${newVariantId}) cho sản phẩm ${product.product_name}`);
+    });
+
+    // 3. FORM QUẢN LÝ SẢN PHẨM (Mô phỏng lưu)
+    manageProductForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const productId = document.getElementById('manage-product_id').value;
+        const product = productMap.get(productId);
+
+        if (!product) {
+            alert('Lỗi: Không tìm thấy sản phẩm cần quản lý.');
+            return;
+        }
+
+        // Lấy dữ liệu mới
+        const newProductName = document.getElementById('manage-product_name').value;
+        const newCategoryId = document.getElementById('manage-category_id').value;
+        const newOrigin = document.getElementById('manage-origin').value;
+        const newBrand = document.getElementById('manage-brand').value;
+        const newDescription = document.getElementById('manage-description').value;
+        const newStatus = document.getElementById('manage-status').value;
+        const newImageUrl = document.getElementById('manage-image_url_hidden').value; // Lấy từ input ẩn
+
+        // Cập nhật Map
+        product.product_name = newProductName;
+        product.category_id = newCategoryId;
+        product.origin = newOrigin;
+        product.brand = newBrand;
+        product.description = newDescription;
+        product.status = newStatus;
+        product.image_url = newImageUrl;
+        
+        // Cập nhật hiển thị trong bảng chính
+        const productRow = document.querySelector(`.product-row-trigger[data-product_id="${productId}"]`);
+        if (productRow) {
+            // Cập nhật dataset
+            productRow.dataset.product_name = newProductName;
+            productRow.dataset.category_id = newCategoryId;
+            productRow.dataset.origin = newOrigin;
+            productRow.dataset.brand = newBrand;
+            productRow.dataset.description = newDescription;
+            productRow.dataset.product_status = newStatus;
+            productRow.dataset.image_url = newImageUrl;
+            
+            // Cập nhật nội dung hiển thị
+            productRow.querySelector('.product-name-display').textContent = newProductName;
+            productRow.querySelector('.category-name-display').textContent = MOCK_CATEGORIES_DATA[newCategoryId] || newCategoryId;
+            productRow.querySelector('.product-image-display').src = newImageUrl;
+
+            const badge = productRow.querySelector('.product-status-badge');
+            badge.dataset.statusId = newStatus;
+            badge.textContent = MOCK_STATUS_DATA[newStatus];
+            badge.classList.remove('bg-green-100', 'text-green-800', 'bg-gray-200', 'text-gray-800');
+            badge.classList.add(newStatus === 'active' ? 'bg-green-100' : 'bg-gray-200');
+            badge.classList.add(newStatus === 'active' ? 'text-green-800' : 'text-gray-800');
+        }
+
+        closeModal(manageProductModal);
+        alert(`Đã lưu thông tin sản phẩm: ${newProductName} (ID: ${productId})`);
+    });
+
+    // 4. FORM QUẢN LÝ BIẾN THỂ (Mô phỏng lưu)
+    manageVariantForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const productId = document.getElementById('current-product-id').value;
+        const variantId = document.getElementById('manage-variant-id').value;
+        const product = productMap.get(productId);
+
+        if (!product || !variantId) {
+            alert('Lỗi: Không tìm thấy sản phẩm hoặc biến thể.');
+            return;
+        }
+
+        const variantIndex = product.variants.findIndex(v => v.variant_id === variantId);
+        if (variantIndex === -1) {
+            alert('Lỗi: Không tìm thấy biến thể.');
+            return;
+        }
+
+        // Lấy dữ liệu mới
+        const newColor = document.getElementById('manage-variant-color').value;
+        const newSize = document.getElementById('manage-variant-size').value;
+        const newPrice = parseInt(document.getElementById('manage-variant-price').value) || 0;
+        const newStock = parseInt(document.getElementById('manage-variant-stock').value) || 0;
+        const newPromo = document.getElementById('manage-variant-promo').value;
+        const newWeight = document.getElementById('manage-variant-weight').value;
+        const newUnit = document.getElementById('manage-variant-unit').value;
+        const newStatus = document.getElementById('manage-variant-status').value;
+        const newImageUrl = document.getElementById('manage-variant-image-url').value;
+        // SỬA: Lấy giá giảm thủ công
+        const newPromoPrice = parseInt(document.getElementById('manage-variant-promo-price').value) || 0; 
+
+
+        if (!newColor || !newSize || newPrice <= 0 || newStock < 0) {
+            alert('Vui lòng nhập đầy đủ Màu, Size, Giá bán (>0) và Tồn kho (>=0).');
+            return;
+        }
+
+        // Kiểm tra logic giá giảm
+        if (newPromo === 'Có' && newPromoPrice >= newPrice) {
+             alert('Giá giảm phải nhỏ hơn Giá bán khi áp dụng Khuyến mãi.');
+             return;
+        }
+        if (newPromo === 'Không' && newPromoPrice > 0) {
+             alert('Không thể có Giá giảm khi không áp dụng Khuyến mãi. Vui lòng đặt Giá giảm về 0 hoặc chọn "Có".');
+             return;
+        }
+
+        const newVariantName = `${newColor}/${newWeight}${newUnit}`;
+
+        // Cập nhật Map
+        product.variants[variantIndex] = {
+            ...product.variants[variantIndex], // Giữ lại các thuộc tính cũ
+            name: newVariantName,
+            color: newColor,
+            size: newSize,
+            price: newPrice / 1000,
+            stock: newStock,
+            promo: newPromo,
+            promo_price: newPromoPrice / 1000,
+            weight: newWeight,
+            unit: newUnit,
+            status: newStatus,
+            image_url: newImageUrl
+        };
+        
+        // Cập nhật lại trạng thái sản phẩm chính nếu cần (logic giữ nguyên)
+        if (newStatus === 'active' && product.status === 'inactive') {
+            product.status = 'active';
+        } else if (newStatus === 'inactive') {
+            const hasActiveVariant = product.variants.some(v => v.status === 'active');
+            product.status = hasActiveVariant ? 'active' : 'inactive';
+        }
+
+        // Render lại danh sách biến thể trong modal (cột phải)
+        renderVariantList(productId);
+        // Cập nhật link biến thể trong bảng chính
+        updateProductRowVariantLinks(productId, product.variants);
+        // Cập nhật trạng thái sản phẩm trong bảng chính
+        const productRow = document.querySelector(`.product-row-trigger[data-product_id="${productId}"]`);
+        if (productRow) {
+             productRow.dataset.product_status = product.status;
+             const badge = productRow.querySelector('.product-status-badge');
+             badge.textContent = MOCK_STATUS_DATA[product.status];
+             badge.classList.remove('bg-green-100', 'text-green-800', 'bg-gray-200', 'text-gray-800');
+             badge.classList.add(product.status === 'active' ? 'bg-green-100' : 'bg-gray-200');
+             badge.classList.add(product.status === 'active' ? 'text-green-800' : 'text-gray-800');
+        }
+
+        // Tự động chọn lại item vừa chỉnh sửa
+        const updatedItem = document.querySelector(`.variant-list-item[data-variant-id="${variantId}"]`);
+        if (updatedItem) {
+             updatedItem.classList.add('bg-gray-100');
+        }
+
+        alert(`Đã lưu thông tin biến thể: ${newVariantName} (ID: ${variantId})`);
+    });
+
+    // --- LOGIC TẮT/BẬT INPUT GIÁ GIẢM KHI CHỌN "CÓ/KHÔNG" ---
+    document.querySelectorAll('#manage-variant-promo, #add-variant-promo').forEach(select => {
+        select.addEventListener('change', function() {
+            const isAddForm = this.id.includes('add-');
+            const promoPriceInput = document.getElementById(isAddForm ? 'add-variant-promo-price' : 'manage-variant-promo-price');
+            const isPromo = this.value === 'Có';
+
+            if (isPromo) {
+                promoPriceInput.classList.remove('bg-gray-100');
+                promoPriceInput.readOnly = false;
+            } else {
+                promoPriceInput.classList.add('bg-gray-100');
+                promoPriceInput.readOnly = true;
+                promoPriceInput.value = 0; // Reset về 0 khi chọn Không
             }
 
             const data = this.dataset;

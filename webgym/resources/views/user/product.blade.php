@@ -225,7 +225,7 @@
     // URL cơ sở cho API
     const API_URL = "{{ url('/api/products') }}";
     const CATEGORY_API_URL = "{{ url('/api/categories') }}";
-    const PRODUCT_DETAIL_URL = "{{ route('product_detail') }}".replace(/\/$/, ""); 
+    const PRODUCT_DETAIL_URL = "{{ route('product.detail', ['slug' => 'placeholder']) }}".replace('/placeholder', '');
 
     // Khởi tạo các sự kiện
     document.addEventListener('DOMContentLoaded', () => {
