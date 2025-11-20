@@ -22,7 +22,7 @@ $membership_packages = [
     (object)[
         'package_id' => 'GT0002',
         'package_name' => 'Gói quý',
-        'price' => 1000000,
+        'price' => 3000000,
         'duration_months' => 3,
         'description' => 'Tặng 1 buổi PT cá nhân, ...',
         'status' => 'active',
@@ -33,7 +33,7 @@ $membership_packages = [
     (object)[
         'package_id' => 'GT0003',
         'package_name' => 'Gói năm',
-        'price' => 1000000,
+        'price' => 10000000,
         'duration_months' => 12,
         'description' => 'Tặng 5 buổi PT/thăm, ...',
         'status' => 'active',
@@ -44,7 +44,7 @@ $membership_packages = [
     (object)[
         'package_id' => 'GT0004',
         'package_name' => 'Gói PT cá nhân',
-        'price' => 1000000,
+        'price' => 5000000,
         'duration_months' => 1,
         'description' => 'Huấn luyện viên cá nhân, ...',
         'status' => 'active',
@@ -55,7 +55,7 @@ $membership_packages = [
     (object)[
         'package_id' => 'GT0005',
         'package_name' => 'Gói nửa năm',
-        'price' => 1000000,
+        'price' => 5000000,
         'duration_months' => 6,
         'description' => 'Tập không giới hạn, ...',
         'status' => 'inactive',
@@ -111,9 +111,10 @@ $status_options = [
                 </tr>
             </thead>
 
-            <tbody>
+            <tbody id="packageTableBody"> 
                 @foreach ($membership_packages as $package)
                 <tr class="transition duration-150 cursor-pointer modal-trigger"
+                    id="row-{{ $package->package_id }}" {{-- THÊM ID CHO DÒNG --}}
                     data-package_id="{{ $package->package_id }}"
                     data-package_name="{{ $package->package_name }}"
                     data-price="{{ $package->price }}"
@@ -126,33 +127,33 @@ $status_options = [
                 >
                     
                     <td colspan="7" class="p-0">
-                        <div class="flex w-full rounded-lg items-center 
+                        <div class="flex w-full rounded-lg items-center
                                 {{ $loop->even ? 'bg-white' : 'bg-[#1976D2]/10' }}
-                                shadow-sm overflow-hidden">
+                                shadow-sm overflow-hidden package-row-content"> {{-- THÊM CLASS ĐỂ TÌM DIV CHỨA NỘI DUNG --}}
                             
                             {{-- CỘT MỚI: Ngôi sao --}}
-                            <div class="px-4 py-3 w-[5%] text-center">
+                            <div class="px-4 py-3 w-[5%] text-center star-icon">
                                 @if ($package->is_featured)
                                     <svg class="w-5 h-5 text-yellow-500 mx-auto" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.002 8.71c-.783-.57-.381-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
                                 @endif
                             </div>
 
-                            <div class="px-4 py-3 w-[10%] text-sm font-medium text-gray-900">
+                            <div class="px-4 py-3 w-[10%] text-sm font-medium text-gray-900 package-id-display">
                                 {{ $package->package_id }}
                             </div>
-                            <div class="px-4 py-3 w-[15%] text-sm text-gray-700">
+                            <div class="px-4 py-3 w-[15%] text-sm text-gray-700 package-name-display">
                                 {{ $package->package_name }}
                             </div>
-                            <div class="px-4 py-3 w-[15%] text-sm text-gray-700">
+                            <div class="px-4 py-3 w-[15%] text-sm text-gray-700 package-price-display">
                                 {{ number_format($package->price, 0, ',', '.') }} VND
                             </div>
-                            <div class="px-4 py-3 w-[15%] text-sm text-gray-700">
+                            <div class="px-4 py-3 w-[15%] text-sm text-gray-700 package-duration-display">
                                 {{ $package->duration_months }} tháng
                             </div>
-                            <div class="px-4 py-3 flex-1 text-sm text-gray-700 truncate" title="{{ $package->description }}">
+                            <div class="px-4 py-3 flex-1 text-sm text-gray-700 truncate package-description-display" title="{{ $package->description }}">
                                 {{ $package->description }}
                             </div>
-                            <div class="px-4 py-3 w-[15%] text-sm text-right">
+                            <div class="px-4 py-3 w-[15%] text-sm text-right package-status-display">
                                 @if ($package->status == 'active')
                                     <span class="inline-flex px-3 py-1 text-xs font-semibold leading-5 rounded-full bg-green-100 text-green-800">
                                         Đang hoạt động
@@ -187,38 +188,38 @@ $status_options = [
             THÊM GÓI TẬP
         </h2>
         
-        <form>
+        <form id="addPackageForm">
             {{-- Phần Thông tin --}}
             <h3 class="text-xl font-semibold text-blue-700 mb-4">Thông tin gói tập</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                 {{-- Cột ảnh --}}
                 <div class="md:col-span-1 flex flex-col items-center">
                     <div class="w-40 h-40 bg-gray-200 rounded-lg flex items-center justify-center mb-3">
-                        <img src="https://via.placeholder.com/160x160.png?text=Image" alt="Package Image" class="w-full h-full object-cover rounded-lg">
+                        <img id="add-image-preview" src="https://via.placeholder.com/160x160.png?text=Image" alt="Package Image" class="w-full h-full object-cover rounded-lg">
                     </div>
-                    <button type="button" class="flex items-center px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600">
+                    <button type="button" id="add-upload-btn" class="flex items-center px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600">
                         <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
                         Upload ảnh
                     </button>
                     {{-- Thêm input file ẩn cho image_url --}}
-                    <input type="file" id="add-image_url" class="hidden">
+                    <input type="file" id="add-image_url" accept="image/*" class="hidden"> 
                 </div>
 
                 {{-- Cột thông tin --}}
                 <div class="md:col-span-2 space-y-4">
                     <div class="flex items-center space-x-4">
                         <label for="add-package_name" class="block text-sm font-medium text-gray-700 w-1/3">Tên gói tập</label>
-                        <input type="text" id="add-package_name" class="w-2/3 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                        <input type="text" id="add-package_name" required class="w-2/3 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
                     </div>
                     
                     <div class="flex items-center space-x-4">
                         <label for="add-duration_months" class="block text-sm font-medium text-gray-700 w-1/3">Thời hạn (tháng)</label>
-                        <input type="number" id="add-duration_months" class="w-2/3 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                        <input type="number" id="add-duration_months" required class="w-2/3 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black" min="1">
                     </div>
 
                     <div class="flex items-center space-x-4">
                         <label for="add-price" class="block text-sm font-medium text-gray-700 w-1/3">Giá tiền (VNĐ)</label>
-                        <input type="number" id="add-price" class="w-2/3 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                        <input type="number" id="add-price" required class="w-2/3 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black" min="0">
                     </div>
                 </div>
             </div>
@@ -263,7 +264,7 @@ $status_options = [
             QUẢN LÝ GÓI TẬP
         </h2>
         
-        <form>
+        <form id="managePackageForm"> {{-- THÊM ID CHO FORM --}}
             {{-- Phần Thông tin --}}
             <h3 class="text-xl font-semibold text-blue-700 mb-4">Thông tin gói tập</h3>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -272,12 +273,13 @@ $status_options = [
                     <div class="w-40 h-40 bg-gray-200 rounded-lg flex items-center justify-center mb-3">
                         <img id="manage-image_url" src="https://via.placeholder.com/160x160.png?text=Image" alt="Package Image" class="w-full h-full object-cover rounded-lg">
                     </div>
-                    <button type="button" class="flex items-center px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600">
+                    <button type="button" id="manage-upload-btn" class="flex items-center px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600">
                         <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM6.293 6.707a1 1 0 010-1.414l3-3a1 1 0 011.414 0l3 3a1 1 0 01-1.414 1.414L11 5.414V13a1 1 0 11-2 0V5.414L7.707 6.707a1 1 0 01-1.414 0z" clip-rule="evenodd"></path></svg>
                         Upload ảnh
                     </button>
                     {{-- Thêm input file ẩn --}}
-                    <input type="file" id="manage-image_url_input" class="hidden">
+                    <input type="file" id="manage-image_url_input" accept="image/*" class="hidden">
+                    <input type="hidden" id="current-package-id"> {{-- INPUT ẨN LƯU ID GÓI TẬP ĐANG CHỈNH SỬA --}}
                 </div>
 
                 {{-- Cột thông tin --}}
@@ -289,17 +291,17 @@ $status_options = [
                 
                     <div class="flex items-center space-x-4">
                         <label for="manage-package_name" class="block text-sm font-medium text-gray-700 w-1/3">Tên gói tập</label>
-                        <input type="text" id="manage-package_name" class="w-2/3 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                        <input type="text" id="manage-package_name" required class="w-2/3 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
                     </div>
                     
                     <div class="flex items-center space-x-4">
                         <label for="manage-duration_months" class="block text-sm font-medium text-gray-700 w-1/3">Thời hạn (tháng)</label>
-                        <input type="number" id="manage-duration_months" class="w-2/3 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                        <input type="number" id="manage-duration_months" required class="w-2/3 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black" min="1">
                     </div>
 
                     <div class="flex items-center space-x-4">
                         <label for="manage-price" class="block text-sm font-medium text-gray-700 w-1/3">Giá tiền (VNĐ)</label>
-                        <input type="number" id="manage-price" class="w-2/3 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                        <input type="number" id="manage-price" required class="w-2/3 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black" min="0">
                     </div>
                 </div>
             </div>
@@ -325,9 +327,9 @@ $status_options = [
                 <label class="block text-sm font-medium text-gray-700 w-1/4">Trạng thái</label>
                 <div class="relative custom-multiselect w-1/2" data-select-id="manage-status-custom" data-type="single"> 
                     <select id="manage-status-custom-hidden-select" name="manage_status" class="hidden">
-                         @foreach($status_options as $value => $label)
-                             <option value="{{ $value }}">{{ $label }}</option>
-                         @endforeach
+                             @foreach($status_options as $value => $label)
+                                 <option value="{{ $value }}">{{ $label }}</option>
+                             @endforeach
                     </select>
                     <button type="button" class="custom-multiselect-trigger w-full bg-white border border-[#999999]/50 rounded-2xl shadow-sm text-left px-4 py-2.5 flex items-center justify-between focus:outline-none focus:ring-1 focus:ring-black">
                         <span class="custom-multiselect-display text-gray-500">Chọn trạng thái...</span>
@@ -354,7 +356,7 @@ $status_options = [
                 <button type="button" class="close-modal px-8 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400">
                     Hủy
                 </button>
-                <button type="submit" class="px-8 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                <button type="submit" class="px-8 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"> {{-- Đổi màu nút thành Xanh (Blue) --}}
                     Lưu thông tin
                 </button>
             </div>
@@ -545,66 +547,305 @@ document.addEventListener('DOMContentLoaded', function() {
     
     const addModal = document.getElementById('addPackageModal');
     const manageModal = document.getElementById('managePackageModal');
+    const addForm = document.getElementById('addPackageForm'); 
+    const manageForm = document.getElementById('managePackageForm'); // Lấy form sửa
+    const packageTableBody = document.getElementById('packageTableBody'); 
 
     const openAddBtn = document.getElementById('openAddModalBtn');
-    const rowTriggers = document.querySelectorAll('tr.modal-trigger');
+    let rowTriggers = document.querySelectorAll('tr.modal-trigger'); 
 
     const closeTriggers = document.querySelectorAll('.close-modal');
     const modalContainers = document.querySelectorAll('.modal-container');
 
+    // Các biến cho logic thêm/sửa gói tập
+    const defaultImage = 'https://via.placeholder.com/160x160.png?text=Image';
+    
+    // Thêm
+    const addImageInput = document.getElementById('add-image_url');
+    const addImagePreview = document.getElementById('add-image-preview');
+    const addUploadBtn = document.getElementById('add-upload-btn');
+    
+    // Sửa
+    const manageImageInput = document.getElementById('manage-image_url_input');
+    const manageImagePreview = document.getElementById('manage-image_url');
+    const manageUploadBtn = document.getElementById('manage-upload-btn');
+    const currentPackageIdInput = document.getElementById('current-package-id');
+
+    // Mảng dữ liệu trạng thái cho việc hiển thị (lookup map)
+    const statusOptions = {
+        'active': 'Đang hoạt động',
+        'inactive': 'Dừng hoạt động'
+    };
+    
+    /**
+     * Hàm tiện ích: Tạo HTML cho phần hiển thị trạng thái
+     */
+    function createStatusBadge(status) {
+        const statusText = statusOptions[status];
+        const statusClass = status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-200 text-gray-800';
+        return `
+            <span class="inline-flex px-3 py-1 text-xs font-semibold leading-5 rounded-full ${statusClass}">
+                ${statusText}
+            </span>
+        `;
+    }
+    
+    /**
+     * Hàm tiện ích: Tạo HTML cho icon ngôi sao
+     */
+    function createStarIcon(isFeatured) {
+        return isFeatured === 'true' || isFeatured === true ? 
+            '<svg class="w-5 h-5 text-yellow-500 mx-auto" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.002 8.71c-.783-.57-.381-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>'
+            : '';
+    }
+
+    // Hàm tiện ích: Tạo chuỗi HTML cho một gói tập (để thêm mới)
+    function createPackageRowHTML(packageData, isEven) {
+        const evenClass = isEven ? 'bg-white' : 'bg-[#1976D2]/10';
+
+        return `
+            <tr class="transition duration-150 cursor-pointer modal-trigger"
+                id="row-${packageData.package_id}"
+                data-package_id="${packageData.package_id}"
+                data-package_name="${packageData.package_name}"
+                data-price="${packageData.price}"
+                data-duration_months="${packageData.duration_months}"
+                data-description="${packageData.description}"
+                data-status="${packageData.status}"
+                data-slug="${packageData.slug || packageData.package_name.toLowerCase().replace(/\s/g, '-')}"
+                data-image_url="${packageData.image_url}"
+                data-is_featured="${packageData.is_featured}"
+            >
+                <td colspan="7" class="p-0">
+                    <div class="flex w-full rounded-lg items-center ${evenClass} shadow-sm overflow-hidden package-row-content">
+                        <div class="px-4 py-3 w-[5%] text-center star-icon">
+                            ${createStarIcon(packageData.is_featured)}
+                        </div>
+                        <div class="px-4 py-3 w-[10%] text-sm font-medium text-gray-900 package-id-display">${packageData.package_id}</div>
+                        <div class="px-4 py-3 w-[15%] text-sm text-gray-700 package-name-display">${packageData.package_name}</div>
+                        <div class="px-4 py-3 w-[15%] text-sm text-gray-700 package-price-display">${Number(packageData.price).toLocaleString('vi-VN')} VND</div>
+                        <div class="px-4 py-3 w-[15%] text-sm text-gray-700 package-duration-display">${packageData.duration_months} tháng</div>
+                        <div class="px-4 py-3 flex-1 text-sm text-gray-700 truncate package-description-display" title="${packageData.description}">${packageData.description}</div>
+                        <div class="px-4 py-3 w-[15%] text-sm text-right package-status-display">
+                            ${createStatusBadge(packageData.status)}
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        `;
+    }
+
+    // Hàm tiện ích: Tái khởi tạo các trigger của modal
+    function reinitializeRowTriggers() {
+        rowTriggers = document.querySelectorAll('tr.modal-trigger');
+        rowTriggers.forEach(row => {
+            row.removeEventListener('click', openManageModal); 
+            row.addEventListener('click', openManageModal);
+        });
+    }
+
+    // Hàm mở modal "Quản lý"
+    function openManageModal() {
+        const data = this.dataset;
+        const packageId = data.package_id;
+
+        // Lưu ID gói tập đang chỉnh sửa
+        currentPackageIdInput.value = packageId;
+        
+        document.getElementById('manage-package_id').value = packageId;
+        document.getElementById('manage-package_name').value = data.package_name;
+        document.getElementById('manage-duration_months').value = data.duration_months;
+        document.getElementById('manage-price').value = data.price;
+        document.getElementById('manage-description').value = data.description;
+        
+        const isFeaturedCheckbox = document.getElementById('manage-is_featured');
+        const isFeatured = data.is_featured === 'true'; 
+        isFeaturedCheckbox.checked = isFeatured;
+
+        manageImagePreview.src = data.image_url || defaultImage;
+
+        const statusContainer = document.querySelector('.custom-multiselect[data-select-id="manage-status-custom"]');
+        setCustomMultiselectValues(statusContainer, data.status, ',');
+
+        openModal(manageModal);
+    }
+    
+    // Hàm mở modal
     function openModal(modal) {
         if (modal) {
             modal.classList.remove('hidden');
+            modal.classList.add('flex'); 
         }
     }
 
+    // Hàm đóng modal
     function closeModal(modal) {
         if (modal) {
             modal.classList.add('hidden');
+            modal.classList.remove('flex');
         }
     }
 
-    // --- SỰ KIỆN MỞ MODAL ---
+    // --- SỰ KIỆN CHUNG ---
+    
+    // 1. Lắng nghe sự kiện Upload ảnh cho Modal Thêm
+    if (addUploadBtn) {
+        addUploadBtn.addEventListener('click', () => addImageInput.click());
+        addImageInput.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (event) => addImagePreview.src = event.target.result;
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+    }
 
-    // 1. Mở modal "Thêm"
+    // 2. Lắng nghe sự kiện Upload ảnh cho Modal Quản lý
+    if (manageUploadBtn) {
+        manageUploadBtn.addEventListener('click', () => manageImageInput.click());
+        manageImageInput.addEventListener('change', function(e) {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (event) => manageImagePreview.src = event.target.result;
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+    }
+
+
+    // --- LOGIC THÊM GÓI TẬP ---
+    
+    // Mở modal "Thêm"
     if (openAddBtn) {
         openAddBtn.addEventListener('click', function() {
+            addForm.reset(); 
+            addImagePreview.src = defaultImage; 
             openModal(addModal);
         });
     }
 
-    // 2. Mở modal "Quản lý" khi nhấn vào dòng
-    rowTriggers.forEach(row => {
-        row.addEventListener('click', function() {
-            const data = this.dataset;
+    // Xử lý Submit form "Thêm gói tập"
+    addForm.addEventListener('submit', function(e) {
+        e.preventDefault();
 
-            document.getElementById('manage-package_id').value = data.package_id;
-            document.getElementById('manage-package_name').value = data.package_name;
-            document.getElementById('manage-duration_months').value = data.duration_months;
-            document.getElementById('manage-price').value = data.price;
-            document.getElementById('manage-description').value = data.description;
-            
-            // CẬP NHẬT: Xử lý is_featured
-            const isFeaturedCheckbox = document.getElementById('manage-is_featured');
-            const isFeatured = data.is_featured === 'true'; 
-            isFeaturedCheckbox.checked = isFeatured;
+        // 1. Tự động sinh ID
+        const currentIds = Array.from(packageTableBody.querySelectorAll('tr.modal-trigger')).map(tr => tr.dataset.package_id);
+        const maxNum = currentIds.reduce((max, id) => {
+            const num = parseInt(id.replace('GT', ''), 10);
+            return num > max ? num : max;
+        }, 0);
+        const newId = 'GT' + String(maxNum + 1).padStart(4, '0');
 
-            // Cập nhật ảnh
-            const avatarImg = document.getElementById('manage-image_url');
-            if (data.image_url) {
-                avatarImg.src = data.image_url;
-            } else {
-                avatarImg.src = '[https://via.placeholder.com/160x160.png?text=Image](https://via.placeholder.com/160x160.png?text=Image)';
-            }
+        // 2. Thu thập dữ liệu
+        const packageName = document.getElementById('add-package_name').value.trim();
+        const duration = parseInt(document.getElementById('add-duration_months').value, 10) || 0;
+        const price = parseInt(document.getElementById('add-price').value, 10) || 0;
+        const description = document.getElementById('add-description').value.trim();
+        const isFeatured = document.getElementById('add-is_featured').checked;
+        const imageUrl = addImagePreview.src === defaultImage ? 'https://via.placeholder.com/160x160.png?text=' + encodeURIComponent(packageName) : addImagePreview.src;
+        const status = 'active'; 
 
-            // CẬP NHẬT: Set custom single-select cho Trạng thái
-            const statusContainer = document.querySelector('.custom-multiselect[data-select-id="manage-status-custom"]');
-            setCustomMultiselectValues(statusContainer, data.status, ',');
+        // Kiểm tra dữ liệu bắt buộc
+        if (!packageName || duration <= 0 || price < 0) {
+            alert('Vui lòng điền đầy đủ và chính xác Tên gói tập, Thời hạn và Giá tiền.');
+            return;
+        }
 
-            // Mở modal
-            openModal(manageModal);
-        });
+        // 3. Tạo đối tượng gói tập mới
+        const newPackage = {
+            package_id: newId,
+            package_name: packageName,
+            price: price,
+            duration_months: duration,
+            description: description || '',
+            status: status,
+            slug: packageName.toLowerCase().replace(/\s/g, '-'),
+            image_url: imageUrl,
+            is_featured: isFeatured
+        };
+
+        // 4. Thêm dòng mới vào bảng
+        const isEven = packageTableBody.children.length % 2 === 0; 
+        const newRowHTML = createPackageRowHTML(newPackage, isEven);
+        packageTableBody.insertAdjacentHTML('beforeend', newRowHTML);
+
+        // 5. Cập nhật lại các sự kiện trigger 
+        reinitializeRowTriggers();
+
+        // 6. Đóng modal và reset form
+        closeModal(addModal);
+        addForm.reset();
+        addImagePreview.src = defaultImage; 
+
+        alert(`Đã thêm gói tập: ${newPackage.package_name} với ID: ${newPackage.package_id}`);
     });
+
+    // --- LOGIC SỬA/LƯU THÔNG TIN ---
+
+    // Khởi tạo/tái khởi tạo sự kiện mở modal Quản lý
+    reinitializeRowTriggers(); 
+
+    // Xử lý Submit form "Quản lý gói tập" (Sửa và Lưu)
+    manageForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // 1. Thu thập dữ liệu
+        const packageId = currentPackageIdInput.value;
+        const row = document.getElementById(`row-${packageId}`);
+        
+        if (!row) {
+            alert('Không tìm thấy gói tập để cập nhật.');
+            return;
+        }
+
+        const newName = document.getElementById('manage-package_name').value.trim();
+        const newDuration = parseInt(document.getElementById('manage-duration_months').value, 10) || 0;
+        const newPrice = parseInt(document.getElementById('manage-price').value, 10) || 0;
+        const newDescription = document.getElementById('manage-description').value.trim();
+        const newIsFeatured = document.getElementById('manage-is_featured').checked;
+        
+        // Lấy giá trị trạng thái từ hidden select (đã được custom select cập nhật)
+        const newStatus = document.getElementById('manage-status-custom-hidden-select').value; 
+        
+        // Giá trị ảnh mới (sử dụng ảnh đang hiển thị trong preview)
+        const newImageUrl = manageImagePreview.src;
+
+        // Kiểm tra dữ liệu bắt buộc
+        if (!newName || newDuration <= 0 || newPrice < 0) {
+            alert('Vui lòng điền đầy đủ và chính xác Tên gói tập, Thời hạn và Giá tiền.');
+            return;
+        }
+
+        // 2. Cập nhật data-* attributes trên dòng (quan trọng để mở modal lần sau)
+        row.dataset.packageName = newName;
+        row.dataset.durationMonths = newDuration;
+        row.dataset.price = newPrice;
+        row.dataset.description = newDescription;
+        row.dataset.isFeatured = newIsFeatured ? 'true' : 'false';
+        row.dataset.status = newStatus;
+        row.dataset.imageUrl = newImageUrl;
+        row.dataset.slug = newName.toLowerCase().replace(/\s/g, '-');
+
+        // 3. Cập nhật HTML hiển thị trên bảng
+        const rowContent = row.querySelector('.package-row-content');
+        
+        // Cập nhật các cột bên trong
+        rowContent.querySelector('.package-name-display').textContent = newName;
+        rowContent.querySelector('.package-price-display').textContent = `${Number(newPrice).toLocaleString('vi-VN')} VND`;
+        rowContent.querySelector('.package-duration-display').textContent = `${newDuration} tháng`;
+        
+        const descElement = rowContent.querySelector('.package-description-display');
+        descElement.textContent = newDescription;
+        descElement.title = newDescription;
+
+        rowContent.querySelector('.package-status-display').innerHTML = createStatusBadge(newStatus);
+        rowContent.querySelector('.star-icon').innerHTML = createStarIcon(newIsFeatured);
+
+        // 4. Đóng modal
+        closeModal(manageModal);
+        alert(`Đã cập nhật thông tin cho gói tập ${packageId} - ${newName}.`);
+    });
+
 
     // --- SỰ KIỆN ĐÓNG MODAL ---
 
