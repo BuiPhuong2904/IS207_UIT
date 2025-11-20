@@ -5,36 +5,42 @@
 @section('content')
 
 <!-- Background Section -->
-<section class="relative bg-black h-[75vh] flex items-center">
+<!--<section class="relative bg-black h-[75vh] flex items-center">
   
-    <div class="absolute inset-0">
-        <img
-            src="{{ asset('images/class/background.png') }}"
-            alt="GRYND - Background"
-            class="h-full w-full object-cover object-top opacity-80">
+    <div class="relative w-full h-[300px] md:h-[400px] lg:h-[540px] overflow-hidden">
+        
+        <div class="absolute inset-0">
+            <img
+                src="{{ asset('images/package/package.png') }}"
+                alt="GRYND - Background"
+                class="h-full w-full object-cover object-top opacity-80 transition-opacity duration-500">
+        </div>
     </div>
 
     <div class="relative z-10 max-w-6xl px-20 text-white">
     
         <div class="grid grid-cols-1 gap-8 md:grid-cols-3 md:items-center">
-        
-            <div class="md:col-span-2">
-                <h1 class="mb-4 font-extrabold text-[55px] font-montserrat text-[#42A5F5] whitespace-nowrap">
-                    CHINH PHỤC CƠ THỂ
-                </h1>
-
-                <p class="font-normal text-[24px] font-open-sans text-white leading-relaxed text-justify">
-                    Khám phá các gói luyện tập đa dạng, được thiết kế linh hoạt theo từng mục
-                    tiêu cá nhân của bạn, và bắt đầu hành trình lột xác toàn diện ngay hôm nay để
-                    chinh phục vóc dáng và phong độ mà bạn mong muốn!
-                </p>
-            </div>
 
             <div class="hidden md:block"></div>
 
         </div>
     </div>
-</section>
+</section>-->
+<div class="relative w-full 
+            aspect-[4/3] 
+            sm:aspect-video 
+            md:aspect-[21/9] 
+            lg:aspect-[1920/540] 
+            overflow-hidden">
+            
+    <div class="absolute inset-0 bg-black opacity-20 z-10"></div>
+    
+    <img
+        src="{{ asset('images/package/background_1.png') }}"
+        alt="GRYND - Background"
+        class="absolute inset-0 h-full w-full object-cover object-center lg:object-top opacity-80">
+        
+</div>
 
 <!-- Featured Packages Section -->
 <section class="bg-[#E3F2FD] py-12 px-10 md:px-20 text-center">
