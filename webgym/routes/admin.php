@@ -35,20 +35,19 @@ Route::middleware([/*'auth', 'admin.role'*/])->prefix('admin')->name('admin.')->
     Route::resource('store', StoreController::class);
     // Cập nhật: Resource cho Store - Tập trung vào Products (CRUD chính)
     Route::prefix('store')->name('store.')->group(function () {
-        // Danh sách tổng quan store (nếu cần, ví dụ index chung)
-        Route::get('/', [StoreController::class, 'index'])->name('index'); // Hoặc redirect đến products
 
-        // CRUD cho Products
-        Route::resource('products', StoreController::class)->except(['index']); // Index dùng chung, tránh conflict
-        // Hoặc nếu muốn resource đầy đủ: Route::resource('products', StoreController::class);
+        // Danh sách sản phẩm
+        Route::get('/', [StoreController::class, 'index'])->name('index');
 
+        // CRUD Product chuẩn REST
+        Route::resource('products', StoreController::class)->except(['index', 'show']);
 
-        // Nested routes cho Variants (CRUD con của Product)
+        // Variant nested
         Route::prefix('products/{product}')->name('products.')->group(function () {
-            Route::resource('variants', StoreController::class)->only(['store', 'update', 'destroy']);
-            Route::delete('variants/{variant}', [StoreController::class, 'destroyVariant']);
-            Route::get('variants', [StoreController::class, 'variants'])
-                ->name('variants.index');
+            Route::get('variants', [StoreController::class, 'variants'])->name('variants.index');
+            Route::post('variants', [StoreController::class, 'storeVariant'])->name('variants.store');
+            Route::put('variants/{variant}', [StoreController::class, 'updateVariant'])->name('variants.update');
+            Route::delete('variants/{variant}', [StoreController::class, 'destroyVariant'])->name('variants.destroy');
         });
     });
 
