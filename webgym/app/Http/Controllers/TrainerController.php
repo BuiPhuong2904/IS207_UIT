@@ -14,8 +14,8 @@ class TrainerController extends Controller
     public function index()
     {
         $trainers = Trainer::with(['user', 'branch'])->latest()->paginate(20);
-
-        return view('admin.trainers', compact('trainers'));
+        $branches = Branch::all(['branch_id', 'branch_name']); // Lấy tất cả chi nhánh
+        return view('admin.trainers', compact('trainers', 'branches'));
     }
 
 

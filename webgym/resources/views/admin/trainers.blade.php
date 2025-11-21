@@ -54,6 +54,7 @@
                 data-experience_years="{{ $trainer->experience_years }}"
                 data-work_schedule="{{ $trainer->work_schedule }}"
                 data-branch_id="{{ $trainer->branch_id }}"
+                data-branch_name="{{ $trainer->branch_name ?? '' }}"
                 data-status="{{ $trainer->status }}"
                 data-image_url="{{ $trainer->user->image_url ?? asset('images/default-avatar.png') }}"
             >
@@ -169,8 +170,13 @@
                             <input type="number" id="add-salary" required min="0" class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
                         </div>
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">ID Chi nhánh <span class="text-red-500">*</span></label>
-                            <input type="number" id="add-branch_id" required placeholder="Ví dụ: 1" value="1" class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Chi nhánh <span class="text-red-500">*</span></label>
+                            <select id="add-branch_id" required class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                                <option value="">-- Chọn chi nhánh --</option>
+                                @foreach($branches as $branch)
+                                <option value="{{ $branch->branch_id }}">{{ $branch->branch_name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
 
@@ -258,7 +264,11 @@
                         </div>
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Chi nhánh</label>
-                            <input type="number" id="manage-branch_id" class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                            <select id="manage-branch_id" class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                                @foreach($branches as $branch)
+                                <option value="{{ $branch->branch_id }}">{{ $branch->branch_name }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
 
@@ -418,6 +428,7 @@
             formData.append('branch_id',       document.getElementById('manage-branch_id').value);
             formData.append('status',          document.getElementById('manage-status').value);
 
+            console.log(formData);
             if (document.getElementById('manage-image_url_input').files[0]) {
                 formData.append('image_url', document.getElementById('manage-image_url_input').files[0]);
             }
