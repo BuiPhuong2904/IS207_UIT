@@ -371,7 +371,7 @@
 
             {{-- Nút bấm --}}
             <div class="flex justify-between mt-8">
-                <button type="button" id="btn-delete-trainer" class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                <button type="button" id="btn-delete-package" class="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 font-medium">
                     Xóa HLV
                 </button>
                 <div class="flex space-x-4">
