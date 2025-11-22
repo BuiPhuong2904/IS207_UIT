@@ -102,7 +102,7 @@
         </table>
         
         <div class="mt-6 flex justify-center">
-             {{ $trainers->links() }} 
+              {{ $trainers->links() }} 
         </div>
     </div>
 </div>
@@ -369,9 +369,9 @@
                 </div>
             </div>
 
-            {{-- Nút bấm --}}
+            {{-- Nút bấm (Đã sửa ID: btn-delete-package -> btn-delete-trainer) --}}
             <div class="flex justify-between mt-8">
-                <button type="button" id="btn-delete-package" class="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 font-medium">
+                <button type="button" id="btn-delete-trainer" class="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 font-medium">
                     Xóa HLV
                 </button>
                 <div class="flex space-x-4">
@@ -473,10 +473,10 @@
             if (d.birth_date) {
                 // Kiểm tra sơ bộ format
                 if (d.birth_date.includes('/')) {
-                     const parts = d.birth_date.split('/');
-                     if (parts.length === 3) document.getElementById('manage-birth_date').value = `${parts[2]}-${parts[1]}-${parts[0]}`;
+                    const parts = d.birth_date.split('/');
+                    if (parts.length === 3) document.getElementById('manage-birth_date').value = `${parts[2]}-${parts[1]}-${parts[0]}`;
                 } else {
-                     document.getElementById('manage-birth_date').value = d.birth_date;
+                    document.getElementById('manage-birth_date').value = d.birth_date;
                 }
             } else {
                 document.getElementById('manage-birth_date').value = '';
@@ -517,8 +517,8 @@
             const birthDateInput = document.getElementById('add-birth_date').value;
 
             if (!fullName || !email || !password || !specialty || !salary || !branchId) {
-                 alert('Vui lòng điền đầy đủ các trường bắt buộc (có dấu *).');
-                 return;
+                alert('Vui lòng điền đầy đủ các trường bắt buộc (có dấu *).');
+                return;
             }
 
             const formData = new FormData();
@@ -532,12 +532,12 @@
             formData.append('gender', document.querySelector('input[name="add-gender"]:checked').value);
             
             if (birthDateInput) {
-                 // Chuyển YYYY-MM-DD -> DD/MM/YYYY để lưu vào DB (nếu DB của bạn lưu chuỗi DD/MM/YYYY)
-                 // Nếu DB lưu DATE chuẩn thì không cần split/reverse
-                 const [yyyy, mm, dd] = birthDateInput.split('-');
-                 formData.append('dob', `${dd}/${mm}/${yyyy}`);
+                // Chuyển YYYY-MM-DD -> DD/MM/YYYY để lưu vào DB (nếu DB của bạn lưu chuỗi DD/MM/YYYY)
+                // Nếu DB lưu DATE chuẩn thì không cần split/reverse
+                const [yyyy, mm, dd] = birthDateInput.split('-');
+                formData.append('dob', `${dd}/${mm}/${yyyy}`);
             } else {
-                 formData.append('dob', '');
+                formData.append('dob', '');
             }
 
             // 2. Dữ liệu Trainer
@@ -593,8 +593,8 @@
             const salary = document.getElementById('manage-salary').value;
 
             if (!fullName || !email || !specialty || !salary) {
-                 alert('Vui lòng điền đầy đủ các trường bắt buộc (có dấu *).');
-                 return;
+                alert('Vui lòng điền đầy đủ các trường bắt buộc (có dấu *).');
+                return;
             }
 
             const formData = new FormData();
@@ -652,7 +652,7 @@
             }
         };
 
-        // === XÓA ===
+        // === XÓA (ĐÃ SỬA ID TỪ 'btn-delete-package' THÀNH 'btn-delete-trainer') ===
         document.getElementById('btn-delete-trainer')?.addEventListener('click', async () => {
             if (!confirm('Xóa HLV này? Không thể khôi phục!')) return;
             const id = document.getElementById('current-trainer_id').value;
