@@ -32,12 +32,17 @@
         <table class="min-w-full border-separate border-spacing-y-2">
             <thead class="bg-gray-50">
             <tr>
-                <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase w-[5%]"></th>
+                {{-- Mã lớp: 10% --}}
                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-[10%]">Mã lớp</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-[20%]">Tên lớp</th>
+                {{-- TÊN LỚP: ĐÃ ĐIỀU CHỈNH TỪ w-[20%] SANG w-[15%] --}}
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-[15%]">Tên lớp</th>
+                {{-- Loại lớp: 15% --}}
                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-[15%]">Loại lớp</th>
+                {{-- Sức chứa: 12% --}}
                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-[12%]">Sức chứa</th>
+                {{-- MÔ TẢ: --}}
                 <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase flex-1">Mô tả</th>
+                {{-- Trạng thái: 15% --}}
                 <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase w-[15%]">Trạng thái</th>
             </tr>
             </thead>
@@ -54,44 +59,45 @@
                 data-image_url="{{ $class->image_url ?? '' }}"
             >
 
-                <td colspan="7" class="p-0">
+                {{-- Thay đổi colspan từ 7 thành 6 (theo yêu cầu trước) --}}
+                <td colspan="6" class="p-0">
                     <div class="flex w-full rounded-lg items-center {{ $loop->even ? 'bg-white' : 'bg-[#1976D2]/10' }} shadow-sm overflow-hidden class-row-content">
 
-                        {{-- Cột ngôi sao (nếu muốn thêm trường is_featured sau này thì bật lại) --}}
-                        <div class="px-4 py-3 w-[5%] text-center star-icon">
-                            {{-- @if($class->is_featured ?? false) ... @endif --}}
-                        </div>
-
-                        {{-- Mã lớp: LO0001 --}}
+                        {{-- Mã lớp: 10% --}}
                         <div class="px-4 py-3 w-[10%] text-sm font-medium text-gray-900">
                             LO{{ str_pad($class->class_id, 4, '0', STR_PAD_LEFT) }}
                         </div>
 
-                        <div class="px-4 py-3 w-[20%] text-sm text-gray-700 font-medium">
+                        {{-- TÊN LỚP: ĐÃ ĐIỀU CHỈNH TỪ w-[20%] SANG w-[15%] --}}
+                        <div class="px-4 py-3 w-[15%] text-sm text-gray-700 font-medium">
                             {{ $class->class_name }}
                         </div>
 
+                        {{-- Loại lớp: 15% --}}
                         <div class="px-4 py-3 w-[15%] text-sm text-gray-700">
                             {{ $class->type }}
                         </div>
 
+                        {{-- Sức chứa: 12% --}}
                         <div class="px-4 py-3 w-[12%] text-sm text-gray-700">
                             {{ $class->max_capacity }} người
                         </div>
 
+                        {{-- MÔ TẢ: --}}
                         <div class="px-4 py-3 flex-1 text-sm text-gray-700 truncate" title="{{ $class->description ?? '' }}">
                             {{ Str::limit($class->description ?? '—', 100) }}
                         </div>
 
+                        {{-- Trạng thái: 15% --}}
                         <div class="px-4 py-3 w-[15%] text-right">
                             @if($class->is_active)
                             <span class="inline-flex px-3 py-1 text-xs font-semibold leading-5 rounded-full bg-green-100 text-green-800">
-                                            Đang hoạt động
-                                        </span>
+                                Đang hoạt động
+                            </span>
                             @else
                             <span class="inline-flex px-3 py-1 text-xs font-semibold leading-5 rounded-full bg-gray-200 text-gray-800">
-                                            Dừng hoạt động
-                                        </span>
+                                Dừng hoạt động
+                            </span>
                             @endif
                         </div>
                     </div>
@@ -200,13 +206,13 @@
                 </div>
             </div>
 
-            {{-- Mô tả (ĐÃ SỬA) --}}
+            {{-- Mô tả --}}
             <div class="flex items-start space-x-4 mb-4">
                 <label for="add-description" class="block text-sm font-medium text-gray-700 w-1/4 pt-2.5">Mô tả</label>
                 <textarea id="add-description" rows="5" class="w-3/4 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black"></textarea>
             </div>
 
-            {{-- Nút bấm (ĐÃ SỬA) --}}
+            {{-- Nút bấm --}}
             <div class="flex justify-center space-x-4 mt-8">
                 <button type="button" class="close-modal px-8 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400">
                     Hủy
@@ -343,13 +349,13 @@
                 </div>
             </div>
 
-            {{-- Mô tả (ĐÃ SỬA) --}}
+            {{-- Mô tả --}}
             <div class="mb-4 flex items-start space-x-4">
                 <label for="manage-description" class="block text-sm font-medium text-gray-700 w-1/4 pt-2.5">Mô tả</label>
                 <textarea id="manage-description" rows="5" class="w-3/4 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black"></textarea>
             </div>
             
-            {{-- Nút bấm (ĐÃ SỬA) --}}
+            {{-- Nút bấm --}}
             <div class="flex justify-between space-x-4 mt-8">
                 <button type="button" id="btn-delete-class" class="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 font-medium">
                     Xóa lớp này
