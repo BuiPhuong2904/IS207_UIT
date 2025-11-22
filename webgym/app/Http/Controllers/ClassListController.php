@@ -16,11 +16,12 @@ class ClassListController extends Controller
             'class_name',
             'type',
             'max_capacity',
+            'description',
             'is_active',
             'image_url',
             'created_at'
         )
-            ->latest('class_id')
+            ->latest('class_id', 'asc')
             ->paginate(15); // hoặc get() nếu muốn load hết
 
         return view('admin.class_list', compact('classes'));
@@ -36,10 +37,19 @@ class ClassListController extends Controller
             'max_capacity'  => 'required|integer|min:1|max:100',
             'description'   => 'nullable|string',
             'is_active'     => 'required|boolean',
-            'image_url'     => 'nullable|url|max:500',
+
         ]);
 
-        $class_list = GymClass::create($validated);
+        $data = $request->all();
+
+        if ($request->hasFile('image_url')) {
+            $path = $request->file('image_url')->store('packages', 'public');
+            $data['image_url'] = '/storage/' . $path;
+        } else {
+            $data['image_url'] = 'https://via.placeholder.com/150';
+        }
+
+        $class_list = GymClass::create($data);
 
         return response()->json([
             'success' => true,

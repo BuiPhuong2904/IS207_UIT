@@ -8,6 +8,7 @@ use Illuminate\Validation\Rule;
 use App\Models\Product;
 use App\Models\ProductCategory;
 use App\Models\ProductVariant;
+use Illuminate\Support\Str;
 
 class StoreController extends Controller
 {
@@ -45,69 +46,28 @@ class StoreController extends Controller
         return view('admin.store', compact('products', 'categories', 'statuses'));
     }
 
-    // 2. CREATE - Trả form data rỗng cho modal thêm
-    public function create(Request $request)
-    {
-        $categories = ProductCategory::pluck('category_name', 'category_id')->toArray();
-
-        return response()->json([
-            'success' => true,
-            'form_data' => [
-                'product_name'  => '',
-                'description'   => '',
-                'image_url'     => '',
-                'slug'          => '',
-                'category_id'   => '',
-                'brand'         => '',
-                'origin'        => '',
-                'status'        => 'active',
-                'variants'      => []
-            ],
-            'categories' => $categories
-        ]);
-    }
 
     // 3. STORE - Thêm sản phẩm mới + variants
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'product_name' => 'required|string|max:255',
+        $validated = $request->validate([
+            'product_name' => 'required|string|unique:product,product_name',
             'description'  => 'required|string',
-            'image_url'    => 'nullable|url',
-            'slug'         => 'required|string|unique:product,slug|max:255',
             'category_id'  => 'required|exists:product_category,category_id',
             'brand'        => 'nullable|string|max:100',
             'origin'       => 'nullable|string|max:100',
             'status'       => 'required|in:active,inactive',
-            'variants'     => 'array',
-            'variants.*.color'  => 'required|string|max:50',
-            'variants.*.size'   => 'required|string|max:50',
-            'variants.*.price'  => 'required|numeric|min:0',
-            'variants.*.discount_price' => 'nullable|numeric|lte:variants.*.price',
-            'variants.*.is_discounted'  => 'sometimes|boolean',
-            'variants.*.stock'  => 'required|integer|min:0',
-            'variants.*.image_url' => 'nullable|url',
-            'variants.*.status' => 'required|in:active,inactive',
-            'variants.*.weight' => 'nullable|numeric',
-            'variants.*.unit'   => 'nullable|string|max:20',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+
+        $validated['slug']= Str::slug($request->product_name);
+        if ($request->hasFile('image_url')) {
+            $path = $request->file('image_url')->store('packages', 'public');
+            $validated['image_url'] = '/storage/' . $path;
+        } else {
+            $validated['image_url'] = 'https://via.placeholder.com/150';
         }
-
-        $product = Product::create($request->only([
-            'product_name', 'description', 'image_url', 'slug',
-            'category_id', 'brand', 'origin', 'status'
-        ]));
-
-        if ($request->has('variants') && count($request->variants) > 0) {
-            foreach ($request->variants as $variant) {
-                $product->variants()->create($variant);
-            }
-        }
-
-        $product->load(['category', 'variants']);
+        $product = Product::create($validated);
 
         return response()->json([
             'success' => true,
@@ -116,68 +76,31 @@ class StoreController extends Controller
         ], 201);
     }
 
-    // 4. EDIT - Lấy dữ liệu sản phẩm để sửa
-    public function edit(Product $product)
-    {
-        $product->load('variants');
-        $categories = ProductCategory::pluck('category_name', 'category_id')->toArray();
-
-        return response()->json([
-            'success' => true,
-            'form_data' => $product,
-            'categories' => $categories,
-            'variants' => $product->variants
-        ]);
-    }
-
-    // 5. UPDATE - Cập nhật sản phẩm + sync variants
+    // 5. UPDATE - Cập nhật sản phẩm
     public function update(Request $request, Product $product)
     {
-        $validator = Validator::make($request->all(), [
-            'product_name' => 'required|string|max:255',
+        $validated = $request->validate([
+            'product_name' => 'required|string|max:255|unique:product,product_name,'.$product->product_id. ',product_id',
             'description'  => 'required|string',
-            'image_url'    => 'nullable|url',
-            'slug'         => ['required', 'string', 'max:255', Rule::unique('product')->ignore($product->product_id, 'product_id')],
             'category_id'  => 'required|exists:product_category,category_id',
             'brand'        => 'nullable|string|max:100',
             'origin'       => 'nullable|string|max:100',
             'status'       => 'required|in:active,inactive',
-            'variants'     => 'array',
-            'variants.*.color'  => 'required|string|max:50',
-            'variants.*.size'   => 'required|string|max:50',
-            'variants.*.price'  => 'required|numeric|min:0',
-            'variants.*.discount_price' => 'nullable|numeric|lte:variants.*.price',
-            'variants.*.is_discounted'  => 'sometimes|boolean',
-            'variants.*.stock'  => 'required|integer|min:0',
-            'variants.*.image_url' => 'nullable|url',
-            'variants.*.status' => 'required|in:active,inactive',
-            'variants.*.weight' => 'nullable|numeric',
-            'variants.*.unit'   => 'nullable|string|max:20',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+        $validated['slug']= Str::slug($request->product_name);
+        if ($request->hasFile('image_url')) {
+            $path = $request->file('image_url')->store('packages', 'public');
+            $validated['image_url'] = '/storage/' . $path;
         }
 
-        $product->update($request->only([
-            'product_name', 'description', 'image_url', 'slug',
-            'category_id', 'brand', 'origin', 'status'
-        ]));
-
-        // Sync variants: xóa cũ, tạo mới
-        $product->variants()->delete();
-        if ($request->has('variants') && count($request->variants) > 0) {
-            foreach ($request->variants as $variant) {
-                $product->variants()->create($variant);
-            }
-        }
-
-        $product->load(['category', 'variants']);
+        $product->update($validated);
 
         return response()->json([
             'success' => true,
             'message' => 'Cập nhật sản phẩm thành công!',
-            'product' => $product
+            'success',
+            'product'  => $product->fresh()->load('variants')
         ]);
     }
 
@@ -210,7 +133,7 @@ class StoreController extends Controller
     // 8. API thêm variant mới
     public function storeVariant(Request $request, Product $product)
     {
-        $request->validate([
+        $validated = $request->validate([
             'color'           => 'required|string|max:50',
             'size'            => 'required|string|max:50',
             'price'           => 'required|numeric|min:0',
@@ -222,8 +145,24 @@ class StoreController extends Controller
             'weight'          => 'nullable|numeric',
             'unit'            => 'nullable|string|max:20',
         ]);
+        $data = $validated;
+        $data['product_id'] = $product->product_id;
 
-        $variant = $product->variants()->create($request->all());
+        if (!empty($data['discount_price']) || $data['discount_price'] === '0') {
+            $data['is_discounted'] = true;
+        } elseif (!isset($data['is_discounted'])) {
+            $data['is_discounted'] = false;
+        }
+
+        if ($request->hasFile('image_url')) {
+            $path = $request->file('image_url')->store('packages', 'public');
+            $data['image_url'] = '/storage/' . $path;
+        }
+        else {
+            $data['image_url'] = 'https://via.placeholder.com/150';
+        }
+
+        $variant = ProductVariant::create($data);
 
         return response()->json([
             'success' => true,
@@ -232,44 +171,62 @@ class StoreController extends Controller
         ], 201);
     }
 
-    // 9. API sửa variant
+
     public function updateVariant(Request $request, Product $product, ProductVariant $variant)
     {
+        // Bảo vệ: variant phải thuộc về product này
         if ($variant->product_id !== $product->product_id) {
-            return response()->json(['success' => false, 'message' => 'Không hợp lệ'], 403);
+            return response()->json([
+                'success' => false,
+                'message' => 'Biến thể không thuộc sản phẩm này!'
+            ], 403);
         }
 
-        $request->validate([
+        $validated = $request->validate([
             'color'           => 'required|string|max:50',
             'size'            => 'required|string|max:50',
-            'price'           => 'required|numeric|min:0',
-            'discount_price'  => 'nullable|numeric|lte:price',
-            'is_discounted'   => 'sometimes|boolean',
+            'price'           => 'required|numeric|min:0.01',
+            'discount_price'  => 'nullable|numeric|min:0|lte:price',
             'stock'           => 'required|integer|min:0',
-            'image_url'       => 'nullable|url',
+            'image_url'       => 'nullable|url:http,https|max:500',
             'status'          => 'required|in:active,inactive',
-            'weight'          => 'nullable|numeric',
+            'weight'          => 'nullable|numeric|min:0',
             'unit'            => 'nullable|string|max:20',
         ]);
 
-        $variant->update($request->all());
+        // Tự động bật/tắt is_discounted
+        $validated['is_discounted'] = !empty($validated['discount_price']) || $validated['discount_price'] === 0;
+
+        // Nếu xóa link ảnh → để mặc định
+        if (empty($validated['image_url'])) {
+            $validated['image_url'] = 'https://via.placeholder.com/400x400/cccccc/666666?text=No+Image';
+        }
+
+        $variant->update($validated);
 
         return response()->json([
             'success' => true,
-            'message' => 'Cập nhật biến thể thành công',
+            'message' => 'Cập nhật biến thể thành công!',
             'variant' => $variant->fresh()
         ]);
     }
 
-    // 10. API xóa variant
+    // 3. DESTROY VARIANT – SẠCH + AN TOÀN
     public function destroyVariant(Product $product, ProductVariant $variant)
     {
+        // Kiểm tra quyền sở hữu
         if ($variant->product_id !== $product->product_id) {
-            return response()->json(['success' => false, 'message' => 'Không hợp lệ'], 403);
+            return response()->json([
+                'success' => false,
+                'message' => 'Không có quyền xóa biến thể này!'
+            ], 403);
         }
 
         $variant->delete();
 
-        return response()->json(['success' => true, 'message' => 'Xóa biến thể thành công']);
+        return response()->json([
+            'success' => true,
+            'message' => 'Xóa biến thể thành công!'
+        ]);
     }
 }

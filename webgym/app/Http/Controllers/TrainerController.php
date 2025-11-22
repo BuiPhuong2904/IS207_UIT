@@ -14,8 +14,8 @@ class TrainerController extends Controller
     public function index()
     {
         $trainers = Trainer::with(['user', 'branch'])->latest()->paginate(20);
-
-        return view('admin.trainers', compact('trainers'));
+        $branches = Branch::all(['branch_id', 'branch_name']); // Lấy tất cả chi nhánh
+        return view('admin.trainers', compact('trainers', 'branches'));
     }
 
 
@@ -42,7 +42,7 @@ class TrainerController extends Controller
 
     public function show(Trainer $trainer)
     {
-        $trainer->load(['user:id,full_name,email,phone', 'branch:branch_id,branch_name', 'classschedule']);
+        $trainer->load(['user:id,full_name,email,phone,address,image_url', 'branch:branch_id,branch_name']);
         return response()->json([
             'success' => true,
             'data'    => $trainer
