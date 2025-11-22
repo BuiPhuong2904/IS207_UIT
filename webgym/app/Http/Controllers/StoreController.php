@@ -46,27 +46,6 @@ class StoreController extends Controller
         return view('admin.store', compact('products', 'categories', 'statuses'));
     }
 
-    // 2. CREATE - Trả form data rỗng cho modal thêm
-    public function create(Request $request)
-    {
-        $categories = ProductCategory::pluck('category_name', 'category_id')->toArray();
-
-        return response()->json([
-            'success' => true,
-            'form_data' => [
-                'product_name'  => '',
-                'description'   => '',
-                'image_url'     => '',
-                'slug'          => '',
-                'category_id'   => '',
-                'brand'         => '',
-                'origin'        => '',
-                'status'        => 'active',
-                'variants'      => []
-            ],
-            'categories' => $categories
-        ]);
-    }
 
     // 3. STORE - Thêm sản phẩm mới + variants
     public function store(Request $request)
@@ -96,7 +75,6 @@ class StoreController extends Controller
             'product' => $product
         ], 201);
     }
-
 
     // 5. UPDATE - Cập nhật sản phẩm
     public function update(Request $request, Product $product)
