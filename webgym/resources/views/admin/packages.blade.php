@@ -120,7 +120,7 @@
 </div>
 
 
-{{-- ----------------- MODAL 1: THÊM GÓI TẬP (GIỮ NGUYÊN) ----------------- --}}
+{{-- ----------------- MODAL 1: THÊM GÓI TẬP ----------------- --}}
 <div id="addPackageModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center">
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-3xl"> 
         
@@ -311,7 +311,7 @@
 
 @push('scripts')
 <style>
-/* === CUSTOM STYLES CHO CUSTOM SELECT (GIỮ NGUYÊN) === */
+/* === CUSTOM STYLES CHO CUSTOM SELECT === */
 .custom-multiselect-option:hover { @apply bg-[#999999]/50 text-gray-900; }
 .custom-multiselect-option:hover span { @apply text-gray-900; }
 .custom-multiselect-option.bg-blue-100 { @apply bg-blue-500/50 text-gray-900; }
@@ -321,7 +321,7 @@
 </style>
 
 <script>
-// --- 4. SCRIPT CUSTOM SELECT (GIỮ NGUYÊN KHÔNG SỬA) ---
+// --- 4. SCRIPT CUSTOM SELECT  ---
 function updateMultiselectDisplay(container) {
     const hiddenSelect = container.querySelector('select');
     const displaySpan = container.querySelector('.custom-multiselect-display');
