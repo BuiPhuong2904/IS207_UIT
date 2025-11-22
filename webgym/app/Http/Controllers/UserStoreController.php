@@ -126,7 +126,7 @@ class UserStoreController extends Controller
         return view('user.product_detail', compact('product', 'colors', 'sizes', 'minPrice', 'maxPrice', 'relatedProducts'));
     }
 
-    // API Load thêm sản phẩm liên quan (ĐÃ CẬP NHẬT LOGIC GIẢM GIÁ)
+    // API Load thêm sản phẩm liên quan 
     public function loadMoreRelated(Request $request)
     {
         $categoryId = $request->input('category_id');

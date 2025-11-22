@@ -15,7 +15,7 @@ class ClassSchedule extends Model
         'class_id', 'date', 'start_time', 'end_time', 'room', 'status', 'trainer_id', 'branch_id'
     ];
 
-    public $timestamps = false;
+    // public $timestamps = false;
 
     public function gymClass()
     {

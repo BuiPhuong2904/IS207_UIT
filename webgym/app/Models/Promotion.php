@@ -17,7 +17,7 @@ class Promotion extends Model
         'usage_limit', 'per_user_limit', 'is_active'
     ];
 
-    public $timestamps = false;
+    // public $timestamps = false;
 
     public function targets()
     {

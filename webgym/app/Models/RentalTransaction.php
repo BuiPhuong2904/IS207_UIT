@@ -16,7 +16,7 @@ class RentalTransaction extends Model
         'return_date', 'status', 'note'
     ];
 
-    public $timestamps = false;
+    // public $timestamps = false;
 
     public function user()
     {

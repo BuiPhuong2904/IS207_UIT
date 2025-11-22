@@ -15,7 +15,7 @@ class ClassRegistration extends Model
         'user_id', 'schedule_id', 'status'
     ];
 
-    public $timestamps = false;
+    // public $timestamps = false;
 
     public function user()
     {

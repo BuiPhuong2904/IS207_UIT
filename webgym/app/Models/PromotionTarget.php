@@ -12,7 +12,7 @@ class PromotionTarget extends Model
     protected $table = 'promotion_target';
     protected $primaryKey = 'p_target_id';
     protected $fillable = ['promotion_id', 'target_type', 'target_id'];
-    public $timestamps = false;
+    // public $timestamps = false;
 
     public function promotion()
     {

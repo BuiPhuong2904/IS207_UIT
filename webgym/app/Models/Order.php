@@ -16,7 +16,7 @@ class Order extends Model
         'shipping_address', 'discount_value', 'promotion_code'
     ];
 
-    public $timestamps = false;
+    // public $timestamps = false;
 
     public function user()
     {

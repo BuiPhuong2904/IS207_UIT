@@ -16,7 +16,7 @@ class Payment extends Model
         'payment_date', 'status', 'order_id', 'package_registration_id'
     ];
 
-    public $timestamps = false;
+    // public $timestamps = false;
 
     public function user()
     {

@@ -17,7 +17,7 @@ class Trainer extends Model
         'work_schedule', 'branch_id', 'status'
     ];
 
-    public $timestamps = false;
+    // public $timestamps = false;
 
     public function user()
     {

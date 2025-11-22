@@ -16,7 +16,7 @@ class RentalItem extends Model
         'quantity_available', 'branch_id','ímage_url', 'status'
     ];
 
-    public $timestamps = false;
+    // public $timestamps = false;
 
     public function branch()
     {

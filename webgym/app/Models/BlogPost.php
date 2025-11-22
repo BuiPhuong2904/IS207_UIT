@@ -17,5 +17,5 @@ class BlogPost extends Model
         'tags', 'image_url'
     ];
 
-    public $timestamps = false;
+    // public $timestamps = false;
 }

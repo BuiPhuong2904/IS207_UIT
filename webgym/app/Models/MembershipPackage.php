@@ -17,7 +17,7 @@ class MembershipPackage extends Model
         'package_name', 'description', 'duration_months', 'price', 'slug', 'image_url', 'status', 'is_featured'
     ];
 
-    public $timestamps = true;
+    // public $timestamps = true;
 
     public function registrations()
     {

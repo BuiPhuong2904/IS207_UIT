@@ -510,6 +510,22 @@ class UserSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+
+            // HLV nghỉ việc
+            [
+                'full_name' => 'Trần Văn Khoa',
+                'email' => 'khoa.tran@example.com',
+                'password' => Hash::make('123456'),
+                'role' => 'trainer',
+                'phone' => '0909988776',
+                'birth_date' => '1985-05-15',
+                'gender' => 'Nam',
+                'address' => 'Số 200, Đường Lý Thường Kiệt, Phường 14, TP.HCM',
+                'image_url' => null,
+                'status' => 'inactive',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
         ]);
     }
 }

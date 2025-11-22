@@ -15,7 +15,7 @@ class PackageRegistration extends Model
         'user_id', 'package_id', 'start_date', 'end_date', 'status'
     ];
 
-    public $timestamps = false;
+    // public $timestamps = false;
 
     public function user()
     {

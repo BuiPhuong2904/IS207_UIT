@@ -15,7 +15,7 @@ class Branch extends Model
         'branch_name', 'address', 'phone', 'manager_id', 'is_active'
     ];
 
-    public $timestamps = false;
+    // public $timestamps = false;
 
     public function manager()
     {
