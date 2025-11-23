@@ -16,7 +16,7 @@ class User extends Authenticatable
     protected $primaryKey = 'id';
     protected $fillable = [
         'full_name', 'email', 'password', 'role', 'phone',
-        'birth_date', 'gender', 'address','ímage_url', 'status'
+        'birth_date', 'gender', 'address','image_url', 'status'
     ];
 
     public function trainer()
@@ -79,4 +79,3 @@ class User extends Authenticatable
     }
 
 }
-

@@ -50,7 +50,7 @@
                     data-specialty="{{ $trainer->specialty }}"
                     data-work_schedule="{{ $trainer->work_schedule }}"
                     data-status="{{ $trainer->status }}"
-                    data-birth_date="{{ $trainer->user->dob ?? '' }}" 
+                    data-birth_date="{{ $trainer->user->birth_date ?? '' }}" 
                     data-gender="{{ $trainer->user->gender ?? 'Nam' }}"
                     data-phone="{{ $trainer->user->phone ?? '' }}"
                     data-address="{{ $trainer->user->address ?? '' }}"
@@ -107,7 +107,7 @@
     </div>
 </div>
 
-{{-- ----------------- MODAL 1: THÊM HLV (Giao diện File 1) ----------------- --}}
+{{-- ----------------- MODAL 1: THÊM HLV ----------------- --}}
 <div id="addTrainerModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center bg-black/50">
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         
@@ -235,7 +235,7 @@
     </div>
 </div>
 
-{{-- ----------------- MODAL 2: QUẢN LÝ HLV (Giao diện File 1) ----------------- --}}
+{{-- ----------------- MODAL 2: QUẢN LÝ HLV ----------------- --}}
 <div id="manageTrainerModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center bg-black/50">
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         
@@ -446,6 +446,7 @@
             addForm.reset();
             document.querySelector('input[name="add-gender"][value="Nam"]').checked = true;
             document.getElementById('add-image_url_preview').src = defaultAvatar;
+            // Reset ngày sinh (để trống nếu không chọn)
             document.getElementById('add-birth_date').value = ''; 
             openModal(addModal);
         });
@@ -468,19 +469,9 @@
             document.getElementById('manage-phone').value = d.phone || '';
             document.getElementById('manage-address').value = d.address || '';
             
-            // Xử lý ngày sinh (Chuyển đổi sang YYYY-MM-DD nếu cần, tùy thuộc format từ DB)
-            // Giả sử DB trả về YYYY-MM-DD thì gán thẳng, nếu DD/MM/YYYY thì cần convert
-            if (d.birth_date) {
-                // Kiểm tra sơ bộ format
-                if (d.birth_date.includes('/')) {
-                    const parts = d.birth_date.split('/');
-                    if (parts.length === 3) document.getElementById('manage-birth_date').value = `${parts[2]}-${parts[1]}-${parts[0]}`;
-                } else {
-                    document.getElementById('manage-birth_date').value = d.birth_date;
-                }
-            } else {
-                document.getElementById('manage-birth_date').value = '';
-            }
+            // --- GÁN THẲNG NGÀY THÁNG (Y-m-d) ---
+            // Input type="date" tự động hiểu format YYYY-MM-DD
+            document.getElementById('manage-birth_date').value = d.birth_date || ''; 
             
             document.getElementById('manage-password').value = ''; // Không hiện pass cũ
             document.getElementById('manage-current-password').value = d.password || ''; // Lưu pass cũ ẩn
@@ -514,7 +505,6 @@
             const specialty = document.getElementById('add-specialty').value.trim();
             const salary = document.getElementById('add-salary').value;
             const branchId = document.getElementById('add-branch_id').value;
-            const birthDateInput = document.getElementById('add-birth_date').value;
 
             if (!fullName || !email || !password || !specialty || !salary || !branchId) {
                 alert('Vui lòng điền đầy đủ các trường bắt buộc (có dấu *).');
@@ -531,14 +521,8 @@
             formData.append('address', document.getElementById('add-address').value.trim());
             formData.append('gender', document.querySelector('input[name="add-gender"]:checked').value);
             
-            if (birthDateInput) {
-                // Chuyển YYYY-MM-DD -> DD/MM/YYYY để lưu vào DB (nếu DB của bạn lưu chuỗi DD/MM/YYYY)
-                // Nếu DB lưu DATE chuẩn thì không cần split/reverse
-                const [yyyy, mm, dd] = birthDateInput.split('-');
-                formData.append('dob', `${dd}/${mm}/${yyyy}`);
-            } else {
-                formData.append('dob', '');
-            }
+            // --- GỬI THẲNG NGÀY THÁNG (Y-m-d) ---
+            formData.append('dob', document.getElementById('add-birth_date').value); 
 
             // 2. Dữ liệu Trainer
             formData.append('specialty', specialty);
@@ -555,7 +539,7 @@
             try {
                 const res = await fetch('/admin/trainers', { 
                     method: 'POST',
-                    headers: { 'X-CSRF-TOKEN': csrfToken },
+                    headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' },
                     body: formData
                 });
 
@@ -600,11 +584,8 @@
             const formData = new FormData();
             formData.append('_method', 'PUT'); 
             
-            const birthDateInput = document.getElementById('manage-birth_date').value; 
-            if (birthDateInput) {
-                const [yyyy, mm, dd] = birthDateInput.split('-');
-                formData.append('dob', `${dd}/${mm}/${yyyy}`);
-            }
+            // ---  GỬI THẲNG NGÀY THÁNG (Y-m-d) ---
+            formData.append('dob', document.getElementById('manage-birth_date').value); 
             
             // 1. Dữ liệu User
             formData.append('full_name', fullName);
@@ -652,7 +633,7 @@
             }
         };
 
-        // === XÓA (ĐÃ SỬA ID TỪ 'btn-delete-package' THÀNH 'btn-delete-trainer') ===
+        // === XÓA  ===
         document.getElementById('btn-delete-trainer')?.addEventListener('click', async () => {
             if (!confirm('Xóa HLV này? Không thể khôi phục!')) return;
             const id = document.getElementById('current-trainer_id').value;

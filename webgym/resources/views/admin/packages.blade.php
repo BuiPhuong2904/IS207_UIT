@@ -34,15 +34,15 @@
 
     <div class="overflow-x-auto">
         <table class="min-w-full border-separate border-spacing-y-2">
-            <thead class="bg-gray-50">
+            <thead class="bg-gray-50 font-montserrat text-[#1f1d1d] text-xs font-semibold">
                 <tr>
-                    <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase w-[5%]"></th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-[10%]">Mã gói tập</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-[15%]">Tên gói tập</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-[15%]">Giá tiền</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-[15%]">Thời hạn (tháng)</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase flex-1">Mô tả</th>
-                    <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase w-[15%]">Trạng thái</th>
+                    <th class="px-4 py-3 text-center uppercase w-[5%]"></th>
+                    <th class="px-4 py-3 text-left uppercase w-[10%]">Mã gói tập</th>
+                    <th class="px-4 py-3 text-left uppercase w-[15%]">Tên gói tập</th>
+                    <th class="px-4 py-3 text-left uppercase w-[12%]">Giá tiền (VND)</th>
+                    <th class="px-4 py-3 text-left uppercase w-[10%]">Thời hạn</th>
+                    <th class="px-4 py-3 text-center uppercase flex-1">Mô tả</th>
+                    <th class="px-4 py-3 text-center uppercase w-[15%]">Trạng thái</th>
                 </tr>
             </thead>
 
@@ -82,12 +82,12 @@
                             <div class="px-4 py-3 w-[15%] text-sm text-gray-700 package-name-display">
                                 {{ $package->package_name }}
                             </div>
-                            <div class="px-4 py-3 w-[15%] text-sm text-gray-700 package-price-display">
-                                {{ number_format($package->price, 0, ',', '.') }} VND
+                            <div class="px-4 py-3 w-[12%] text-sm text-gray-700 package-price-display">
+                                {{ number_format($package->price, 0, ',', '.') }}
                             </div>
-                            <div class="px-4 py-3 w-[15%] text-sm text-gray-700 package-duration-display">
+                            <div class="px-4 py-3 w-[10%] text-sm text-gray-700 package-duration-display">
                                 @if($package->duration_months)
-                                    {{ $package->duration_months }} tháng
+                                    {{ $package->duration_months }} tháng 
                                 @else
                                     <span class="text-gray-700 font-medium">Theo ngày</span>
                                 @endif
@@ -95,7 +95,7 @@
                             <div class="px-4 py-3 flex-1 text-sm text-gray-700 truncate package-description-display" title="{{ $package->description }}">
                                 {{ $package->description }}
                             </div>
-                            <div class="px-4 py-3 w-[15%] text-sm text-right package-status-display">
+                            <div class="px-4 py-3 w-[15%] text-sm text-center package-status-display">
                                 @if ($package->status == 'active')
                                     <span class="inline-flex px-3 py-1 text-xs font-semibold leading-5 rounded-full bg-green-100 text-green-800">
                                         Đang hoạt động

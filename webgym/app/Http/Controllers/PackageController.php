@@ -24,7 +24,7 @@ class PackageController extends Controller
             'created_at',
         )
         ->orderBy('package_id', 'asc') // Sắp xếp tăng dần (1 -> 10)
-        ->paginate(15);
+        ->paginate(10);
                 
         return view('admin.packages', compact('packages'));
     }
@@ -48,7 +48,7 @@ class PackageController extends Controller
             $path = $request->file('image_url')->store('packages', 'public');
             $data['image_url'] = '/storage/' . $path;
         } else {
-            $data['image_url'] = 'https://via.placeholder.com/150';
+            $data['image_url'] = 'https://res.cloudinary.com/dna9qbejm/image/upload/v1762341321/ava_ntqezy.jpg';
         }
 
         $package = MembershipPackage::create($data);

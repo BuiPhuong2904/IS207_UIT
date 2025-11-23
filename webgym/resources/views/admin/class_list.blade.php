@@ -30,20 +30,14 @@
 
     <div class="overflow-x-auto">
         <table class="min-w-full border-separate border-spacing-y-2">
-            <thead class="bg-gray-50">
+            <thead class="bg-gray-50 font-montserrat text-[#1f1d1d] text-xs font-semibold">
             <tr>
-                {{-- Mã lớp: 10% --}}
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-[10%]">Mã lớp</th>
-                {{-- TÊN LỚP: ĐÃ ĐIỀU CHỈNH TỪ w-[20%] SANG w-[15%] --}}
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-[15%]">Tên lớp</th>
-                {{-- Loại lớp: 15% --}}
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-[15%]">Loại lớp</th>
-                {{-- Sức chứa: 12% --}}
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase w-[12%]">Sức chứa</th>
-                {{-- MÔ TẢ: --}}
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase flex-1">Mô tả</th>
-                {{-- Trạng thái: 15% --}}
-                <th class="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase w-[15%]">Trạng thái</th>
+                <th class="px-4 py-3 text-left uppercase w-[10%]">Mã lớp</th>
+                <th class="px-4 py-3 text-left uppercase w-[15%]">Tên lớp</th>
+                <th class="px-4 py-3 text-left uppercase w-[15%]">Loại lớp</th>
+                <th class="px-4 py-3 text-left uppercase w-[12%]">Sức chứa</th>
+                <th class="px-4 py-3 text-center uppercase flex-1">Mô tả</th>
+                <th class="px-4 py-3 text-center uppercase w-[15%]">Trạng thái</th>
             </tr>
             </thead>
 
@@ -59,7 +53,6 @@
                 data-image_url="{{ $class->image_url ?? '' }}"
             >
 
-                {{-- Thay đổi colspan từ 7 thành 6 (theo yêu cầu trước) --}}
                 <td colspan="6" class="p-0">
                     <div class="flex w-full rounded-lg items-center {{ $loop->even ? 'bg-white' : 'bg-[#1976D2]/10' }} shadow-sm overflow-hidden class-row-content">
 
@@ -68,14 +61,14 @@
                             LO{{ str_pad($class->class_id, 4, '0', STR_PAD_LEFT) }}
                         </div>
 
-                        {{-- TÊN LỚP: ĐÃ ĐIỀU CHỈNH TỪ w-[20%] SANG w-[15%] --}}
+                        {{-- TÊN LỚP: 15% --}}
                         <div class="px-4 py-3 w-[15%] text-sm text-gray-700 font-medium">
                             {{ $class->class_name }}
                         </div>
 
                         {{-- Loại lớp: 15% --}}
                         <div class="px-4 py-3 w-[15%] text-sm text-gray-700">
-                            {{ $class->type }}
+                            {{ $class->type_label }}
                         </div>
 
                         {{-- Sức chứa: 12% --}}
@@ -89,7 +82,7 @@
                         </div>
 
                         {{-- Trạng thái: 15% --}}
-                        <div class="px-4 py-3 w-[15%] text-right">
+                        <div class="px-4 py-3 w-[15%] text-center">
                             @if($class->is_active)
                             <span class="inline-flex px-3 py-1 text-xs font-semibold leading-5 rounded-full bg-green-100 text-green-800">
                                 Đang hoạt động
@@ -143,57 +136,42 @@
                         <input type="text" id="add-class_name" required class="w-2/3 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5">
                     </div>
 
-                    {{-- Loại lớp (ĐÃ CHUYỂN SANG CUSTOM SELECT VÀ CĂN CHỈNH WIDTH) --}}
+                    {{-- Loại lớp --}}
                     <div class="flex items-center space-x-4">
                         <label class="block text-sm font-medium text-gray-700 w-1/3">Loại lớp <span class="text-red-500">*</span></label>
+                        
                         <div class="relative custom-multiselect w-2/3" data-select-id="add-type-custom" data-type="single">
+                            
+                            {{-- 1. SELECT ẨN (Dùng để gửi dữ liệu đi) --}}
                             <select id="add-type-custom-hidden-select" name="add_type" required class="hidden">
                                 <option value="">Chọn loại lớp...</option>
-                                <option value="Yoga">Yoga</option>
-                                <option value="Gym">Gym</option>
-                                <option value="Cardio">Cardio</option>
-                                <option value="Zumba">Zumba</option>
-                                <option value="Boxing">Boxing</option>
-                                <option value="Pilates">Pilates</option>
-                                <option value="Dance">Dance</option>
-                                <option value="Kickboxing">Kickboxing</option>
-                                <option value="MMA">MMA</option>
+                                {{-- Chạy vòng lặp lấy dữ liệu từ biến $types truyền sang --}}
+                                @foreach($types as $key => $label)
+                                    <option value="{{ $key }}">{{ $label }}</option>
+                                @endforeach
                             </select>
+
+                            {{-- 2. NÚT BẤM HIỂN THỊ --}}
                             <button type="button" class="custom-multiselect-trigger w-full bg-white border border-[#999999]/50 rounded-2xl shadow-sm text-left px-4 py-2.5 flex items-center justify-between focus:outline-none focus:ring-1 focus:ring-black">
                                 <span class="custom-multiselect-display text-gray-500">Chọn loại lớp...</span>
                                 <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                                 </svg>
                             </button>
+
+                            {{-- 3. DANH SÁCH DROPDOWN --}}
                             <div class="custom-multiselect-panel hidden absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
                                 <ul class="custom-multiselect-list max-h-48 overflow-y-auto">
-                                    <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" data-value="Yoga">
-                                        <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">Yoga</span></div>
-                                    </li>
-                                    <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" data-value="Gym">
-                                        <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">Gym</span></div>
-                                    </li>
-                                    <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" data-value="Cardio">
-                                        <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">Cardio</span></div>
-                                    </li>
-                                    <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" data-value="Zumba">
-                                        <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">Zumba</span></div>
-                                    </li>
-                                    <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" data-value="Boxing">
-                                        <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">Boxing</span></div>
-                                    </li>
-                                    <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" data-value="Pilates">
-                                        <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">Pilates</span></div>
-                                    </li>
-                                    <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" data-value="Dance">
-                                        <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">Dance</span></div>
-                                    </li>
-                                    <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" data-value="Kickboxing">
-                                        <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">Kickboxing</span></div>
-                                    </li>
-                                    <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" data-value="MMA">
-                                        <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">MMA</span></div>
-                                    </li>
+                                    {{-- Chạy vòng lặp tạo các dòng li --}}
+                                    @foreach($types as $key => $label)
+                                        <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" 
+                                            data-value="{{ $key }}">
+                                            <div class="flex items-center space-x-3 w-full pointer-events-none">
+                                                {{-- Hiển thị Label --}}
+                                                <span class="text-sm font-medium text-gray-900">{{ $label }}</span>
+                                            </div>
+                                        </li>
+                                    @endforeach
                                 </ul>
                             </div>
                         </div>
@@ -257,59 +235,40 @@
 
                     <div class="flex items-center space-x-4">
                         <label class="block text-sm font-medium text-gray-700 w-1/3">Tên lớp</label>
-                        <input type="text" id="manage-class_name" required class="w-2/3 border border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5">
+                        <input type="text" id="manage-class_name" required class="w-2/3 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5">
                     </div>
 
-                    {{-- Loại lớp (ĐÃ CHUYỂN SANG CUSTOM SELECT VÀ CĂN CHỈNH WIDTH) --}}
+                    {{-- Loại lớp --}}
                     <div class="flex items-center space-x-4">
                         <label class="block text-sm font-medium text-gray-700 w-1/3">Loại lớp</label>
                         <div class="relative custom-multiselect w-2/3" data-select-id="manage-type-custom" data-type="single">
+                            
+                            {{-- 1. Select Ẩn --}}
                             <select id="manage-type-custom-hidden-select" name="manage_type" required class="hidden">
-                                <option value="Yoga">Yoga</option>
-                                <option value="Gym">Gym</option>
-                                <option value="Cardio">Cardio</option>
-                                <option value="Zumba">Zumba</option>
-                                <option value="Boxing">Boxing</option>
-                                <option value="Pilates">Pilates</option>
-                                <option value="Dance">Dance</option>
-                                <option value="Kickboxing">Kickboxing</option>
-                                <option value="MMA">MMA</option>
+                                @foreach($types as $key => $label)
+                                    <option value="{{ $key }}">{{ $label }}</option>
+                                @endforeach
                             </select>
+
+                            {{-- 2. Nút bấm hiển thị --}}
                             <button type="button" class="custom-multiselect-trigger w-full bg-white border border-[#999999]/50 rounded-2xl shadow-sm text-left px-4 py-2.5 flex items-center justify-between focus:outline-none focus:ring-1 focus:ring-black">
                                 <span class="custom-multiselect-display text-gray-500">Chọn loại lớp...</span>
                                 <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                                 </svg>
                             </button>
+
+                            {{-- 3. Danh sách Dropdown --}}
                             <div class="custom-multiselect-panel hidden absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
                                 <ul class="custom-multiselect-list max-h-48 overflow-y-auto">
-                                    <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" data-value="Yoga">
-                                        <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">Yoga</span></div>
-                                    </li>
-                                    <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" data-value="Gym">
-                                        <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">Gym</span></div>
-                                    </li>
-                                    <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" data-value="Cardio">
-                                        <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">Cardio</span></div>
-                                    </li>
-                                    <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" data-value="Zumba">
-                                        <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">Zumba</span></div>
-                                    </li>
-                                    <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" data-value="Boxing">
-                                        <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">Boxing</span></div>
-                                    </li>
-                                    <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" data-value="Pilates">
-                                        <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">Pilates</span></div>
-                                    </li>
-                                    <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" data-value="Dance">
-                                        <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">Dance</span></div>
-                                    </li>
-                                    <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" data-value="Kickboxing">
-                                        <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">Kickboxing</span></div>
-                                    </li>
-                                    <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" data-value="MMA">
-                                        <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">MMA</span></div>
-                                    </li>
+                                    @foreach($types as $key => $label)
+                                        <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" 
+                                            data-value="{{ $key }}">
+                                            <div class="flex items-center space-x-3 w-full pointer-events-none">
+                                                <span class="text-sm font-medium text-gray-900">{{ $label }}</span>
+                                            </div>
+                                        </li>
+                                    @endforeach
                                 </ul>
                             </div>
                         </div>
@@ -320,7 +279,7 @@
                         <input type="number" id="manage-max_capacity" required min="1" max="100" class="w-2/3 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5">
                     </div>
 
-                    {{-- Trạng thái (ĐÃ CHUYỂN SANG CUSTOM SELECT VÀ CĂN CHỈNH WIDTH) --}}
+                    {{-- Trạng thái --}}
                     <div class="flex items-center space-x-4 mb-4">
                         <label class="block text-sm font-medium text-gray-700 w-1/3">Trạng thái</label>
                         <div class="relative custom-multiselect w-2/3" data-select-id="manage-is_active-custom" data-type="single"> 
@@ -377,7 +336,7 @@
 {{-- ========================= SCRIPT AJAX  ========================= --}}
 @push('scripts')
 <style>
-/* === CUSTOM STYLES CHO CUSTOM SELECT (SAO CHÉP TỪ FILE 1) === */
+/* === CUSTOM STYLES CHO CUSTOM SELECT === */
 .custom-multiselect-option:hover { @apply bg-[#999999]/50 text-gray-900; }
 .custom-multiselect-option:hover span { @apply text-gray-900; }
 .custom-multiselect-option.bg-blue-100 { @apply bg-blue-500/50 text-gray-900; }
@@ -387,7 +346,7 @@
 </style>
 
 <script>
-// --- SCRIPT CUSTOM SELECT (SAO CHÉP TỪ FILE 1) ---
+// --- SCRIPT CUSTOM SELECT  ---
 function updateMultiselectDisplay(container) {
     const hiddenSelect = container.querySelector('select');
     const displaySpan = container.querySelector('.custom-multiselect-display');
@@ -478,7 +437,6 @@ document.addEventListener('click', (e) => {
     }
 });
 // --- END SCRIPT CUSTOM SELECT ---
-
 
 // --- MAIN LOGIC: CRUD AJAX ---
 document.addEventListener('DOMContentLoaded', function() {
