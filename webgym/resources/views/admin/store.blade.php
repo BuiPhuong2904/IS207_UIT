@@ -62,7 +62,7 @@
                     data-category_id="{{ $product->category_id }}"
                     data-origin="{{ $product->origin ?? '' }}"
                     data-brand="{{ $product->brand ?? '' }}"
-                    data-description="{{ $product->description }}"
+                    data-description="{{ $product->description ?? '' }}"
                     data-product_status="{{ $product->status }}" 
                     data-slug="{{ $product->slug ?? '' }}"
                     data-image_url="{{ $product->image_url }}"
@@ -71,9 +71,9 @@
                         <div class="flex w-full rounded-lg items-center {{ $loop->even ? 'bg-white' : 'bg-blue-50' }} shadow-sm overflow-hidden">
                             <div class="px-4 py-3 w-[5%] text-sm font-medium text-gray-900">{{ $product->product_id }}</div>
                             <div class="px-4 py-3 w-[15%] text-sm text-gray-700">{{ $product->product_name }}</div>
-                            <div class="px-4 py-3 w-[15%] text-sm text-gray-700">{{ $categories[$product->category_id] ?? 'N/A' }}</div>
-                            <div class="px-4 py-3 w-[12%] text-sm text-gray-700">{{ $product->brand ?? 'N/A' }}</div>
-                            <div class="px-4 py-3 w-[10%] text-sm text-gray-700">{{ $product->origin ?? 'N/A' }}</div>
+                            <div class="px-4 py-3 w-[15%] text-sm text-gray-700">{{ $categories[$product->category_id] ?? '' }}</div>
+                            <div class="px-4 py-3 w-[12%] text-sm text-gray-700">{{ $product->brand ?? '' }}</div>
+                            <div class="px-4 py-3 w-[10%] text-sm text-gray-700">{{ $product->origin ?? '' }}</div>
                             <div class="px-4 py-3 w-[10%]">
                                 <img src="{{ $product->image_url }}" onerror="this.src=''" class="w-16 h-12 object-cover rounded-md">
                             </div>
@@ -139,7 +139,6 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Tên loại</label>
-                            {{-- CUSTOM SELECT CATEGORY (INLINE) --}}
                             <div class="relative custom-multiselect" data-select-id="add-category_id" data-type="single">
                                 <select id="add-category_id" name="category_id" class="hidden">
                                     <option value="" selected disabled>Chọn loại...</option>
@@ -178,7 +177,6 @@
                 </div>
                 <label class="col-span-2 block text-sm font-medium text-gray-700 pt-2.5">Trạng thái</label>
                 <div class="col-span-4">
-                    {{-- CUSTOM SELECT STATUS (INLINE) --}}
                     <div class="relative custom-multiselect" data-select-id="add-product-status" data-type="single">
                         <select id="add-product-status" name="status" class="hidden">
                             @foreach($statuses as $id => $name)
@@ -238,7 +236,6 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700 mb-1">Tên loại</label>
-                            {{-- CUSTOM SELECT CATEGORY (INLINE) --}}
                             <div class="relative custom-multiselect" data-select-id="manage-category_id" data-type="single">
                                 <select id="manage-category_id" name="category_id" class="hidden">
                                     <option value="" selected disabled>Chọn loại...</option>
@@ -277,7 +274,6 @@
                 </div>
                 <label class="col-span-2 block text-sm font-medium text-gray-700 pt-2.5">Trạng thái</label>
                 <div class="col-span-4">
-                    {{-- CUSTOM SELECT STATUS (INLINE) --}}
                     <div class="relative custom-multiselect" data-select-id="manage-status" data-type="single">
                         <select id="manage-status" name="status" class="hidden">
                             <option value="" selected disabled>Chọn trạng thái...</option>
@@ -349,7 +345,6 @@
 
                                     <label class="col-span-3 block text-sm font-medium text-gray-700">Áp dụng KM</label>
                                     <div class="col-span-3">
-                                        {{-- CUSTOM SELECT PROMO (INLINE) --}}
                                         <div class="relative custom-multiselect" data-select-id="manage-variant-promo" data-type="single">
                                             <select id="manage-variant-promo" name="promo_status" class="hidden">
                                                 <option value="Không" selected>Không</option>
@@ -380,7 +375,6 @@
 
                                     <label class="col-span-3 block text-sm font-medium text-gray-700">Trạng thái *</label>
                                     <div class="col-span-3">
-                                        {{-- CUSTOM SELECT STATUS VARIANT (INLINE) --}}
                                         <div class="relative custom-multiselect" data-select-id="manage-variant-status" data-type="single">
                                             <select id="manage-variant-status" name="status" class="hidden">
                                                 <option value="" selected disabled>Chọn...</option>
@@ -445,7 +439,6 @@
 
                                     <label class="col-span-3 block text-sm font-medium text-gray-700">Áp dụng KM</label>
                                     <div class="col-span-3">
-                                        {{-- CUSTOM SELECT PROMO ADD --}}
                                         <div class="relative custom-multiselect" data-select-id="add-variant-promo" data-type="single">
                                             <select id="add-variant-promo" name="promo_status" class="hidden">
                                                 <option value="Không" selected>Không</option>
@@ -476,7 +469,6 @@
 
                                     <label class="col-span-3 block text-sm font-medium text-gray-700">Trạng thái *</label>
                                     <div class="col-span-3">
-                                        {{-- CUSTOM SELECT STATUS ADD --}}
                                         <div class="relative custom-multiselect" data-select-id="add-variant-status" data-type="single">
                                             <select id="add-variant-status" name="status" class="hidden">
                                                 <option value="" disabled>Chọn...</option>
@@ -683,7 +675,7 @@
         
         const img = v.image_url || DEFAULT_IMAGE;
         document.getElementById('manage-variant-image-preview').src = img;
-        document.getElementById('manage-variant-image_url').value = img;
+        document.getElementById('manage-variant-image-url').value = img;
         document.getElementById('manage-variant-image_url_input').value = '';
 
         setCustomMultiselectValues(document.querySelector('#manageVariantView [data-select-id="manage-variant-status"]'), v.status);
@@ -704,9 +696,10 @@
         document.getElementById('manage-product_id').value = d.product_id;
         document.getElementById('manage-product_id_display').value = d.product_id;
         document.getElementById('manage-product_name').value = d.product_name;
-        document.getElementById('manage-origin').value = d.origin;
-        document.getElementById('manage-description').value = d.description;
-        document.getElementById('manage-brand').value = d.brand;
+
+        document.getElementById('manage-origin').value = d.origin || '';
+        document.getElementById('manage-description').value = d.description || '';
+        document.getElementById('manage-brand').value = d.brand || '';
         
         const img = d.image_url || DEFAULT_IMAGE;
         document.getElementById('manage-image_url_preview').src = img;
@@ -856,32 +849,17 @@
                     showFlash(flash, data.message, data.success);
                     
                     if (data.success) {
-                        showFlash(flash, data.message, true);
-
-                        setTimeout(async () => {
-                            if (isVariant) {
-                                const pid = document.getElementById('current-product-id').value;
-                                const resV = await fetch(`/admin/store/products/${pid}/variants`);
-                                const dataV = await resV.json();
-                                const name = document.querySelector(`.product-row-trigger[data-product_id="${pid}"]`)?.dataset.product_name;
-                                renderVariants(name, dataV.variants, pid, data.variant?.variant_id);
-                                if(prefix === 'add') {
-                                    document.getElementById(id).reset();
-
-                                    const imgPreviewId = id.replace('Form', '-image-preview');
-                                    const imgInputId = id.replace('Form', '-image_url_input');
-
-                                    if(document.getElementById(imgPreviewId)) document.getElementById(imgPreviewId).src = DEFAULT_IMAGE;
-                                    if(document.getElementById(imgInputId)) document.getElementById(imgInputId).value = '';
-
-                                    const promoSelectContainer = document.querySelector(`#${prefix}VariantView [data-select-id$="-promo"]`);
-                                    if(promoSelectContainer) setCustomMultiselectValues(promoSelectContainer, 'Không');
-                                }
-                            } else {
-                                closeModal(document.getElementById(modalId));
-                            }
-                            await refreshProductTable();
-                        }, 1500);
+                        if (isVariant) {
+                            const pid = document.getElementById('current-product-id').value;
+                            const resV = await fetch(`/admin/store/products/${pid}/variants`);
+                            const dataV = await resV.json();
+                            const name = document.querySelector(`.product-row-trigger[data-product_id="${pid}"]`)?.dataset.product_name;
+                            renderVariants(name, dataV.variants, pid, data.variant?.variant_id);
+                            if(prefix === 'add') this.reset();
+                        } else {
+                            closeModal(document.getElementById(modalId));
+                        }
+                        await refreshProductTable();
                     } else if(data.errors) {
                         showFlash(flash, Object.values(data.errors).flat().join('<br>'), false);
                     }
