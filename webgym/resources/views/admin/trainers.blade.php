@@ -102,12 +102,12 @@
         </table>
         
         <div class="mt-6 flex justify-center">
-              {{ $trainers->links() }} 
+            {{ $trainers->links() }} 
         </div>
     </div>
 </div>
 
-{{-- ----------------- MODAL 1: THÊM HLV (Giao diện File 1) ----------------- --}}
+{{-- ----------------- MODAL 1: THÊM HLV (ĐÃ CHUYỂN SANG CUSTOM DROPDOWN) ----------------- --}}
 <div id="addTrainerModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center bg-black/50">
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         
@@ -210,15 +210,37 @@
                     <textarea id="add-work_schedule" rows="2" placeholder="VD: Ca sáng 06:00 - 14:00 (T2-T7)" class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black"></textarea>
                 </div>
                 
-                {{-- Chi nhánh làm việc --}}
-                <div class="flex items-center">
-                    <label for="add-branch_id" class="w-40 flex-shrink-0 text-sm font-medium text-gray-700">Chi nhánh <span class="text-red-500">*</span></label>
-                    <select id="add-branch_id" required class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
-                        <option value="">-- Chọn chi nhánh --</option>
-                        @foreach($branches as $branch) 
-                        <option value="{{ $branch->branch_id }}">{{ $branch->branch_name }}</option>
-                        @endforeach
-                    </select>
+                {{-- Chi nhánh làm việc (Custom Dropdown) --}}
+                <div class="flex items-center relative">
+                    <label class="w-40 flex-shrink-0 text-sm font-medium text-gray-700">Chi nhánh <span class="text-red-500">*</span></label>
+                    
+                    {{-- Custom Select Structure (Dùng class từ File 1) --}}
+                    <div class="relative custom-multiselect flex-1" data-select-id="add-branch-custom" data-type="single">
+                        <select id="add-branch-custom-hidden-select" name="add_branch" required class="hidden">
+                            <option value="">-- Chọn chi nhánh --</option>
+                            @foreach($branches as $branch) 
+                            <option value="{{ $branch->branch_id }}">{{ $branch->branch_name }}</option>
+                            @endforeach
+                        </select>
+                        <button type="button" class="custom-multiselect-trigger w-full bg-white border border-[#999999]/50 rounded-2xl shadow-sm text-left px-4 py-2.5 flex items-center justify-between focus:outline-none focus:ring-1 focus:ring-black">
+                            <span class="custom-multiselect-display text-gray-500">-- Chọn chi nhánh --</span>
+                            <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                            </svg>
+                        </button>
+                        <div class="custom-multiselect-panel hidden absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
+                            <ul class="custom-multiselect-list max-h-48 overflow-y-auto">
+                                <li class="px-3 py-2 cursor-pointer custom-multiselect-option" data-value="">
+                                    <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-500">-- Chọn chi nhánh --</span></div>
+                                </li>
+                                @foreach($branches as $branch) 
+                                <li class="px-3 py-2 cursor-pointer custom-multiselect-option" data-value="{{ $branch->branch_id }}">
+                                    <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">{{ $branch->branch_name }}</span></div>
+                                </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -235,7 +257,7 @@
     </div>
 </div>
 
-{{-- ----------------- MODAL 2: QUẢN LÝ HLV (Giao diện File 1) ----------------- --}}
+{{-- ----------------- MODAL 2: QUẢN LÝ HLV (ĐÃ CHUYỂN SANG CUSTOM DROPDOWN) ----------------- --}}
 <div id="manageTrainerModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center bg-black/50">
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
         
@@ -349,27 +371,67 @@
                     <textarea id="manage-work_schedule_input" rows="2" class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black"></textarea>
                 </div>
                 
-                {{-- Chi nhánh làm việc --}}
-                <div class="flex items-center">
-                    <label for="manage-branch_id" class="w-40 flex-shrink-0 text-sm font-medium text-gray-700">Chi nhánh <span class="text-red-500">*</span></label>
-                    <select id="manage-branch_id" required class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
-                        @foreach($branches as $branch)
-                        <option value="{{ $branch->branch_id }}">{{ $branch->branch_name }}</option>
-                        @endforeach
-                    </select>
+                {{-- Chi nhánh làm việc (Custom Dropdown) --}}
+                <div class="flex items-center relative">
+                    <label class="w-40 flex-shrink-0 text-sm font-medium text-gray-700">Chi nhánh <span class="text-red-500">*</span></label>
+                    
+                    {{-- Custom Select Structure (Dùng class từ File 1) --}}
+                    <div class="relative custom-multiselect flex-1" data-select-id="manage-branch-custom" data-type="single">
+                        <select id="manage-branch-custom-hidden-select" name="manage_branch_id" required class="hidden">
+                            @foreach($branches as $branch)
+                            <option value="{{ $branch->branch_id }}">{{ $branch->branch_name }}</option>
+                            @endforeach
+                        </select>
+                        <button type="button" class="custom-multiselect-trigger w-full bg-white border border-[#999999]/50 rounded-2xl shadow-sm text-left px-4 py-2.5 flex items-center justify-between focus:outline-none focus:ring-1 focus:ring-black">
+                            <span class="custom-multiselect-display text-gray-500">Chọn chi nhánh...</span>
+                            <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                            </svg>
+                        </button>
+                        <div class="custom-multiselect-panel hidden absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
+                            <ul class="custom-multiselect-list max-h-48 overflow-y-auto">
+                                @foreach($branches as $branch)
+                                <li class="px-3 py-2 cursor-pointer custom-multiselect-option" data-value="{{ $branch->branch_id }}">
+                                    <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">{{ $branch->branch_name }}</span></div>
+                                </li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
                 </div>
 
-                {{-- Trạng thái --}}
-                <div class="flex items-center">
-                    <label for="manage-status" class="w-40 flex-shrink-0 text-sm font-medium text-gray-700">Trạng thái</label>
-                    <select id="manage-status" class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
-                        <option value="active">Đang hoạt động</option>
-                        <option value="inactive">Nghỉ việc</option>
-                    </select>
+                {{-- Trạng thái (Custom Dropdown) --}}
+                <div class="flex items-center relative">
+                    <label class="w-40 flex-shrink-0 text-sm font-medium text-gray-700">Trạng thái</label>
+                    
+                    {{-- Custom Select Structure (Dùng class từ File 1) --}}
+                    <div class="relative custom-multiselect flex-1" data-select-id="manage-status-custom" data-type="single">
+                        <select id="manage-status-custom-hidden-select" name="manage_status" class="hidden">
+                            <option value="active">Đang hoạt động</option>
+                            <option value="inactive">Nghỉ việc</option>
+                        </select>
+                        <button type="button" class="custom-multiselect-trigger w-full bg-white border border-[#999999]/50 rounded-2xl shadow-sm text-left px-4 py-2.5 flex items-center justify-between focus:outline-none focus:ring-1 focus:ring-black">
+                            <span class="custom-multiselect-display text-gray-500">Chọn trạng thái...</span>
+                            <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                            </svg>
+                        </button>
+                        <div class="custom-multiselect-panel hidden absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
+                            <ul class="custom-multiselect-list max-h-48 overflow-y-auto">
+                                <li class="px-3 py-2 cursor-pointer custom-multiselect-option" data-value="active">
+                                    <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">Đang hoạt động</span></div>
+                                </li>
+                                <li class="px-3 py-2 cursor-pointer custom-multiselect-option" data-value="inactive">
+                                    <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">Nghỉ việc</span></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
+
             </div>
 
-            {{-- Nút bấm (Đã sửa ID: btn-delete-package -> btn-delete-trainer) --}}
+            {{-- Nút bấm --}}
             <div class="flex justify-between mt-8">
                 <button type="button" id="btn-delete-trainer" class="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 font-medium">
                     Xóa HLV
@@ -389,294 +451,432 @@
 
 @endsection
 
+
 @push('scripts')
+<style>
+/* === SỬA LỖI GHI ĐÈ VÀ ÁP DỤNG MÀU HOVER #999999 - 50% === */
+
+/* Cài đặt cơ bản (Giữ nguyên) */
+.custom-multiselect-option { 
+    @apply bg-white text-gray-900; 
+}
+.custom-multiselect-option span { 
+    @apply text-gray-900; 
+}
+
+/* 1. Màu HOVER (Cho mục CHƯA được chọn) */
+
+.custom-multiselect-option:hover:not(.bg-blue-100) { 
+    background-color:  rgba(153, 153, 153, 0.2); !important; 
+    color: #1f1d1d !important; 
+}
+.custom-multiselect-option:hover:not(.bg-blue-100) span { 
+    color: #1f1d1d !important; 
+}
+
+/* 2. Màu SELECTED (Cho mục ĐÃ được chọn) */
+/* Đảm bảo mục đã chọn (bg-blue-100) giữ màu xanh của nó */
+.custom-multiselect-option.bg-blue-100 { 
+    /* Dùng màu xanh nhạt (blue-100) cho trạng thái SELECTED */
+    @apply bg-blue-100 text-gray-900; 
+    background-color: #DBEAFE !important; 
+    color: #1f1d1d !important;
+}
+.custom-multiselect-option.bg-blue-100 span { 
+    @apply text-gray-900; 
+    color: #1f1d1d !important;
+}
+
+</style>
+
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        const addModal = document.getElementById('addTrainerModal');
-        const manageModal = document.getElementById('manageTrainerModal');
-        const addForm = document.getElementById('addTrainerForm');
-        const manageForm = document.getElementById('manageTrainerForm');
-        const defaultAvatar = '{{ asset('images/default-avatar.png') }}';
+// --- SCRIPT CUSTOM SELECT (ĐỒNG BỘ TỪ FILE 1) ---
+function updateMultiselectDisplay(container) {
+    const hiddenSelect = container.querySelector('select');
+    const displaySpan = container.querySelector('.custom-multiselect-display');
+    const selected = Array.from(hiddenSelect.selectedOptions);
+    
+    let placeholder = 'Chọn...';
+    // Đặt placeholder tùy thuộc vào data-select-id trong File 2
+    if (container.dataset.selectId === 'manage-status-custom') placeholder = 'Chọn trạng thái...';
+    if (container.dataset.selectId === 'add-branch-custom' || container.dataset.selectId === 'manage-branch-custom') placeholder = 'Chọn chi nhánh...';
+
+    if (selected.length === 0 || (selected.length === 1 && selected[0].value === "")) {
+        displaySpan.textContent = placeholder;
+        displaySpan.classList.add('text-gray-500');
+    } else {
+        displaySpan.textContent = selected.map(opt => opt.text).join(', ');
+        displaySpan.classList.remove('text-gray-500');
+    }
+}
+
+function setCustomMultiselectValues(container, valuesString, delimiter = ',') {
+    if (!container) return;
+    const hiddenSelect = container.querySelector('select');
+    const optionsList = container.querySelector('.custom-multiselect-list');
+    const selectedValues = valuesString ? String(valuesString).split(delimiter).map(v => v.trim()) : [];
+
+    // Cập nhật giá trị cho thẻ <select> ẩn
+    Array.from(hiddenSelect.options).forEach(opt => opt.selected = false);
+    selectedValues.forEach(val => {
+        const opt = hiddenSelect.querySelector(`option[value="${val}"]`);
+        if (opt) opt.selected = true;
+    });
+
+    // Cập nhật giao diện (li element)
+    if(optionsList) optionsList.querySelectorAll('.custom-multiselect-option').forEach(li => li.classList.remove('bg-blue-100'));
+    selectedValues.forEach(val => {
+        if (optionsList) {
+            const li = optionsList.querySelector(`.custom-multiselect-option[data-value="${val}"]`);
+            // Sử dụng class bg-blue-100 để kích hoạt style selected trong CSS (Đồng bộ với File 1)
+            if (li) li.classList.add('bg-blue-100');
+        }
+    });
+
+    updateMultiselectDisplay(container);
+}
+
+function initializeCustomMultiselects() {
+    document.querySelectorAll('.custom-multiselect').forEach(container => {
+        const trigger = container.querySelector('.custom-multiselect-trigger');
+        const panel = container.querySelector('.custom-multiselect-panel');
+        const optionsList = container.querySelector('.custom-multiselect-list');
+        const hiddenSelect = container.querySelector('select'); 
+        const displaySpan = container.querySelector('.custom-multiselect-display');
+        
+        if (displaySpan && !displaySpan.dataset.placeholder) displaySpan.dataset.placeholder = displaySpan.textContent;
+
+        if (trigger) {
+            trigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                // Đóng tất cả các panel khác
+                document.querySelectorAll('.custom-multiselect-panel').forEach(p => { if (p !== panel) p.classList.add('hidden'); });
+                if (panel) panel.classList.toggle('hidden');
+            });
+        }
+
+        if (optionsList) {
+            optionsList.querySelectorAll('.custom-multiselect-option').forEach(li => {
+                li.addEventListener('click', (e) => {
+                    e.stopPropagation(); 
+                    const value = li.dataset.value;
+                    const option = hiddenSelect.querySelector(`option[value="${value}"]`);
+
+                    if (container.dataset.type === 'single') {
+                        // Xóa lựa chọn cũ
+                        Array.from(hiddenSelect.options).forEach(o => o.selected = false);
+                        if (option) option.selected = true;
+                        
+                        // Cập nhật class selected (bg-blue-100)
+                        optionsList.querySelectorAll('.custom-multiselect-option').forEach(o => o.classList.remove('bg-blue-100'));
+                        li.classList.add('bg-blue-100');
+                        if (panel) panel.classList.add('hidden'); 
+                    }
+                    // Trigger change event trên hidden select để kích hoạt validation/listeners khác
+                    hiddenSelect.dispatchEvent(new Event('change'));
+                    updateMultiselectDisplay(container);
+                });
+            });
+        }
+        updateMultiselectDisplay(container);
+    });
+}
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.custom-multiselect')) {
+        document.querySelectorAll('.custom-multiselect-panel').forEach(p => p.classList.add('hidden'));
+    }
+});
+// --- END SCRIPT CUSTOM SELECT ---
 
 
-        if (!addForm || !manageForm) {
-            console.error('Không tìm thấy form! Kiểm tra id="addTrainerForm" và id="manageTrainerForm"');
+// --- MAIN LOGIC: CRUD AJAX (ĐÃ SỬA LỖI ĐỂ DÙNG CUSTOM SELECT) ---
+document.addEventListener('DOMContentLoaded', function () {
+    
+    // Khởi tạo Custom Selects
+    initializeCustomMultiselects(); 
+    
+    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const addModal = document.getElementById('addTrainerModal');
+    const manageModal = document.getElementById('manageTrainerModal');
+    const addForm = document.getElementById('addTrainerForm');
+    const manageForm = document.getElementById('manageTrainerForm');
+    const defaultAvatar = '{{ asset('images/default-avatar.png') }}';
+
+    // ... (Giữ nguyên setupPreview và Modal Helpers) ...
+
+    // === PREVIEW ẢNH ===
+    function setupPreview(btnId, inputId, previewId) {
+        const btn = document.getElementById(btnId);
+        const input = document.getElementById(inputId);
+        const preview = document.getElementById(previewId);
+        if (btn && input) {
+            btn.onclick = () => input.click();
+            input.onchange = e => {
+                if (e.target.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = ev => preview.src = ev.target.result;
+                    reader.readAsDataURL(e.target.files[0]);
+                }
+            };
+        }
+    }
+    setupPreview('add-upload-btn', 'add-image_url', 'add-image_url_preview');
+    setupPreview('manage-upload-btn', 'manage-image_url_input', 'manage-image_url_preview');
+
+    // Helpers Modal
+    function openModal(m) { m.classList.remove('hidden'); m.classList.add('flex'); }
+    function closeModal(m) { m.classList.add('hidden'); m.classList.remove('flex'); }
+
+    document.querySelectorAll('.close-modal').forEach(btn =>
+        btn.addEventListener('click', () => closeModal(btn.closest('.modal-container')))
+    );
+    document.querySelectorAll('.modal-container').forEach(m =>
+        m.addEventListener('click', e => e.target === m && closeModal(m))
+    );
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeModal(addModal);
+            closeModal(manageModal);
+        }
+    });
+
+    // Mở modal thêm (Add)
+    document.getElementById('openAddModalBtn')?.addEventListener('click', () => {
+        addForm.reset();
+        document.querySelector('input[name="add-gender"][value="Nam"]').checked = true;
+        document.getElementById('add-image_url_preview').src = defaultAvatar;
+        document.getElementById('add-birth_date').value = ''; 
+        
+        // Reset Custom Selects
+        setCustomMultiselectValues(document.querySelector('.custom-multiselect[data-select-id="add-branch-custom"]'), '');
+
+        openModal(addModal);
+    });
+
+    // Click dòng → mở modal sửa (Manage)
+    document.getElementById('trainer-list-body').addEventListener('click', e => {
+        const row = e.target.closest('tr.modal-trigger');
+        if (!row) return;
+
+        const d = row.dataset;
+        const trainerId = d.user_id;
+
+        // ... (Thông tin cá nhân: Giữ nguyên) ...
+        document.getElementById('manage-user_id').value = 'HLV' + String(trainerId).padStart(4, '0');
+        document.getElementById('current-trainer_id').value = trainerId;
+        document.getElementById('manage-full_name').value = d.full_name || '';
+        document.getElementById('manage-email').value = d.email || '';
+        document.getElementById('manage-phone').value = d.phone || '';
+        document.getElementById('manage-address').value = d.address || '';
+        
+        // Xử lý ngày sinh (Giữ nguyên)
+        if (d.birth_date) {
+            if (d.birth_date.includes('/')) {
+                const parts = d.birth_date.split('/');
+                if (parts.length === 3) document.getElementById('manage-birth_date').value = `${parts[2]}-${parts[1]}-${parts[0]}`;
+            } else {
+                document.getElementById('manage-birth_date').value = d.birth_date;
+            }
+        } else {
+            document.getElementById('manage-birth_date').value = '';
+        }
+        
+        document.getElementById('manage-password').value = ''; 
+        document.getElementById('manage-current-password').value = d.password || ''; 
+        const gender = d.gender || 'Nam';
+        document.getElementById('manage-gender-male').checked = (gender === 'Nam');
+        document.getElementById('manage-gender-female').checked = (gender === 'Nữ');
+        document.getElementById('manage-image_url_preview').src = d.image_url || defaultAvatar;
+
+        // ... (Thông tin công việc: Giữ nguyên) ...
+        document.getElementById('manage-specialty').value = d.specialty || '';
+        document.getElementById('manage-experience_years').value = d.experience_years || 0;
+        document.getElementById('manage-salary').value = d.salary || '';
+        document.getElementById('manage-work_schedule_input').value = d.work_schedule || '';
+        
+        // Gán giá trị cho Custom Selects (ĐÃ SỬA)
+        setCustomMultiselectValues(document.querySelector('.custom-multiselect[data-select-id="manage-branch-custom"]'), d.branch_id);
+        setCustomMultiselectValues(document.querySelector('.custom-multiselect[data-select-id="manage-status-custom"]'), d.status);
+
+        openModal(manageModal);
+    });
+
+    // === THÊM MỚI (AddForm Submit) ===
+    addForm.onsubmit = async function (e) {
+        e.preventDefault();
+
+        // Lấy giá trị từ Custom Select Chi nhánh (ĐÃ SỬA)
+        const branchId = document.getElementById('add-branch-custom-hidden-select').value;
+        
+        const fullName = document.getElementById('add-full_name').value.trim();
+        const email = document.getElementById('add-email').value.trim();
+        const password = document.getElementById('add-password').value.trim();
+        const specialty = document.getElementById('add-specialty').value.trim();
+        const salary = document.getElementById('add-salary').value;
+        const birthDateInput = document.getElementById('add-birth_date').value;
+
+        if (!fullName || !email || !password || !specialty || !salary || !branchId) {
+            alert('Vui lòng điền đầy đủ các trường bắt buộc (có dấu *) và chọn Chi nhánh.');
             return;
         }
 
-        // === PREVIEW ẢNH ===
-        function setupPreview(btnId, inputId, previewId) {
-            const btn = document.getElementById(btnId);
-            const input = document.getElementById(inputId);
-            const preview = document.getElementById(previewId);
-            if (btn && input) {
-                btn.onclick = () => input.click();
-                input.onchange = e => {
-                    if (e.target.files[0]) {
-                        const reader = new FileReader();
-                        reader.onload = ev => preview.src = ev.target.result;
-                        reader.readAsDataURL(e.target.files[0]);
-                    }
-                };
-            }
+        const formData = new FormData();
+        
+        // 1. Dữ liệu User 
+        formData.append('full_name', fullName);
+        formData.append('email', email);
+        formData.append('password', password);
+        formData.append('phone', document.getElementById('add-phone').value.trim());
+        formData.append('address', document.getElementById('add-address').value.trim());
+        formData.append('gender', document.querySelector('input[name="add-gender"]:checked').value);
+        
+        if (birthDateInput) {
+            const [yyyy, mm, dd] = birthDateInput.split('-');
+            formData.append('dob', `${dd}/${mm}/${yyyy}`);
+        } else {
+            formData.append('dob', '');
         }
-        setupPreview('add-upload-btn', 'add-image_url', 'add-image_url_preview');
-        setupPreview('manage-upload-btn', 'manage-image_url_input', 'manage-image_url_preview');
 
-        // === MODAL HELPER ===
-        function openModal(m) { m.classList.remove('hidden'); m.classList.add('flex'); }
-        function closeModal(m) { m.classList.add('hidden'); m.classList.remove('flex'); }
+        // 2. Dữ liệu Trainer
+        formData.append('specialty', specialty);
+        formData.append('experience_years', document.getElementById('add-experience_years').value || 0);
+        formData.append('salary', salary);
+        formData.append('work_schedule', document.getElementById('add-work_schedule').value.trim());
+        formData.append('branch_id', branchId); // ĐÃ SỬA
+        formData.append('status', 'active');
+        
+        if (document.getElementById('add-image_url').files[0]) {
+            formData.append('image_file', document.getElementById('add-image_url').files[0]);
+        }
+        
+        try {
+            const res = await fetch('/admin/trainers', { 
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': csrfToken },
+                body: formData
+            });
 
-        document.querySelectorAll('.close-modal').forEach(btn =>
-            btn.addEventListener('click', () => closeModal(btn.closest('.modal-container')))
-        );
-        document.querySelectorAll('.modal-container').forEach(m =>
-            m.addEventListener('click', e => e.target === m && closeModal(m))
-        );
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeModal(addModal);
-                closeModal(manageModal);
-            }
-        });
-
-        // === MỞ MODAL THÊM ===
-        document.getElementById('openAddModalBtn')?.addEventListener('click', () => {
-            addForm.reset();
-            document.querySelector('input[name="add-gender"][value="Nam"]').checked = true;
-            document.getElementById('add-image_url_preview').src = defaultAvatar;
-            document.getElementById('add-birth_date').value = ''; 
-            openModal(addModal);
-        });
-
-        // === CLICK DÒNG → MỞ MODAL SỬA ===
-        document.getElementById('trainer-list-body').addEventListener('click', e => {
-            const row = e.target.closest('tr.modal-trigger');
-            if (!row) return;
-
-            const d = row.dataset;
-            const trainerId = d.user_id;
-
-            // Hiển thị ID
-            document.getElementById('manage-user_id').value = 'HLV' + String(trainerId).padStart(4, '0');
-            document.getElementById('current-trainer_id').value = trainerId;
-
-            // 1. Thông tin cá nhân
-            document.getElementById('manage-full_name').value = d.full_name || '';
-            document.getElementById('manage-email').value = d.email || '';
-            document.getElementById('manage-phone').value = d.phone || '';
-            document.getElementById('manage-address').value = d.address || '';
+            const json = await res.json();
             
-            // Xử lý ngày sinh (Chuyển đổi sang YYYY-MM-DD nếu cần, tùy thuộc format từ DB)
-            // Giả sử DB trả về YYYY-MM-DD thì gán thẳng, nếu DD/MM/YYYY thì cần convert
-            if (d.birth_date) {
-                // Kiểm tra sơ bộ format
-                if (d.birth_date.includes('/')) {
-                    const parts = d.birth_date.split('/');
-                    if (parts.length === 3) document.getElementById('manage-birth_date').value = `${parts[2]}-${parts[1]}-${parts[0]}`;
-                } else {
-                    document.getElementById('manage-birth_date').value = d.birth_date;
+            if (!res.ok) {
+                let errorMsg = 'Lỗi khi thêm HLV.';
+                if (json.errors) {
+                    errorMsg += '\n' + Object.values(json.errors).flat().join('\n');
+                } else if (json.message) {
+                    errorMsg += '\n' + json.message;
                 }
-            } else {
-                document.getElementById('manage-birth_date').value = '';
+                alert(errorMsg);
+                return;
             }
             
-            document.getElementById('manage-password').value = ''; // Không hiện pass cũ
-            document.getElementById('manage-current-password').value = d.password || ''; // Lưu pass cũ ẩn
+            alert(json.message || 'Thêm thành công!');
+            if (json.success) location.reload();
+        } catch (err) {
+            console.error(err);
+            alert('Lỗi server: Vui lòng kiểm tra kết nối mạng hoặc server logs.');
+        }
+    };
 
-            // Giới tính
-            const gender = d.gender || 'Nam';
-            document.getElementById('manage-gender-male').checked = (gender === 'Nam');
-            document.getElementById('manage-gender-female').checked = (gender === 'Nữ');
+    // === SỬA (ManageForm Submit) ===
+    manageForm.onsubmit = async function (e) {
+        e.preventDefault();
+
+        const id = document.getElementById('current-trainer_id').value;
+        if (!id) return alert('Không có ID HLV!');
+        
+        // Lấy giá trị từ Custom Select (ĐÃ SỬA)
+        const branchId = document.getElementById('manage-branch-custom-hidden-select').value;
+        const status = document.getElementById('manage-status-custom-hidden-select').value;
+
+        const fullName = document.getElementById('manage-full_name').value.trim();
+        const email = document.getElementById('manage-email').value.trim();
+        const specialty = document.getElementById('manage-specialty').value.trim();
+        const salary = document.getElementById('manage-salary').value;
+
+        if (!fullName || !email || !specialty || !salary) {
+            alert('Vui lòng điền đầy đủ các trường bắt buộc (có dấu *).');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('_method', 'PUT'); 
+        
+        const birthDateInput = document.getElementById('manage-birth_date').value; 
+        if (birthDateInput) {
+            const [yyyy, mm, dd] = birthDateInput.split('-');
+            formData.append('dob', `${dd}/${mm}/${yyyy}`);
+        }
+        
+        // 1. Dữ liệu User
+        formData.append('full_name', fullName);
+        formData.append('email', email);
+        formData.append('password', document.getElementById('manage-password').value.trim() || document.getElementById('manage-current-password').value);
+        formData.append('phone', document.getElementById('manage-phone').value.trim());
+        formData.append('address', document.getElementById('manage-address').value.trim());
+        formData.append('gender', document.querySelector('input[name="manage-gender"]:checked').value);
+        
+        // 2. Dữ liệu Trainer
+        formData.append('specialty', specialty);
+        formData.append('experience_years', document.getElementById('manage-experience_years').value);
+        formData.append('salary', salary);
+        formData.append('work_schedule', document.getElementById('manage-work_schedule_input').value.trim()); 
+        formData.append('branch_id', branchId); // ĐÃ SỬA
+        formData.append('status', status); // ĐÃ SỬA
+
+        if (document.getElementById('manage-image_url_input').files[0]) {
+            formData.append('image_file', document.getElementById('manage-image_url_input').files[0]);
+        }
+
+        try {
+            const res = await fetch(`/admin/trainers/${id}`, {
+                method: 'POST', 
+                headers: { 'X-CSRF-TOKEN': csrfToken },
+                body: formData
+            });
             
-            // Ảnh
-            document.getElementById('manage-image_url_preview').src = d.image_url || defaultAvatar;
-
-            // 2. Thông tin công việc
-            document.getElementById('manage-specialty').value = d.specialty || '';
-            document.getElementById('manage-experience_years').value = d.experience_years || 0;
-            document.getElementById('manage-salary').value = d.salary || '';
-            document.getElementById('manage-work_schedule_input').value = d.work_schedule || '';
-            document.getElementById('manage-branch_id').value = d.branch_id || '';
-            document.getElementById('manage-status').value = d.status || 'active';
-
-            openModal(manageModal);
-        });
-
-        // === THÊM MỚI ===
-        addForm.onsubmit = async function (e) {
-            e.preventDefault();
-
-            const fullName = document.getElementById('add-full_name').value.trim();
-            const email = document.getElementById('add-email').value.trim();
-            const password = document.getElementById('add-password').value.trim();
-            const specialty = document.getElementById('add-specialty').value.trim();
-            const salary = document.getElementById('add-salary').value;
-            const branchId = document.getElementById('add-branch_id').value;
-            const birthDateInput = document.getElementById('add-birth_date').value;
-
-            if (!fullName || !email || !password || !specialty || !salary || !branchId) {
-                alert('Vui lòng điền đầy đủ các trường bắt buộc (có dấu *).');
+            const json = await res.json();
+            
+            if (!res.ok) {
+                let errorMsg = 'Lỗi khi cập nhật HLV.';
+                if (json.errors) errorMsg += '\n' + Object.values(json.errors).flat().join('\n');
+                else if (json.message) errorMsg += '\n' + json.message;
+                alert(errorMsg);
                 return;
             }
 
-            const formData = new FormData();
-            
-            // 1. Dữ liệu User 
-            formData.append('full_name', fullName);
-            formData.append('email', email);
-            formData.append('password', password);
-            formData.append('phone', document.getElementById('add-phone').value.trim());
-            formData.append('address', document.getElementById('add-address').value.trim());
-            formData.append('gender', document.querySelector('input[name="add-gender"]:checked').value);
-            
-            if (birthDateInput) {
-                // Chuyển YYYY-MM-DD -> DD/MM/YYYY để lưu vào DB (nếu DB của bạn lưu chuỗi DD/MM/YYYY)
-                // Nếu DB lưu DATE chuẩn thì không cần split/reverse
-                const [yyyy, mm, dd] = birthDateInput.split('-');
-                formData.append('dob', `${dd}/${mm}/${yyyy}`);
-            } else {
-                formData.append('dob', '');
-            }
+            alert(json.message || 'Cập nhật thành công!');
+            if (json.success) location.reload();
+        } catch (err) {
+            console.error('Lỗi fetch:', err);
+            alert('Lỗi server: Vui lòng kiểm tra kết nối mạng hoặc server logs.');
+        }
+    };
 
-            // 2. Dữ liệu Trainer
-            formData.append('specialty', specialty);
-            formData.append('experience_years', document.getElementById('add-experience_years').value || 0);
-            formData.append('salary', salary);
-            formData.append('work_schedule', document.getElementById('add-work_schedule').value.trim());
-            formData.append('branch_id', branchId);
-            formData.append('status', 'active');
+    // === XÓA ===
+    document.getElementById('btn-delete-trainer')?.addEventListener('click', async () => {
+        if (!confirm('Xóa HLV này? Không thể khôi phục!')) return;
+        const id = document.getElementById('current-trainer_id').value;
+
+        try {
+            const res = await fetch(`/admin/trainers/${id}`, {
+                method: 'DELETE',
+                headers: { 'X-CSRF-TOKEN': csrfToken }
+            });
             
-            if (document.getElementById('add-image_url').files[0]) {
-                formData.append('image_file', document.getElementById('add-image_url').files[0]);
-            }
+            const json = await res.json();
             
-            try {
-                const res = await fetch('/admin/trainers', { 
-                    method: 'POST',
-                    headers: { 'X-CSRF-TOKEN': csrfToken },
-                    body: formData
-                });
-
-                const json = await res.json();
-                
-                if (!res.ok) {
-                    let errorMsg = 'Lỗi khi thêm HLV.';
-                    if (json.errors) {
-                        errorMsg += '\n' + Object.values(json.errors).flat().join('\n');
-                    } else if (json.message) {
-                        errorMsg += '\n' + json.message;
-                    }
-                    alert(errorMsg);
-                    return;
-                }
-                
-                alert(json.message || 'Thêm thành công!');
-                if (json.success) location.reload();
-            } catch (err) {
-                console.error(err);
-                alert('Lỗi server: Vui lòng kiểm tra kết nối mạng hoặc server logs.');
-            }
-        };
-
-        // === SỬA ===
-        manageForm.onsubmit = async function (e) {
-            e.preventDefault();
-
-            const id = document.getElementById('current-trainer_id').value;
-            if (!id) return alert('Không có ID HLV!');
-            
-            const fullName = document.getElementById('manage-full_name').value.trim();
-            const email = document.getElementById('manage-email').value.trim();
-            const specialty = document.getElementById('manage-specialty').value.trim();
-            const salary = document.getElementById('manage-salary').value;
-
-            if (!fullName || !email || !specialty || !salary) {
-                alert('Vui lòng điền đầy đủ các trường bắt buộc (có dấu *).');
+            if (!res.ok) {
+                alert(json.message || 'Lỗi khi xóa HLV.');
                 return;
             }
-
-            const formData = new FormData();
-            formData.append('_method', 'PUT'); 
             
-            const birthDateInput = document.getElementById('manage-birth_date').value; 
-            if (birthDateInput) {
-                const [yyyy, mm, dd] = birthDateInput.split('-');
-                formData.append('dob', `${dd}/${mm}/${yyyy}`);
-            }
-            
-            // 1. Dữ liệu User
-            formData.append('full_name', fullName);
-            formData.append('email', email);
-            // Nếu không nhập pass mới thì dùng pass cũ (ẩn) hoặc logic controller sẽ tự bỏ qua nếu null
-            formData.append('password', document.getElementById('manage-password').value.trim() || document.getElementById('manage-current-password').value);
-            formData.append('phone', document.getElementById('manage-phone').value.trim());
-            formData.append('address', document.getElementById('manage-address').value.trim());
-            formData.append('gender', document.querySelector('input[name="manage-gender"]:checked').value);
-            
-            // 2. Dữ liệu Trainer
-            formData.append('specialty', specialty);
-            formData.append('experience_years', document.getElementById('manage-experience_years').value);
-            formData.append('salary', salary);
-            formData.append('work_schedule', document.getElementById('manage-work_schedule_input').value.trim()); 
-            formData.append('branch_id', document.getElementById('manage-branch_id').value);
-            formData.append('status', document.getElementById('manage-status').value);
-
-            if (document.getElementById('manage-image_url_input').files[0]) {
-                formData.append('image_file', document.getElementById('manage-image_url_input').files[0]);
-            }
-
-            try {
-                const res = await fetch(`/admin/trainers/${id}`, {
-                    method: 'POST', 
-                    headers: { 'X-CSRF-TOKEN': csrfToken },
-                    body: formData
-                });
-                
-                const json = await res.json();
-                
-                if (!res.ok) {
-                    let errorMsg = 'Lỗi khi cập nhật HLV.';
-                    if (json.errors) errorMsg += '\n' + Object.values(json.errors).flat().join('\n');
-                    else if (json.message) errorMsg += '\n' + json.message;
-                    alert(errorMsg);
-                    return;
-                }
-
-                alert(json.message || 'Cập nhật thành công!');
-                if (json.success) location.reload();
-            } catch (err) {
-                console.error('Lỗi fetch:', err);
-                alert('Lỗi server: Vui lòng kiểm tra kết nối mạng hoặc server logs.');
-            }
-        };
-
-        // === XÓA (ĐÃ SỬA ID TỪ 'btn-delete-package' THÀNH 'btn-delete-trainer') ===
-        document.getElementById('btn-delete-trainer')?.addEventListener('click', async () => {
-            if (!confirm('Xóa HLV này? Không thể khôi phục!')) return;
-            const id = document.getElementById('current-trainer_id').value;
-
-            try {
-                const res = await fetch(`/admin/trainers/${id}`, {
-                    method: 'DELETE',
-                    headers: { 'X-CSRF-TOKEN': csrfToken }
-                });
-                
-                const json = await res.json();
-                
-                if (!res.ok) {
-                    alert(json.message || 'Lỗi khi xóa HLV.');
-                    return;
-                }
-                
-                alert(json.message || 'Xóa thành công!');
-                if (json.success) location.reload();
-            } catch (err) {
-                console.error('Lỗi khi xóa HLV:', err);
-                alert('Lỗi server');
-            }
-        });
+            alert(json.message || 'Xóa thành công!');
+            if (json.success) location.reload();
+        } catch (err) {
+            console.error('Lỗi khi xóa HLV:', err);
+            alert('Lỗi server');
+        }
     });
+});
 </script>
 @endpush
