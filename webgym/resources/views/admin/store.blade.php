@@ -523,14 +523,49 @@
 
 @push('scripts')
 <style>
-    .custom-multiselect-option:hover { background-color: rgba(153, 153, 153, 0.5); color: #1a202c; }
-    .custom-multiselect-option.bg-blue-100 { background-color: rgba(59, 130, 246, 0.5); color: #1a202c; }
-    .custom-multiselect-option.bg-blue-100:hover { background-color: rgba(153, 153, 153, 0.5); }
-    .custom-multiselect-option { background-color: white; color: #1a202c; }
-    #variant-sidebar-list::-webkit-scrollbar { width: 8px; }
-    #variant-sidebar-list::-webkit-scrollbar-track { background: transparent; }
-    #variant-sidebar-list::-webkit-scrollbar-thumb { background: rgba(153, 153, 153, 0.5); border-radius: 4px; }
-    #variant-sidebar-list::-webkit-scrollbar-thumb:hover { background: #777777; }
+/* === CUSTOM STYLES CHO CUSTOM SELECT COMPONENT === */
+
+    .custom-multiselect-option {
+        @apply bg-white text-gray-900 transition-all duration-200 ease-in-out;
+    }
+    .custom-multiselect-option span {
+        @apply text-gray-900;
+    }
+
+    /* 1. Màu HOVER */
+    .custom-multiselect-option:hover:not(.bg-blue-100) {
+        background-color: rgba(153, 153, 153, 0.2) !important; 
+        color: #1a202c !important;
+    }
+    .custom-multiselect-option:hover:not(.bg-blue-100) span {
+        color: #1a202c !important;
+    }
+
+    /* 2. Màu SELECTED */
+    .custom-multiselect-option.bg-blue-100 { 
+        @apply bg-blue-100 text-gray-900;
+        background-color: #DBEAFE !important; 
+        color: #1a202c !important;
+    }
+    .custom-multiselect-option.bg-blue-100 span { 
+        color: #1a202c !important;
+    }
+
+    /* === SCROLLBAR STYLES === */
+    #variant-sidebar-list::-webkit-scrollbar {
+        width: 8px;
+    }
+    #variant-sidebar-list::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    #variant-sidebar-list::-webkit-scrollbar-thumb {
+        background: rgba(153, 153, 153, 0.2); 
+        border-radius: 4px;
+    }
+    #variant-sidebar-list::-webkit-scrollbar-thumb:hover {
+        background: rgba(153, 153, 153, 0.2);
+    }
+
 </style>
 
 <script>
@@ -851,7 +886,14 @@
 
                 const flash = document.getElementById(flashId);
                 try {
-                    const res = await fetch(url(this), { method: 'POST', body: fd });
+                    const res = await fetch(url(this), { 
+                        method: 'POST', 
+                        headers: {
+                            'Accept': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                        },
+                        body: fd 
+                    });
                     const data = await res.json();
                     showFlash(flash, data.message, data.success);
                     
@@ -922,14 +964,13 @@
 
         // --- LOGIC TẮT/BẬT INPUT GIÁ GIẢM ---
         function setupPromoLogic(containerId, inputId) {
-            // Tìm container của custom select dựa trên data-select-id
             const container = document.querySelector(`[data-select-id="${containerId}"]`);
             if (!container) return;
 
             const hiddenSelect = container.querySelector('select');
             const priceInput = document.getElementById(inputId);
 
-            // Hàm xử lý chính: Kiểm tra giá trị và bật/tắt input
+            // Kiểm tra giá trị và bật/tắt input
             const toggleInput = () => {
                 const isPromo = hiddenSelect.value === 'Có'; // Kiểm tra nếu chọn 'Có'
                 
@@ -942,15 +983,14 @@
                     // TRƯỜNG HỢP: KHÔNG KHUYẾN MÃI
                     priceInput.readOnly = true; // Khóa nhập
                     priceInput.classList.remove('bg-white');
-                    priceInput.classList.add('bg-gray-100'); // Thêm nền xám (disabled look)
+                    priceInput.classList.add('bg-gray-100'); // Thêm nền xám 
                     priceInput.value = 0; // Reset giá trị về 0
                 }
             };
 
-            // 1. Lắng nghe sự kiện thay đổi (khi người dùng chọn menu)
+            // (khi người dùng chọn menu)
             hiddenSelect.addEventListener('change', toggleInput);
 
-            // 2. Chạy logic này ngay lập tức (để áp dụng cho dữ liệu vừa load lên)
             // Dùng MutationObserver để theo dõi khi value của select thay đổi bằng JS (lúc load modal)
             const observer = new MutationObserver(toggleInput);
             observer.observe(hiddenSelect, { attributes: true, childList: true, subtree: true });
