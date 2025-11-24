@@ -94,7 +94,7 @@
         <table class="w-full text-left border-collapse table-auto font-open-sans">
             
             <!-- Table Header -->
-            <thead class="text-gray-400 font-normal text-sm text-center">
+            <thead class="font-montserrat text-[#1f1d1d] text-sm text-center ">
                 <tr>
                     <th class="py-4 px-4 w-[5%] truncate">ID</th>                  
                     <th class="py-4 px-4 w-[10%] truncate">Mã lớp</th>                    
