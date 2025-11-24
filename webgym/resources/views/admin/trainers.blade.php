@@ -33,7 +33,7 @@
                     <th class="px-4 py-3 text-left uppercase w-[10%]">Mã HLV</th>
                     <th class="px-4 py-3 text-left uppercase w-[15%]">Họ và tên</th>
                     <th class="px-4 py-3 text-left uppercase w-[20%]">Email</th>
-                    <th class="px-4 py-3 text-left uppercase w-[10%]">lương (VND)</th>
+                    <th class="px-4 py-3 text-left uppercase w-[10%]">Lương (VND)</th>
                     <th class="px-4 py-3 text-left uppercase w-[10%]">Chuyên môn</th>
                     <th class="px-4 py-3 text-left uppercase flex-1">Lịch làm việc</th>
                     <th class="px-4 py-3 text-center uppercase w-[15%]">Trạng thái</th>
@@ -50,7 +50,14 @@
                     data-specialty="{{ $trainer->specialty }}"
                     data-work_schedule="{{ $trainer->work_schedule }}"
                     data-status="{{ $trainer->status }}"
-                    data-birth_date="{{ $trainer->user->dob ?? '' }}" 
+                    
+                    {{-- QUAN TRỌNG: Ép kiểu về Y-m-d ngay tại đây để JS Code 2 (gán thẳng) hoạt động được --}}
+                    @php
+                        $rawDate = $trainer->user->birth_date ?? $trainer->user->dob;
+                        $formattedDate = $rawDate ? \Carbon\Carbon::parse($rawDate)->format('Y-m-d') : '';
+                    @endphp
+                    data-birth_date="{{ $formattedDate }}" 
+                    
                     data-gender="{{ $trainer->user->gender ?? 'Nam' }}"
                     data-phone="{{ $trainer->user->phone ?? '' }}"
                     data-address="{{ $trainer->user->address ?? '' }}"
@@ -61,7 +68,6 @@
                 >
                     <td colspan="7" class="p-0">
                         <div class="flex w-full rounded-lg items-center {{ $loop->even ? 'bg-white' : 'bg-[#1976D2]/10' }} shadow-sm overflow-hidden trainer-row-content">
-                            
                             <div class="px-4 py-3 w-[10%] text-sm font-medium text-gray-900">
                                 <div class="flex items-center">
                                     <img class="w-8 h-8 rounded-full mr-2 object-cover" src="{{ $trainer->user->image_url ?? asset('images/default-avatar.png') }}" alt="Avatar">
@@ -100,7 +106,6 @@
                 @endforeach
             </tbody>
         </table>
-        
         <div class="mt-6 flex justify-center">
              {{ $trainers->links() }} 
         </div>
@@ -110,132 +115,100 @@
 {{-- ----------------- MODAL 1: THÊM HLV ----------------- --}}
 <div id="addTrainerModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center bg-black/50">
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-        
         <h2 class="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-[#0D47A1] to-[#42A5F5] bg-clip-text text-transparent">
             THÊM HUẤN LUYỆN VIÊN
         </h2>
-        
         <form id="addTrainerForm">
-            {{-- Phần Thông tin cá nhân --}}
+            {{-- Thông tin cá nhân --}}
             <h3 class="text-xl font-semibold text-blue-700 mb-4">Thông tin cá nhân</h3>
             <div class="flex space-x-6 mb-6">
-                {{-- Cột ảnh (Trái) --}}
                 <div class="w-40 flex-shrink-0 flex flex-col items-center">
                     <div class="w-40 h-40 bg-gray-200 rounded-lg flex items-center justify-center mb-3">
-                        <img id="add-image_url_preview" src="{{ asset('images/default-avatar.png') }}" alt="Avatar" class="w-full h-full object-cover rounded-lg">
+                        <img id="add-image_url_preview" src="{{ asset('images/default-avatar.png') }}" class="w-full h-full object-cover rounded-lg">
                     </div>
-                    <button type="button" id="add-upload-btn" class="w-full flex items-center justify-center px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600">
-                        Upload ảnh
-                    </button>
+                    <button type="button" id="add-upload-btn" class="w-full px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600">Upload ảnh</button>
                     <input type="file" id="add-image_url" class="hidden" accept="image/*">
                 </div>
-                
-                {{-- Cột thông tin (Phải) --}}
                 <div class="flex-1 flex flex-col space-y-4">
-                    {{-- Hàng Họ và tên --}}
                     <div class="flex items-center">
-                        <label for="add-full_name" class="w-24 flex-shrink-0 text-sm font-medium text-gray-700">Họ và tên <span class="text-red-500">*</span></label>
-                        <input type="text" id="add-full_name" required class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                        <label class="w-24 flex-shrink-0 text-sm font-medium text-gray-700">Họ và tên <span class="text-red-500">*</span></label>
+                        <input type="text" id="add-full_name" required class="flex-1 border border-[#999999]/50 rounded-2xl px-4 py-2.5">
                     </div>
-
-                    {{-- Hàng Ngày sinh + Giới tính --}}
                     <div class="flex items-center space-x-6">
                         <div class="flex items-center flex-1">
-                            <label for="add-birth_date" class="w-24 flex-shrink-0 text-sm font-medium text-gray-700">Ngày sinh</label>
-                            <input type="date" id="add-birth_date" class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                            <label class="w-24 flex-shrink-0 text-sm font-medium text-gray-700">Ngày sinh</label>
+                            <input type="date" id="add-birth_date" class="flex-1 border border-[#999999]/50 rounded-2xl px-4 py-2.5">
                         </div>
                         <div class="flex items-center flex-1"> 
                             <label class="w-16 flex-shrink-0 text-sm font-medium text-gray-700">Giới tính</label>
                             <div class="flex items-center space-x-4 flex-1"> 
-                                <label class="flex items-center">
-                                    <input type="radio" name="add-gender" value="Nam" class="form-radio text-blue-600 focus:ring-1 focus:ring-black" checked>
-                                    <span class="ml-2 text-sm text-gray-700">Nam</span>
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="radio" name="add-gender" value="Nữ" class="form-radio text-pink-600 focus:ring-1 focus:ring-black">
-                                    <span class="ml-2 text-sm text-gray-700">Nữ</span>
-                                </label>
+                                <label class="flex items-center"><input type="radio" name="add-gender" value="Nam" class="mr-2" checked> Nam</label>
+                                <label class="flex items-center"><input type="radio" name="add-gender" value="Nữ" class="mr-2"> Nữ</label>
                             </div>
                         </div>
                     </div>
-                    
-                    {{-- Hàng Mật khẩu + SĐT --}}
                     <div class="flex items-center space-x-6">
                         <div class="flex items-center flex-1">
-                            <label for="add-password" class="w-24 flex-shrink-0 text-sm font-medium text-gray-700">Mật khẩu <span class="text-red-500">*</span></label>
-                            <input type="password" id="add-password" required placeholder="Tạo mật khẩu" class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                            <label class="w-24 flex-shrink-0 text-sm font-medium text-gray-700">Mật khẩu <span class="text-red-500">*</span></label>
+                            <input type="password" id="add-password" required class="flex-1 border border-[#999999]/50 rounded-2xl px-4 py-2.5">
                         </div>
                         <div class="flex items-center flex-1">
-                            <label for="add-phone" class="w-16 flex-shrink-0 text-sm font-medium text-gray-700">SĐT</label>
-                            <input type="text" id="add-phone" class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                            <label class="w-16 flex-shrink-0 text-sm font-medium text-gray-700">SĐT</label>
+                            <input type="text" id="add-phone" class="flex-1 border border-[#999999]/50 rounded-2xl px-4 py-2.5">
                         </div>
                     </div>
-
-                    {{-- Hàng Email --}}
                     <div class="flex items-center">
-                        <label for="add-email" class="w-24 flex-shrink-0 text-sm font-medium text-gray-700">Email <span class="text-red-500">*</span></label>
-                        <input type="email" id="add-email" required class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                        <label class="w-24 flex-shrink-0 text-sm font-medium text-gray-700">Email <span class="text-red-500">*</span></label>
+                        <input type="email" id="add-email" required class="flex-1 border border-[#999999]/50 rounded-2xl px-4 py-2.5">
                     </div>
-
-                    {{-- Hàng Địa chỉ --}}
                     <div class="flex items-center">
-                        <label for="add-address" class="w-24 flex-shrink-0 text-sm font-medium text-gray-700">Địa chỉ</label>
-                        <input type="text" id="add-address" class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                        <label class="w-24 flex-shrink-0 text-sm font-medium text-gray-700">Địa chỉ</label>
+                        <input type="text" id="add-address" class="flex-1 border border-[#999999]/50 rounded-2xl px-4 py-2.5">
                     </div>
                 </div>
             </div>
 
-            {{-- Phần Công việc --}}
+            {{-- Thông tin công việc --}}
             <h3 class="text-xl font-semibold text-blue-700 mb-4">Công việc</h3>
-
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
                 <div class="flex items-center">
-                    <label for="add-specialty" class="text-sm font-medium text-gray-700 mr-3 flex-shrink-0">Chuyên môn <span class="text-red-500">*</span></label>
-                    <input type="text" id="add-specialty" required class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                    <label class="text-sm font-medium text-gray-700 mr-3 flex-shrink-0">Chuyên môn <span class="text-red-500">*</span></label>
+                    <input type="text" id="add-specialty" required class="w-full border border-[#999999]/50 rounded-2xl px-4 py-2.5">
                 </div>
                 <div class="flex items-center">
-                    <label for="add-experience_years" class="text-sm font-medium text-gray-700 mr-3 whitespace-nowrap flex-shrink-0">Kinh nghiệm (năm)</label>
-                    <input type="number" id="add-experience_years" min="0" value="0" class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                    <label class="text-sm font-medium text-gray-700 mr-3 whitespace-nowrap flex-shrink-0">Kinh nghiệm</label>
+                    <input type="number" id="add-experience_years" min="0" value="0" class="w-full border border-[#999999]/50 rounded-2xl px-4 py-2.5">
                 </div>
                 <div class="flex items-center">
-                    <label for="add-salary" class="text-sm font-medium text-gray-700 mr-3 whitespace-nowrap flex-shrink-0">Lương (VNĐ) <span class="text-red-500">*</span></label>
-                    <input type="number" id="add-salary" required min="0" class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                    <label class="text-sm font-medium text-gray-700 mr-3 whitespace-nowrap flex-shrink-0">Lương <span class="text-red-500">*</span></label>
+                    <input type="number" id="add-salary" required min="0" class="w-full border border-[#999999]/50 rounded-2xl px-4 py-2.5">
                 </div>
             </div>
 
             <div class="flex flex-col space-y-4">
-                {{-- Lịch làm việc --}}
                 <div class="flex items-center">
-                    <label for="add-work_schedule" class="w-40 flex-shrink-0 text-sm font-medium text-gray-700">Lịch làm việc</label>
-                    <textarea id="add-work_schedule" rows="2" placeholder="VD: Ca sáng 06:00 - 14:00 (T2-T7)" class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black"></textarea>
+                    <label class="w-40 flex-shrink-0 text-sm font-medium text-gray-700">Lịch làm việc</label>
+                    <textarea id="add-work_schedule" rows="2" class="flex-1 border border-[#999999]/50 rounded-2xl px-4 py-2.5"></textarea>
                 </div>
                 
-                {{-- Chi nhánh làm việc (CUSTOM DROPDOWN) --}}
+                {{-- CUSTOM SELECT: CHI NHÁNH --}}
                 <div class="flex items-center relative">
                     <label class="w-40 flex-shrink-0 text-sm font-medium text-gray-700">Chi nhánh <span class="text-red-500">*</span></label>
-                    
                     <div class="relative custom-multiselect flex-1" data-select-id="add-branch-custom" data-type="single">
-                        <select id="add-branch-custom-hidden-select" name="add_branch" required class="hidden">
+                        <select id="add-branch-custom-hidden-select" class="hidden">
                             <option value="">-- Chọn chi nhánh --</option>
                             @foreach($branches as $branch) 
                             <option value="{{ $branch->branch_id }}">{{ $branch->branch_name }}</option>
                             @endforeach
                         </select>
-                        <button type="button" class="custom-multiselect-trigger w-full bg-white border border-[#999999]/50 rounded-2xl shadow-sm text-left px-4 py-2.5 flex items-center justify-between focus:outline-none focus:ring-1 focus:ring-black">
+                        <button type="button" class="custom-multiselect-trigger w-full bg-white border border-[#999999]/50 rounded-2xl shadow-sm text-left px-4 py-2.5 flex items-center justify-between focus:outline-none">
                             <span class="custom-multiselect-display text-gray-500">-- Chọn chi nhánh --</span>
-                            <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                            </svg>
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
                         </button>
                         <div class="custom-multiselect-panel hidden absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
                             <ul class="custom-multiselect-list max-h-48 overflow-y-auto">
-                                <li class="px-3 py-2 cursor-pointer custom-multiselect-option" data-value="">
-                                    <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-500">-- Chọn chi nhánh --</span></div>
-                                </li>
                                 @foreach($branches as $branch) 
-                                <li class="px-3 py-2 cursor-pointer custom-multiselect-option" data-value="{{ $branch->branch_id }}">
-                                    <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">{{ $branch->branch_name }}</span></div>
-                                </li>
+                                <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" data-value="{{ $branch->branch_id }}"><span class="text-sm text-gray-900">{{ $branch->branch_name }}</span></li>
                                 @endforeach
                             </ul>
                         </div>
@@ -243,14 +216,9 @@
                 </div>
             </div>
 
-            {{-- Nút bấm --}}
             <div class="flex justify-center space-x-4 mt-8">
-                <button type="button" class="close-modal px-8 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400">
-                    Hủy
-                </button>
-                <button type="submit" class="px-8 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
-                    Thêm thông tin
-                </button>
+                <button type="button" class="close-modal px-8 py-2 bg-gray-300 text-gray-800 rounded-lg">Hủy</button>
+                <button type="submit" class="px-8 py-2 bg-green-500 text-white rounded-lg">Thêm thông tin</button>
             </div>
         </form>
     </div>
@@ -259,699 +227,417 @@
 {{-- ----------------- MODAL 2: QUẢN LÝ HLV ----------------- --}}
 <div id="manageTrainerModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center bg-black/50">
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-        
-        <h2 class="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-[#0D47A1] to-[#42A5F5] bg-clip-text text-transparent">
-            QUẢN LÝ HUẤN LUYỆN VIÊN
-        </h2>
-        
+        <h2 class="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-[#0D47A1] to-[#42A5F5] bg-clip-text text-transparent">QUẢN LÝ HUẤN LUYỆN VIÊN</h2>
         <form id="manageTrainerForm">
             <input type="hidden" id="current-trainer_id">
             <input type="hidden" id="manage-current-password">
 
-            {{-- Phần Thông tin cá nhân --}}
             <h3 class="text-xl font-semibold text-blue-700 mb-4">Thông tin cá nhân</h3>
             <div class="flex space-x-6 mb-6">
-                {{-- Cột ảnh (Trái) --}}
                 <div class="w-40 flex-shrink-0 flex flex-col items-center">
                     <div class="w-40 h-40 bg-gray-200 rounded-lg flex items-center justify-center mb-3">
-                        <img id="manage-image_url_preview" src="" alt="Avatar" class="w-full h-full object-cover rounded-lg">
+                        <img id="manage-image_url_preview" src="" class="w-full h-full object-cover rounded-lg">
                     </div>
-                    <button type="button" id="manage-upload-btn" class="w-full flex items-center justify-center px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600">
-                        Upload ảnh
-                    </button>
+                    <button type="button" id="manage-upload-btn" class="w-full px-4 py-2 bg-blue-500 text-white text-sm rounded-lg hover:bg-blue-600">Upload ảnh</button>
                     <input type="file" id="manage-image_url_input" class="hidden" accept="image/*">
                 </div>
-                
-                {{-- Cột thông tin (Phải) --}}
                 <div class="flex-1 flex flex-col space-y-4">
-
-                    {{-- Hàng ID + Họ và tên --}}
                     <div class="flex items-center space-x-6">
                         <div class="flex items-center flex-1">
-                            <label for="manage-user_id" class="w-24 flex-shrink-0 text-sm font-medium text-gray-700">ID</label>
-                            <input type="text" id="manage-user_id" class="flex-1 border border-gray-300 rounded-2xl shadow-sm bg-gray-100 px-4 py-2.5" disabled>
+                            <label class="w-24 flex-shrink-0 text-sm font-medium text-gray-700">ID</label>
+                            <input type="text" id="manage-user_id" class="flex-1 border border-gray-300 rounded-2xl px-4 py-2.5 bg-gray-100" disabled>
                         </div>
                         <div class="flex items-center flex-1">
-                            <label for="manage-full_name" class="w-16 flex-shrink-0 text-sm font-medium text-gray-700">Họ tên <span class="text-red-500">*</span></label>
-                            <input type="text" id="manage-full_name" required class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                            <label class="w-16 flex-shrink-0 text-sm font-medium text-gray-700">Họ tên <span class="text-red-500">*</span></label>
+                            <input type="text" id="manage-full_name" required class="flex-1 border border-[#999999]/50 rounded-2xl px-4 py-2.5">
                         </div>
                     </div>
-
-                    {{-- Hàng Ngày sinh + Giới tính --}}
                     <div class="flex items-center space-x-6">
                         <div class="flex items-center flex-1">
-                            <label for="manage-birth_date" class="w-24 flex-shrink-0 text-sm font-medium text-gray-700">Ngày sinh</label>
-                            <input type="date" id="manage-birth_date" class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                            <label class="w-24 flex-shrink-0 text-sm font-medium text-gray-700">Ngày sinh</label>
+                            <input type="date" id="manage-birth_date" class="flex-1 border border-[#999999]/50 rounded-2xl px-4 py-2.5">
                         </div>
                         <div class="flex items-center flex-1"> 
                             <label class="w-16 flex-shrink-0 text-sm font-medium text-gray-700">Giới tính</label>
                             <div class="flex items-center space-x-4 flex-1"> 
-                                <label class="flex items-center">
-                                    <input type="radio" name="manage-gender" value="Nam" id="manage-gender-male" class="form-radio text-blue-600 focus:ring-1 focus:ring-black">
-                                    <span class="ml-2 text-sm text-gray-700">Nam</span>
-                                </label>
-                                <label class="flex items-center">
-                                    <input type="radio" name="manage-gender" value="Nữ" id="manage-gender-female" class="form-radio text-pink-600 focus:ring-1 focus:ring-black">
-                                    <span class="ml-2 text-sm text-gray-700">Nữ</span>
-                                </label>
+                                <label class="flex items-center"><input type="radio" name="manage-gender" value="Nam" id="manage-gender-male" class="mr-2"> Nam</label>
+                                <label class="flex items-center"><input type="radio" name="manage-gender" value="Nữ" id="manage-gender-female" class="mr-2"> Nữ</label>
                             </div>
                         </div>
                     </div>
-                    
-                    {{-- Hàng Mật khẩu + SĐT --}}
                     <div class="flex items-center space-x-6">
                         <div class="flex items-center flex-1">
-                            <label for="manage-password" class="w-24 flex-shrink-0 text-sm font-medium text-gray-700">Mật khẩu</label>
-                            <input type="password" id="manage-password" placeholder="Nhập nếu muốn đổi" class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                            <label class="w-24 flex-shrink-0 text-sm font-medium text-gray-700">Mật khẩu</label>
+                            <input type="password" id="manage-password" placeholder="Nhập nếu muốn đổi" class="flex-1 border border-[#999999]/50 rounded-2xl px-4 py-2.5">
                         </div>
                         <div class="flex items-center flex-1">
-                            <label for="manage-phone" class="w-16 flex-shrink-0 text-sm font-medium text-gray-700">SĐT</label>
-                            <input type="text" id="manage-phone" class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                            <label class="w-16 flex-shrink-0 text-sm font-medium text-gray-700">SĐT</label>
+                            <input type="text" id="manage-phone" class="flex-1 border border-[#999999]/50 rounded-2xl px-4 py-2.5">
                         </div>
                     </div>
-
-                    {{-- Hàng Email --}}
                     <div class="flex items-center">
-                        <label for="manage-email" class="w-24 flex-shrink-0 text-sm font-medium text-gray-700">Email <span class="text-red-500">*</span></label>
-                            <input type="email" id="manage-email" required class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                        <label class="w-24 flex-shrink-0 text-sm font-medium text-gray-700">Email <span class="text-red-500">*</span></label>
+                        <input type="email" id="manage-email" required class="flex-1 border border-[#999999]/50 rounded-2xl px-4 py-2.5">
                     </div>
-
-                    {{-- Hàng Địa chỉ --}}
                     <div class="flex items-center">
-                        <label for="manage-address" class="w-24 flex-shrink-0 text-sm font-medium text-gray-700">Địa chỉ</label>
-                        <input type="text" id="manage-address" class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                        <label class="w-24 flex-shrink-0 text-sm font-medium text-gray-700">Địa chỉ</label>
+                        <input type="text" id="manage-address" class="flex-1 border border-[#999999]/50 rounded-2xl px-4 py-2.5">
                     </div>
                 </div>
             </div>
 
-            {{-- Phần Công việc --}}
             <h3 class="text-xl font-semibold text-blue-700 mb-4">Công việc</h3>
-            
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
                 <div class="flex items-center">
-                    <label for="manage-specialty" class="text-sm font-medium text-gray-700 mr-3 flex-shrink-0">Chuyên môn <span class="text-red-500">*</span></label>
-                    <input type="text" id="manage-specialty" required class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                    <label class="text-sm font-medium text-gray-700 mr-3 flex-shrink-0">Chuyên môn <span class="text-red-500">*</span></label>
+                    <input type="text" id="manage-specialty" required class="w-full border border-[#999999]/50 rounded-2xl px-4 py-2.5">
                 </div>
                 <div class="flex items-center">
-                    <label for="manage-experience_years" class="text-sm font-medium text-gray-700 mr-3 whitespace-nowrap flex-shrink-0">Kinh nghiệm (năm)</label>
-                    <input type="number" id="manage-experience_years" min="0" class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                    <label class="text-sm font-medium text-gray-700 mr-3 whitespace-nowrap flex-shrink-0">Kinh nghiệm</label>
+                    <input type="number" id="manage-experience_years" min="0" class="w-full border border-[#999999]/50 rounded-2xl px-4 py-2.5">
                 </div>
                 <div class="flex items-center">
-                    <label for="manage-salary" class="text-sm font-medium text-gray-700 mr-3 whitespace-nowrap flex-shrink-0">Lương (VNĐ) <span class="text-red-500">*</span></label>
-                    <input type="number" id="manage-salary" required min="0" class="w-full border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black">
+                    <label class="text-sm font-medium text-gray-700 mr-3 whitespace-nowrap flex-shrink-0">Lương <span class="text-red-500">*</span></label>
+                    <input type="number" id="manage-salary" required min="0" class="w-full border border-[#999999]/50 rounded-2xl px-4 py-2.5">
                 </div>
             </div>
-
             <div class="flex flex-col space-y-4">
-
-                {{-- Lịch làm việc --}}
                 <div class="flex items-center">
-                    <label for="manage-work_schedule_input" class="w-40 flex-shrink-0 text-sm font-medium text-gray-700">Lịch làm việc</label>
-                    <textarea id="manage-work_schedule_input" rows="2" class="flex-1 border border-[#999999]/50 rounded-2xl shadow-sm px-4 py-2.5 focus:outline-none focus:ring-1 focus:ring-black"></textarea>
+                    <label class="w-40 flex-shrink-0 text-sm font-medium text-gray-700">Lịch làm việc</label>
+                    <textarea id="manage-work_schedule_input" rows="2" class="flex-1 border border-[#999999]/50 rounded-2xl px-4 py-2.5"></textarea>
                 </div>
                 
-                {{-- Chi nhánh làm việc (CUSTOM DROPDOWN) --}}
+                {{-- CUSTOM SELECT: CHI NHÁNH (MANAGE) --}}
                 <div class="flex items-center relative">
                     <label class="w-40 flex-shrink-0 text-sm font-medium text-gray-700">Chi nhánh <span class="text-red-500">*</span></label>
-                    
                     <div class="relative custom-multiselect flex-1" data-select-id="manage-branch-custom" data-type="single">
-                        <select id="manage-branch-custom-hidden-select" name="manage_branch_id" required class="hidden">
+                        <select id="manage-branch-custom-hidden-select" class="hidden">
+                            <option value="" disabled>Chọn chi nhánh...</option>
                             @foreach($branches as $branch)
                             <option value="{{ $branch->branch_id }}">{{ $branch->branch_name }}</option>
                             @endforeach
                         </select>
-                        <button type="button" class="custom-multiselect-trigger w-full bg-white border border-[#999999]/50 rounded-2xl shadow-sm text-left px-4 py-2.5 flex items-center justify-between focus:outline-none focus:ring-1 focus:ring-black">
+                        <button type="button" class="custom-multiselect-trigger w-full bg-white border border-[#999999]/50 rounded-2xl shadow-sm text-left px-4 py-2.5 flex items-center justify-between focus:outline-none">
                             <span class="custom-multiselect-display text-gray-500">Chọn chi nhánh...</span>
-                            <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                            </svg>
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
                         </button>
                         <div class="custom-multiselect-panel hidden absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
                             <ul class="custom-multiselect-list max-h-48 overflow-y-auto">
                                 @foreach($branches as $branch)
-                                <li class="px-3 py-2 cursor-pointer custom-multiselect-option" data-value="{{ $branch->branch_id }}">
-                                    <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">{{ $branch->branch_name }}</span></div>
-                                </li>
+                                <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" data-value="{{ $branch->branch_id }}"><span class="text-sm text-gray-900">{{ $branch->branch_name }}</span></li>
                                 @endforeach
                             </ul>
                         </div>
                     </div>
                 </div>
 
-                {{-- Trạng thái (CUSTOM DROPDOWN) --}}
+                {{-- CUSTOM SELECT: TRẠNG THÁI (MANAGE) --}}
                 <div class="flex items-center relative">
                     <label class="w-40 flex-shrink-0 text-sm font-medium text-gray-700">Trạng thái</label>
-                    
                     <div class="relative custom-multiselect flex-1" data-select-id="manage-status-custom" data-type="single">
-                        <select id="manage-status-custom-hidden-select" name="manage_status" class="hidden">
+                        <select id="manage-status-custom-hidden-select" class="hidden">
                             <option value="active">Đang hoạt động</option>
                             <option value="inactive">Nghỉ việc</option>
                         </select>
-                        <button type="button" class="custom-multiselect-trigger w-full bg-white border border-[#999999]/50 rounded-2xl shadow-sm text-left px-4 py-2.5 flex items-center justify-between focus:outline-none focus:ring-1 focus:ring-black">
+                        <button type="button" class="custom-multiselect-trigger w-full bg-white border border-[#999999]/50 rounded-2xl shadow-sm text-left px-4 py-2.5 flex items-center justify-between focus:outline-none">
                             <span class="custom-multiselect-display text-gray-500">Chọn trạng thái...</span>
-                            <svg class="w-5 h-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                            </svg>
+                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
                         </button>
                         <div class="custom-multiselect-panel hidden absolute z-20 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg">
                             <ul class="custom-multiselect-list max-h-48 overflow-y-auto">
-                                <li class="px-3 py-2 cursor-pointer custom-multiselect-option" data-value="active">
-                                    <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">Đang hoạt động</span></div>
-                                </li>
-                                <li class="px-3 py-2 cursor-pointer custom-multiselect-option" data-value="inactive">
-                                    <div class="flex items-center space-x-3 w-full pointer-events-none"><span class="text-sm font-medium text-gray-900">Nghỉ việc</span></div>
-                                </li>
+                                <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" data-value="active"><span class="text-sm text-gray-900">Đang hoạt động</span></li>
+                                <li class="px-3 py-2 hover:bg-gray-100 cursor-pointer custom-multiselect-option" data-value="inactive"><span class="text-sm text-gray-900">Nghỉ việc</span></li>
                             </ul>
                         </div>
                     </div>
                 </div>
-
             </div>
 
-            {{-- Nút bấm --}}
             <div class="flex justify-between mt-8">
-                <button type="button" id="btn-delete-trainer" class="px-4 py-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 font-medium">
-                    Xóa HLV
-                </button>
+                <button type="button" id="btn-delete-trainer" class="px-4 py-2 bg-red-100 text-red-600 rounded-lg">Xóa HLV</button>
                 <div class="flex space-x-4">
-                    <button type="button" class="close-modal px-8 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400">
-                        Hủy
-                    </button>
-                    <button type="submit" class="px-8 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                        Lưu thông tin
-                    </button>
+                    <button type="button" class="close-modal px-8 py-2 bg-gray-300 text-gray-800 rounded-lg">Hủy</button>
+                    <button type="submit" class="px-8 py-2 bg-blue-500 text-white rounded-lg">Lưu thông tin</button>
                 </div>
             </div>
         </form>
     </div>
 </div>
-
 @endsection
-
 
 @push('scripts')
 <style>
-/* === SỬA LỖI GHI ĐÈ VÀ ÁP DỤNG MÀU HOVER #999999 - 50% === */
+    /* === CUSTOM STYLES CHO CUSTOM SELECT COMPONENT === */
+    .custom-multiselect-option {
+        @apply bg-white text-gray-900 transition-all duration-200 ease-in-out;
+    }
+    .custom-multiselect-option span {
+        @apply text-gray-900;
+    }
 
-/* Cài đặt cơ bản (Giữ nguyên) */
-.custom-multiselect-option { 
-    @apply bg-white text-gray-900; 
-}
-.custom-multiselect-option span { 
-    @apply text-gray-900; 
-}
+    /* 1. Màu HOVER (Cho mục CHƯA được chọn) */
+    .custom-multiselect-option:hover:not(.bg-blue-100) {
+        background-color: rgba(153, 153, 153, 0.2) !important; 
+        color: #1a202c !important;
+    }
+    .custom-multiselect-option:hover:not(.bg-blue-100) span {
+        color: #1a202c !important;
+    }
 
-/* 1. Màu HOVER (Cho mục CHƯA được chọn) */
-
-.custom-multiselect-option:hover:not(.bg-blue-100) { 
-    background-color:  rgba(153, 153, 153, 0.2); !important; 
-    color: #1f1d1d !important; 
-}
-.custom-multiselect-option:hover:not(.bg-blue-100) span { 
-    color: #1f1d1d !important; 
-}
-
-/* 2. Màu SELECTED (Cho mục ĐÃ được chọn) */
-/* Đảm bảo mục đã chọn (bg-blue-100) giữ màu xanh của nó */
-.custom-multiselect-option.bg-blue-100 { 
-    /* Dùng màu xanh nhạt (blue-100) cho trạng thái SELECTED */
-    @apply bg-blue-100 text-gray-900; 
-    background-color: #DBEAFE !important; 
-    color: #1f1d1d !important;
-}
-.custom-multiselect-option.bg-blue-100 span { 
-    @apply text-gray-900; 
-    color: #1f1d1d !important;
-}
-
+    /* 2. Màu SELECTED (Cho mục ĐÃ được chọn) */
+    .custom-multiselect-option.bg-blue-100 { 
+        @apply bg-blue-100 text-gray-900;
+        background-color: #DBEAFE !important; /* Màu xanh nhạt blue-100 */
+        color: #1a202c !important;
+    }
+    .custom-multiselect-option.bg-blue-100 span { 
+        color: #1a202c !important;
+    }
 </style>
 
-
 <script>
-// --- SCRIPT CUSTOM SELECT VÀ XỬ LÝ HOVER/FOCUS ---
-
-function updateMultiselectDisplay(container) {
-    const hiddenSelect = container.querySelector('select');
-    const displaySpan = container.querySelector('.custom-multiselect-display');
-    const selected = Array.from(hiddenSelect.selectedOptions);
-    
-    let placeholder = 'Chọn...';
-    if (container.dataset.selectId === 'manage-status-custom') placeholder = 'Chọn trạng thái...';
-    if (container.dataset.selectId === 'add-branch-custom') placeholder = '-- Chọn chi nhánh --';
-    if (container.dataset.selectId === 'manage-branch-custom') placeholder = 'Chọn chi nhánh...';
-
-    if (selected.length === 0 || (selected.length === 1 && selected[0].value === "")) {
-        displaySpan.textContent = placeholder;
-        displaySpan.classList.add('text-gray-500');
-    } else {
-        displaySpan.textContent = selected.map(opt => opt.text).join(', ');
-        displaySpan.classList.remove('text-gray-500');
-    }
-}
-
-function setCustomMultiselectValues(container, valuesString, delimiter = ',') {
-    if (!container) return;
-    const hiddenSelect = container.querySelector('select');
-    const optionsList = container.querySelector('.custom-multiselect-list');
-    const selectedValues = valuesString ? String(valuesString).split(delimiter).map(v => v.trim()) : [];
-
-    // Cập nhật giá trị cho thẻ <select> ẩn
-    Array.from(hiddenSelect.options).forEach(opt => opt.selected = false);
-    selectedValues.forEach(val => {
-        const opt = hiddenSelect.querySelector(`option[value="${val}"]`);
-        if (opt) opt.selected = true;
-    });
-
-    // Cập nhật giao diện (li element)
-    if(optionsList) optionsList.querySelectorAll('.custom-multiselect-option').forEach(li => li.classList.remove('bg-blue-100', 'focused'));
-    selectedValues.forEach(val => {
-        if (optionsList) {
-            const li = optionsList.querySelector(`.custom-multiselect-option[data-value="${val}"]`);
-            if (li) li.classList.add('bg-blue-100');
+    // --- 1. CUSTOM MULTISELECT LOGIC (Từ Code 1) ---
+    function updateMultiselectDisplay(container) {
+        if (!container) return;
+        const select = container.querySelector('select');
+        const display = container.querySelector('.custom-multiselect-display');
+        const selected = select.options[select.selectedIndex];
+        const placeholder = display.dataset.placeholder || 'Chọn...';
+        
+        if (!selected || selected.value === "") {
+            display.textContent = placeholder;
+            display.classList.add('text-gray-500');
+        } else {
+            display.textContent = selected.text;
+            display.classList.remove('text-gray-500');
         }
-    });
-    
-    updateMultiselectDisplay(container);
-}
+    }
 
-function initializeCustomMultiselects() {
-    document.querySelectorAll('.custom-multiselect').forEach(container => {
-        const trigger = container.querySelector('.custom-multiselect-trigger');
-        const panel = container.querySelector('.custom-multiselect-panel');
-        const optionsList = container.querySelector('.custom-multiselect-list');
-        const hiddenSelect = container.querySelector('select'); 
-        const options = Array.from(optionsList.querySelectorAll('.custom-multiselect-option'));
+    function setCustomMultiselectValues(container, value) {
+        if (!container) return;
+        const select = container.querySelector('select');
+        const valStr = String(value).trim();
+        
+        Array.from(select.options).forEach(opt => opt.selected = (String(opt.value).trim() === valStr));
+        
+        const list = container.querySelector('.custom-multiselect-list');
+        if (list) {
+            list.querySelectorAll('.custom-multiselect-option').forEach(li => {
+                li.classList.remove('bg-blue-100');
+                if (String(li.dataset.value).trim() === valStr) li.classList.add('bg-blue-100');
+            });
+        }
+        updateMultiselectDisplay(container);
+    }
 
-        // === XỬ LÝ CLICK MỞ/ĐÓNG & FOCUS ===
-        if (trigger) {
-            const openPanel = () => {
-                // Đóng tất cả các panel khác
-                document.querySelectorAll('.custom-multiselect-panel').forEach(p => { if (p !== panel) p.classList.add('hidden'); });
-                
-                panel.classList.remove('hidden');
-                
-                // Reset/Set initial focus
-                options.forEach(opt => opt.classList.remove('focused'));
-                let focusedItem = options.find(opt => opt.classList.contains('bg-blue-100'));
-                
-                if (!focusedItem && options.length > 0) {
-                    // Nếu không có mục nào được chọn, focus vào mục đầu tiên không phải là option rỗng (nếu có)
-                    focusedItem = options.find(opt => opt.dataset.value !== "");
-                    if (!focusedItem) focusedItem = options[0]; 
-                }
-                if (focusedItem) {
-                    focusedItem.classList.add('focused');
-                    focusedItem.scrollIntoView({ block: 'nearest' });
-                }
-                
-                // Focus vào panel để cho phép điều hướng bằng bàn phím
-                panel.focus({ preventScroll: true }); 
-            };
+    function initializeCustomMultiselects() {
+        document.querySelectorAll('.custom-multiselect').forEach(container => {
+            const trigger = container.querySelector('.custom-multiselect-trigger');
+            const panel = container.querySelector('.custom-multiselect-panel');
+            const list = container.querySelector('.custom-multiselect-list');
+            const select = container.querySelector('select');
+            const display = container.querySelector('.custom-multiselect-display');
 
-            trigger.addEventListener('click', (e) => {
+            if (display) display.dataset.placeholder = display.textContent;
+
+            trigger?.addEventListener('click', (e) => {
                 e.stopPropagation();
-                if (panel.classList.contains('hidden')) {
-                    openPanel();
-                } else {
-                    panel.classList.add('hidden');
-                }
+                document.querySelectorAll('.custom-multiselect-panel').forEach(p => { if(p !== panel) p.classList.add('hidden'); });
+                panel?.classList.toggle('hidden');
             });
-            trigger.setAttribute('tabindex', '0');
-        }
 
-        // === XỬ LÝ OPTIONS ===
-        if (optionsList) {
-            // Xử lý click chuột và mouseover
-            options.forEach(li => {
-                // Click để chọn giá trị
+            list?.querySelectorAll('.custom-multiselect-option').forEach(li => {
                 li.addEventListener('click', (e) => {
-                    e.stopPropagation(); 
-                    const value = li.dataset.value;
-                    const option = hiddenSelect.querySelector(`option[value="${value}"]`);
-
-                    if (container.dataset.type === 'single') {
-                        // Cập nhật giá trị
-                        Array.from(hiddenSelect.options).forEach(o => o.selected = false);
-                        if (option) option.selected = true;
-                        
-                        // Cập nhật class selected và đóng panel
-                        options.forEach(o => o.classList.remove('bg-blue-100', 'focused'));
-                        li.classList.add('bg-blue-100');
-                        panel.classList.add('hidden'); 
-                    }
-                    
-                    hiddenSelect.dispatchEvent(new Event('change'));
+                    e.stopPropagation();
+                    const val = li.dataset.value;
+                    Array.from(select.options).forEach(opt => opt.selected = (opt.value === val));
+                    list.querySelectorAll('.custom-multiselect-option').forEach(l => l.classList.remove('bg-blue-100'));
+                    li.classList.add('bg-blue-100');
+                    panel?.classList.add('hidden');
                     updateMultiselectDisplay(container);
-                    trigger.focus(); 
-                });
-                
-                // Xử lý hover chuột để loại bỏ class focused (chỉ giữ lại style hover từ CSS)
-                li.addEventListener('mouseover', () => {
-                    options.forEach(o => o.classList.remove('focused'));
                 });
             });
-
-            // Xử lý bàn phím (Lên/Xuống/Enter)
-            panel.addEventListener('keydown', (e) => {
-                const visibleOptions = options.filter(o => !o.classList.contains('hidden'));
-                if (visibleOptions.length === 0) return;
-
-                const currentFocusedIndex = visibleOptions.findIndex(o => o.classList.contains('focused'));
-                let nextFocusedIndex = currentFocusedIndex;
-
-                if (e.key === 'ArrowDown') {
-                    e.preventDefault();
-                    nextFocusedIndex = (currentFocusedIndex + 1) % visibleOptions.length;
-                } else if (e.key === 'ArrowUp') {
-                    e.preventDefault();
-                    nextFocusedIndex = (currentFocusedIndex - 1 + visibleOptions.length) % visibleOptions.length;
-                } else if (e.key === 'Enter') {
-                    e.preventDefault();
-                    const focusedItem = visibleOptions[currentFocusedIndex];
-                    if (focusedItem) focusedItem.click(); // Giả lập click để chọn
-                    return;
-                } else if (e.key === 'Escape') {
-                    e.preventDefault();
-                    panel.classList.add('hidden');
-                    trigger.focus();
-                    return;
-                }
-
-                if (nextFocusedIndex !== currentFocusedIndex) {
-                    visibleOptions[currentFocusedIndex]?.classList.remove('focused');
-                    visibleOptions[nextFocusedIndex].classList.add('focused');
-                    visibleOptions[nextFocusedIndex].scrollIntoView({ block: 'nearest' });
-                }
-            });
-        }
-        
-        // Thêm listener cho trigger để xử lý keydown Enter/Space
-        trigger.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                trigger.click(); // Mở/đóng panel
-            }
+            updateMultiselectDisplay(container);
         });
-        
-        // Cần tabindex trên panel để nhận sự kiện keydown
-        panel.setAttribute('tabindex', '-1'); 
-    });
-}
-document.addEventListener('click', (e) => {
-    // Đóng panel nếu click ra ngoài
-    if (!e.target.closest('.custom-multiselect')) {
-        document.querySelectorAll('.custom-multiselect-panel').forEach(p => p.classList.add('hidden'));
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.custom-multiselect')) document.querySelectorAll('.custom-multiselect-panel').forEach(p => p.classList.add('hidden'));
+        });
     }
-});
-// --- END SCRIPT CUSTOM SELECT ---
 
+    // --- 2. MAIN APP LOGIC (Y chang Logic Code 2 cũ) ---
+    document.addEventListener('DOMContentLoaded', function () {
+        // Khởi tạo custom select ngay lập tức
+        initializeCustomMultiselects();
 
-// --- MAIN LOGIC: CRUD AJAX ---
-document.addEventListener('DOMContentLoaded', function () {
-    
-    initializeCustomMultiselects(); 
-    
-    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    const addModal = document.getElementById('addTrainerModal');
-    const manageModal = document.getElementById('manageTrainerModal');
-    const addForm = document.getElementById('addTrainerForm');
-    const manageForm = document.getElementById('manageTrainerForm');
-    const defaultAvatar = '{{ asset('images/default-avatar.png') }}';
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        const addModal = document.getElementById('addTrainerModal');
+        const manageModal = document.getElementById('manageTrainerModal');
+        const addForm = document.getElementById('addTrainerForm');
+        const manageForm = document.getElementById('manageTrainerForm');
+        const defaultAvatar = '{{ asset('images/default-avatar.png') }}';
 
+        // Logic Preview Ảnh
+        function setupPreview(btnId, inputId, previewId) {
+            const btn = document.getElementById(btnId);
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+            if (btn && input) {
+                btn.onclick = () => input.click();
+                input.onchange = e => {
+                    if (e.target.files[0]) {
+                        const r = new FileReader();
+                        r.onload = ev => preview.src = ev.target.result;
+                        r.readAsDataURL(e.target.files[0]);
+                    }
+                };
+            }
+        }
+        setupPreview('add-upload-btn', 'add-image_url', 'add-image_url_preview');
+        setupPreview('manage-upload-btn', 'manage-image_url_input', 'manage-image_url_preview');
 
-    // === PREVIEW ẢNH ===
-    function setupPreview(btnId, inputId, previewId) {
-        const btn = document.getElementById(btnId);
-        const input = document.getElementById(inputId);
-        const preview = document.getElementById(previewId);
-        if (btn && input) {
-            btn.onclick = () => input.click();
-            input.onchange = e => {
-                if (e.target.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = ev => preview.src = ev.target.result;
-                    reader.readAsDataURL(e.target.files[0]);
+        // Helpers Modal
+        function closeModal(m) { m.classList.add('hidden'); m.classList.remove('flex'); }
+        function openModal(m) { m.classList.remove('hidden'); m.classList.add('flex'); }
+
+        document.querySelectorAll('.close-modal').forEach(b => b.addEventListener('click', () => closeModal(b.closest('.modal-container'))));
+        document.querySelectorAll('.modal-container').forEach(m => m.addEventListener('click', e => e.target === m && closeModal(m)));
+
+        // Open ADD Modal
+        document.getElementById('openAddModalBtn').onclick = () => {
+            addForm.reset();
+            document.getElementById('add-image_url_preview').src = defaultAvatar;
+            // Reset custom select UI
+            setCustomMultiselectValues(document.querySelector('[data-select-id="add-branch-custom"]'), '');
+            openModal(addModal);
+        };
+
+        // Open MANAGE Modal (Click row)
+        document.getElementById('trainer-list-body').addEventListener('click', e => {
+            const row = e.target.closest('tr.modal-trigger');
+            if (!row) return;
+            const d = row.dataset;
+            
+            document.getElementById('current-trainer_id').value = d.user_id;
+            document.getElementById('manage-user_id').value = 'HLV' + String(d.user_id).padStart(4, '0');
+            document.getElementById('manage-full_name').value = d.full_name || '';
+            document.getElementById('manage-email').value = d.email || '';
+            document.getElementById('manage-phone').value = d.phone || '';
+            document.getElementById('manage-address').value = d.address || '';
+            
+            // LOGIC CŨ: Gán thẳng giá trị từ data attribute vào input
+            // (Vì ở Blade đã ép kiểu Y-m-d nên input date sẽ hiểu và hiện đúng)
+            document.getElementById('manage-birth_date').value = d.birth_date || '';
+            
+            if(d.gender === 'Nữ') document.getElementById('manage-gender-female').checked = true;
+            else document.getElementById('manage-gender-male').checked = true;
+
+            document.getElementById('manage-specialty').value = d.specialty || '';
+            document.getElementById('manage-experience_years').value = d.experience_years || 0;
+            document.getElementById('manage-salary').value = d.salary || '';
+            document.getElementById('manage-work_schedule_input').value = d.work_schedule || '';
+            
+            // Set value cho custom selects
+            setCustomMultiselectValues(document.querySelector('[data-select-id="manage-branch-custom"]'), d.branch_id);
+            setCustomMultiselectValues(document.querySelector('[data-select-id="manage-status-custom"]'), d.status);
+            
+            document.getElementById('manage-image_url_preview').src = d.image_url || defaultAvatar;
+            
+            openModal(manageModal);
+        });
+
+        // --- SUBMIT ADD FORM ---
+        addForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const fd = new FormData();
+            fd.append('full_name', document.getElementById('add-full_name').value);
+            fd.append('email', document.getElementById('add-email').value);
+            fd.append('password', document.getElementById('add-password').value);
+            fd.append('phone', document.getElementById('add-phone').value);
+            fd.append('address', document.getElementById('add-address').value);
+            fd.append('gender', document.querySelector('input[name="add-gender"]:checked').value);
+            
+            // SỬA LỖI: Gửi thẳng định dạng YYYY-MM-DD để Laravel validate thành công
+            fd.append('dob', document.getElementById('add-birth_date').value);
+            
+            fd.append('specialty', document.getElementById('add-specialty').value);
+            fd.append('experience_years', document.getElementById('add-experience_years').value);
+            fd.append('salary', document.getElementById('add-salary').value);
+            fd.append('work_schedule', document.getElementById('add-work_schedule').value);
+            
+            // Lấy value từ hidden select của custom dropdown
+            fd.append('branch_id', document.getElementById('add-branch-custom-hidden-select').value);
+            
+            fd.append('status', 'active');
+            if(document.getElementById('add-image_url').files[0]) fd.append('image_file', document.getElementById('add-image_url').files[0]);
+
+            try {
+                const res = await fetch('/admin/trainers', { method: 'POST', headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' }, body: fd });
+                const json = await res.json();
+                if(!res.ok) {
+                    let msg = 'Lỗi thêm: ';
+                    if(json.errors) msg += Object.values(json.errors).join('\n');
+                    else msg += json.message;
+                    alert(msg);
+                } else {
+                    alert('Thêm thành công!');
+                    location.reload();
                 }
-            };
-        }
-    }
-    setupPreview('add-upload-btn', 'add-image_url', 'add-image_url_preview');
-    setupPreview('manage-upload-btn', 'manage-image_url_input', 'manage-image_url_preview');
+            } catch (err) { alert('Lỗi server'); console.error(err); }
+        };
 
-    // Helpers Modal
-    function openModal(m) { m.classList.remove('hidden'); m.classList.add('flex'); }
-    function closeModal(m) { m.classList.add('hidden'); m.classList.remove('flex'); }
-
-    document.querySelectorAll('.close-modal').forEach(btn =>
-        btn.addEventListener('click', () => closeModal(btn.closest('.modal-container')))
-    );
-    document.querySelectorAll('.modal-container').forEach(m =>
-        m.addEventListener('click', e => e.target === m && closeModal(m))
-    );
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeModal(addModal);
-            closeModal(manageModal);
-        }
-    });
-
-    // Mở modal thêm (Add)
-    document.getElementById('openAddModalBtn')?.addEventListener('click', () => {
-        addForm.reset();
-        document.querySelector('input[name="add-gender"][value="Nam"]').checked = true;
-        document.getElementById('add-image_url_preview').src = defaultAvatar;
-        document.getElementById('add-birth_date').value = ''; 
-        
-        // Reset Custom Selects
-        setCustomMultiselectValues(document.querySelector('.custom-multiselect[data-select-id="add-branch-custom"]'), '');
-
-        openModal(addModal);
-    });
-
-    // Click dòng → mở modal sửa (Manage)
-    document.getElementById('trainer-list-body').addEventListener('click', e => {
-        const row = e.target.closest('tr.modal-trigger');
-        if (!row) return;
-
-        const d = row.dataset;
-        const trainerId = d.user_id;
-
-        // ... (Thông tin cá nhân: Giữ nguyên) ...
-        document.getElementById('manage-user_id').value = 'HLV' + String(trainerId).padStart(4, '0');
-        document.getElementById('current-trainer_id').value = trainerId;
-        document.getElementById('manage-full_name').value = d.full_name || '';
-        document.getElementById('manage-email').value = d.email || '';
-        document.getElementById('manage-phone').value = d.phone || '';
-        document.getElementById('manage-address').value = d.address || '';
-        
-        // Xử lý ngày sinh (Giữ nguyên)
-        if (d.birth_date) {
-            if (d.birth_date.includes('/')) {
-                const parts = d.birth_date.split('/');
-                if (parts.length === 3) document.getElementById('manage-birth_date').value = `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-            } else {
-                document.getElementById('manage-birth_date').value = d.birth_date;
-            }
-        } else {
-            document.getElementById('manage-birth_date').value = '';
-        }
-        
-        document.getElementById('manage-password').value = ''; 
-        document.getElementById('manage-current-password').value = d.password || ''; 
-        const gender = d.gender || 'Nam';
-        document.getElementById('manage-gender-male').checked = (gender === 'Nam');
-        document.getElementById('manage-gender-female').checked = (gender === 'Nữ');
-        document.getElementById('manage-image_url_preview').src = d.image_url || defaultAvatar;
-
-        // ... (Thông tin công việc: Giữ nguyên) ...
-        document.getElementById('manage-specialty').value = d.specialty || '';
-        document.getElementById('manage-experience_years').value = d.experience_years || 0;
-        document.getElementById('manage-salary').value = d.salary || '';
-        document.getElementById('manage-work_schedule_input').value = d.work_schedule || '';
-        
-        // Gán giá trị cho Custom Selects
-        setCustomMultiselectValues(document.querySelector('.custom-multiselect[data-select-id="manage-branch-custom"]'), d.branch_id);
-        setCustomMultiselectValues(document.querySelector('.custom-multiselect[data-select-id="manage-status-custom"]'), d.status);
-
-        openModal(manageModal);
-    });
-
-    // === THÊM MỚI (AddForm Submit) ===
-    addForm.onsubmit = async function (e) {
-        e.preventDefault();
-
-        // Lấy giá trị từ Custom Select Chi nhánh
-        const branchId = document.getElementById('add-branch-custom-hidden-select').value;
-        
-        const fullName = document.getElementById('add-full_name').value.trim();
-        const email = document.getElementById('add-email').value.trim();
-        const password = document.getElementById('add-password').value.trim();
-        const specialty = document.getElementById('add-specialty').value.trim();
-        const salary = document.getElementById('add-salary').value;
-        const birthDateInput = document.getElementById('add-birth_date').value;
-
-        if (!fullName || !email || !password || !specialty || !salary || !branchId) {
-            alert('Vui lòng điền đầy đủ các trường bắt buộc (có dấu *) và chọn Chi nhánh.');
-            return;
-        }
-
-        const formData = new FormData();
-        
-        // 1. Dữ liệu User 
-        formData.append('full_name', fullName);
-        formData.append('email', email);
-        formData.append('password', password);
-        formData.append('phone', document.getElementById('add-phone').value.trim());
-        formData.append('address', document.getElementById('add-address').value.trim());
-        formData.append('gender', document.querySelector('input[name="add-gender"]:checked').value);
-        
-        if (birthDateInput) {
-            const [yyyy, mm, dd] = birthDateInput.split('-');
-            formData.append('dob', `${dd}/${mm}/${yyyy}`);
-        } else {
-            formData.append('dob', '');
-        }
-
-        // 2. Dữ liệu Trainer
-        formData.append('specialty', specialty);
-        formData.append('experience_years', document.getElementById('add-experience_years').value || 0);
-        formData.append('salary', salary);
-        formData.append('work_schedule', document.getElementById('add-work_schedule').value.trim());
-        formData.append('branch_id', branchId); 
-        formData.append('status', 'active');
-        
-        if (document.getElementById('add-image_url').files[0]) {
-            formData.append('image_file', document.getElementById('add-image_url').files[0]);
-        }
-        
-        try {
-            const res = await fetch('/admin/trainers', { 
-                method: 'POST',
-                headers: { 'X-CSRF-TOKEN': csrfToken },
-                body: formData
-            });
-
-            const json = await res.json();
+        // --- SUBMIT MANAGE FORM ---
+        manageForm.onsubmit = async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('current-trainer_id').value;
+            const fd = new FormData();
+            fd.append('_method', 'PUT');
+            fd.append('full_name', document.getElementById('manage-full_name').value);
+            fd.append('email', document.getElementById('manage-email').value);
+            fd.append('phone', document.getElementById('manage-phone').value);
+            fd.append('address', document.getElementById('manage-address').value);
+            fd.append('gender', document.querySelector('input[name="manage-gender"]:checked').value);
             
-            if (!res.ok) {
-                let errorMsg = 'Lỗi khi thêm HLV.';
-                if (json.errors) {
-                    errorMsg += '\n' + Object.values(json.errors).flat().join('\n');
-                } else if (json.message) {
-                    errorMsg += '\n' + json.message;
+            // SỬA LỖI: Gửi thẳng định dạng YYYY-MM-DD
+            fd.append('dob', document.getElementById('manage-birth_date').value);
+
+            const pass = document.getElementById('manage-password').value;
+            if(pass) fd.append('password', pass);
+
+            fd.append('specialty', document.getElementById('manage-specialty').value);
+            fd.append('experience_years', document.getElementById('manage-experience_years').value);
+            fd.append('salary', document.getElementById('manage-salary').value);
+            fd.append('work_schedule', document.getElementById('manage-work_schedule_input').value);
+            
+            // Lấy value từ hidden select của custom dropdown
+            fd.append('branch_id', document.getElementById('manage-branch-custom-hidden-select').value);
+            fd.append('status', document.getElementById('manage-status-custom-hidden-select').value);
+
+            if(document.getElementById('manage-image_url_input').files[0]) fd.append('image_file', document.getElementById('manage-image_url_input').files[0]);
+
+            try {
+                const res = await fetch(`/admin/trainers/${id}`, { method: 'POST', headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' }, body: fd });
+                const json = await res.json();
+                if(!res.ok) {
+                    let msg = 'Lỗi cập nhật: ';
+                    if(json.errors) msg += Object.values(json.errors).join('\n');
+                    else msg += json.message;
+                    alert(msg);
+                } else {
+                    alert('Cập nhật thành công!');
+                    location.reload();
                 }
-                alert(errorMsg);
-                return;
-            }
-            
-            alert(json.message || 'Thêm thành công!');
-            if (json.success) location.reload();
-        } catch (err) {
-            console.error(err);
-            alert('Lỗi server: Vui lòng kiểm tra kết nối mạng hoặc server logs.');
-        }
-    };
+            } catch (err) { alert('Lỗi server'); console.error(err); }
+        };
 
-    // === SỬA (ManageForm Submit) ===
-    manageForm.onsubmit = async function (e) {
-        e.preventDefault();
-
-        const id = document.getElementById('current-trainer_id').value;
-        if (!id) return alert('Không có ID HLV!');
-        
-        // Lấy giá trị từ Custom Select
-        const branchId = document.getElementById('manage-branch-custom-hidden-select').value;
-        const status = document.getElementById('manage-status-custom-hidden-select').value;
-
-        const fullName = document.getElementById('manage-full_name').value.trim();
-        const email = document.getElementById('manage-email').value.trim();
-        const specialty = document.getElementById('manage-specialty').value.trim();
-        const salary = document.getElementById('manage-salary').value;
-
-        if (!fullName || !email || !specialty || !salary) {
-            alert('Vui lòng điền đầy đủ các trường bắt buộc (có dấu *).');
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('_method', 'PUT'); 
-        
-        const birthDateInput = document.getElementById('manage-birth_date').value; 
-        if (birthDateInput) {
-            const [yyyy, mm, dd] = birthDateInput.split('-');
-            formData.append('dob', `${dd}/${mm}/${yyyy}`);
-        }
-        
-        // 1. Dữ liệu User
-        formData.append('full_name', fullName);
-        formData.append('email', email);
-        formData.append('password', document.getElementById('manage-password').value.trim() || document.getElementById('manage-current-password').value);
-        formData.append('phone', document.getElementById('manage-phone').value.trim());
-        formData.append('address', document.getElementById('manage-address').value.trim());
-        formData.append('gender', document.querySelector('input[name="manage-gender"]:checked').value);
-        
-        // 2. Dữ liệu Trainer
-        formData.append('specialty', specialty);
-        formData.append('experience_years', document.getElementById('manage-experience_years').value);
-        formData.append('salary', salary);
-        formData.append('work_schedule', document.getElementById('manage-work_schedule_input').value.trim()); 
-        formData.append('branch_id', branchId); 
-        formData.append('status', status); 
-
-        if (document.getElementById('manage-image_url_input').files[0]) {
-            formData.append('image_file', document.getElementById('manage-image_url_input').files[0]);
-        }
-
-        try {
-            const res = await fetch(`/admin/trainers/${id}`, {
-                method: 'POST', 
-                headers: { 'X-CSRF-TOKEN': csrfToken },
-                body: formData
-            });
-            
-            const json = await res.json();
-            
-            if (!res.ok) {
-                let errorMsg = 'Lỗi khi cập nhật HLV.';
-                if (json.errors) errorMsg += '\n' + Object.values(json.errors).flat().join('\n');
-                else if (json.message) errorMsg += '\n' + json.message;
-                alert(errorMsg);
-                return;
-            }
-
-            alert(json.message || 'Cập nhật thành công!');
-            if (json.success) location.reload();
-        } catch (err) {
-            console.error('Lỗi fetch:', err);
-            alert('Lỗi server: Vui lòng kiểm tra kết nối mạng hoặc server logs.');
-        }
-    };
-
-    // === XÓA ===
-    document.getElementById('btn-delete-trainer')?.addEventListener('click', async () => {
-        if (!confirm('Xóa HLV này? Không thể khôi phục!')) return;
-        const id = document.getElementById('current-trainer_id').value;
-
-        try {
-            const res = await fetch(`/admin/trainers/${id}`, {
-                method: 'DELETE',
-                headers: { 'X-CSRF-TOKEN': csrfToken }
-            });
-            
-            const json = await res.json();
-            
-            if (!res.ok) {
-                alert(json.message || 'Lỗi khi xóa HLV.');
-                return;
-            }
-            
-            alert(json.message || 'Xóa thành công!');
-            if (json.success) location.reload();
-        } catch (err) {
-            console.error('Lỗi khi xóa HLV:', err);
-            alert('Lỗi server');
-        }
+        // --- DELETE ACTION ---
+        document.getElementById('btn-delete-trainer').onclick = async () => {
+            if(!confirm('Xóa HLV này?')) return;
+            try {
+                const res = await fetch(`/admin/trainers/${document.getElementById('current-trainer_id').value}`, { method: 'DELETE', headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' } });
+                if(res.ok) { alert('Xóa thành công!'); location.reload(); }
+                else alert('Lỗi xóa');
+            } catch { alert('Lỗi server'); }
+        };
     });
-});
 </script>
 @endpush
