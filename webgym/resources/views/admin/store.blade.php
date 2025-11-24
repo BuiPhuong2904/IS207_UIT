@@ -523,14 +523,53 @@
 
 @push('scripts')
 <style>
-    .custom-multiselect-option:hover { background-color: rgba(153, 153, 153, 0.5); color: #1a202c; }
-    .custom-multiselect-option.bg-blue-100 { background-color: rgba(59, 130, 246, 0.5); color: #1a202c; }
-    .custom-multiselect-option.bg-blue-100:hover { background-color: rgba(153, 153, 153, 0.5); }
-    .custom-multiselect-option { background-color: white; color: #1a202c; }
-    #variant-sidebar-list::-webkit-scrollbar { width: 8px; }
-    #variant-sidebar-list::-webkit-scrollbar-track { background: transparent; }
-    #variant-sidebar-list::-webkit-scrollbar-thumb { background: rgba(153, 153, 153, 0.5); border-radius: 4px; }
-    #variant-sidebar-list::-webkit-scrollbar-thumb:hover { background: #777777; }
+/* === CUSTOM STYLES CHO CUSTOM SELECT COMPONENT === */
+
+/* Đảm bảo trạng thái ban đầu của option */
+.custom-multiselect-option {
+    @apply bg-white text-gray-900 transition-all duration-200 ease-in-out;
+}
+.custom-multiselect-option span {
+    @apply text-gray-900;
+}
+
+/* 1. Màu HOVER (Cho mục CHƯA được chọn) */
+.custom-multiselect-option:hover:not(.bg-blue-100) {
+    background-color: rgba(153, 153, 153, 0.2) !important; 
+    color: #1a202c !important;
+}
+.custom-multiselect-option:hover:not(.bg-blue-100) span {
+    color: #1a202c !important;
+}
+
+/* 2. Màu SELECTED (Đã chọn) */
+/* KHÔI PHỤC MÀU XANH NHẠT (bg-blue-100) cho mục đã chọn */
+.custom-multiselect-option.bg-blue-100 { 
+    @apply bg-blue-100 text-gray-900;
+    background-color: #DBEAFE !important; /* Màu xanh nhạt blue-100 */
+    color: #1a202c !important;
+}
+.custom-multiselect-option.bg-blue-100 span { 
+    color: #1a202c !important;
+}
+
+
+/* === SCROLLBAR STYLES (#999999 - [50]) - GIỮ NGUYÊN TỪ FILE 1/2 === */
+#variant-sidebar-list::-webkit-scrollbar {
+    width: 8px;
+}
+#variant-sidebar-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+#variant-sidebar-list::-webkit-scrollbar-thumb {
+    background: rgba(153, 153, 153, 0.2); 
+    border-radius: 4px;
+}
+#variant-sidebar-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(153, 153, 153, 0.2);
+}
+/* === KẾT THÚC: SCROLLBAR STYLES === */
+
 </style>
 
 <script>
