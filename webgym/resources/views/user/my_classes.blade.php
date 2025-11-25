@@ -16,9 +16,9 @@
 
     <div class="mb-6 flex flex-wrap gap-2 font-open-sans">
         <button @click="currentTab = 'all'" :class="currentTab === 'all' ? 'bg-blue-100 text-blue-700 font-bold shadow-sm' : 'bg-gray-100 text-gray-600 font-semibold hover:bg-gray-200'" class="px-5 py-2 rounded-full text-sm transition-all duration-200">Tất cả</button>
-        <button @click="currentTab = 'registered'" :class="currentTab === 'registered' ? 'bg-blue-100 text-blue-700 font-bold shadow-sm' : 'bg-gray-100 text-gray-600 font-semibold hover:bg-gray-200'" class="px-5 py-2 rounded-full text-sm transition-all duration-200">Đã đăng ký</button>
-        <button @click="currentTab = 'completed'" :class="currentTab === 'completed' ? 'bg-blue-100 text-blue-700 font-bold shadow-sm' : 'bg-gray-100 text-gray-600 font-semibold hover:bg-gray-200'" class="px-5 py-2 rounded-full text-sm transition-all duration-200">Hoàn thành</button>
-        <button @click="currentTab = 'cancelled'" :class="currentTab === 'cancelled' ? 'bg-blue-100 text-blue-700 font-bold shadow-sm' : 'bg-gray-100 text-gray-600 font-semibold hover:bg-gray-200'" class="px-5 py-2 rounded-full text-sm transition-all duration-200">Đã hủy</button>
+        <button @click="currentTab = 'registered'" :class="currentTab === 'registered' ? 'bg-blue-100 text-blue-700 font-bold shadow-sm' : 'bg-[#999999]/20 text-gray-600 font-semibold hover:bg-gray-300'" class="px-5 py-2 rounded-full text-sm transition-all duration-200">Đã đăng ký</button>
+        <button @click="currentTab = 'completed'" :class="currentTab === 'completed' ? 'bg-blue-100 text-blue-700 font-bold shadow-sm' : 'bg-[#999999]/20 text-gray-600 font-semibold hover:bg-gray-300'" class="px-5 py-2 rounded-full text-sm transition-all duration-200">Hoàn thành</button>
+        <button @click="currentTab = 'cancelled'" :class="currentTab === 'cancelled' ? 'bg-blue-100 text-blue-700 font-bold shadow-sm' : 'bg-[#999999]/20 text-gray-600 font-semibold hover:bg-gray-300'" class="px-5 py-2 rounded-full text-sm transition-all duration-200">Đã hủy</button>
     </div>
 
     {{-- TRƯỜNG HỢP CHƯA CÓ DỮ LIỆU --}}
@@ -27,9 +27,9 @@
             <svg class="w-20 h-20 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
             </svg>
-            <h3 class="text-lg font-bold text-gray-700 mb-2">Bạn chưa đăng ký lớp học nào</h3>
-            <p class="text-gray-500 mb-6 max-w-md mx-auto">Hãy tham gia các lớp học thú vị tại GRYND để rèn luyện sức khỏe ngay hôm nay!</p>
-            <a href="{{ route('class') }}" class="px-6 py-2.5 bg-[#0D47A1] hover:bg-[#0D47A1]/90 text-white font-semibold rounded-full transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+            <h3 class="text-lg font-bold text-black mb-2 font-montserrat">Bạn chưa đăng ký lớp học nào</h3>
+            <p class="text-[#333333]/80 mb-6 mx-auto font-open-sans">Hãy tham gia các lớp học thú vị tại GRYND để rèn luyện sức khỏe ngay hôm nay!</p>
+            <a href="{{ route('class') }}" class="px-6 py-2.5 bg-[#1976D2] hover:bg-[#0D47A1]/90 text-white font-semibold rounded-full transition-all shadow-md hover:shadow-lg transform hover:-translate-y-0.5 font-open-sans">
                 Đăng ký lớp ngay
             </a>
         </div>
