@@ -6,68 +6,6 @@
 
 @section('content')
 
-{{-- 1. KHAI BÁO DỮ LIỆU GIẢ DỰA TRÊN SEEDER --}}
-@php
-    $packages = [
-        // 1. Gói Tháng (Đang tập, mới mua được 5 ngày)
-        [
-            'name' => 'Gói Tháng',
-            'status' => 'active', 
-            'days_left' => 25, // Tổng 30 ngày, đã tập 5 ngày
-            'expiry_date' => date('d/m/Y', strtotime('+25 days')),
-            'progress' => 17, // (5/30)*100
-            'benefits' => [
-                'Thời hạn: 30 ngày', 
-                'Tập không giới hạn', 
-                'Hỗ trợ PT hướng dẫn', 
-                'Miễn phí tủ đồ'
-            ]
-        ],
-        // 2. Gói Quý (Đã hết hạn từ tháng trước)
-        [
-            'name' => 'Gói Quý',
-            'status' => 'expired',
-            'days_left' => 0,
-            'expiry_date' => '25/10/2025',
-            'progress' => 100, 
-            'benefits' => [
-                'Thời hạn: 90 ngày', 
-                'Tập không giới hạn', 
-                'Tặng 1 buổi PT cá nhân', 
-                'Ưu đãi mua sản phẩm'
-            ]
-        ],
-        // 3. Gói PT Cá Nhân (Sắp hết hạn - Đã tập 28/30 ngày)
-        [
-            'name' => 'Gói PT Cá Nhân',
-            'status' => 'active',
-            'days_left' => 2,
-            'expiry_date' => date('d/m/Y', strtotime('+2 days')),
-            'progress' => 93, // (28/30)*100
-            'benefits' => [
-                'Thời hạn: 30 ngày', 
-                'Huấn luyện viên cá nhân', 
-                'Có giáo trình tập riêng', 
-                'Tư vấn chế độ ăn riêng'
-            ]
-        ],
-        // 4. Gói Năm (VIP - Còn rất dài)
-        [
-            'name' => 'Gói Năm',
-            'status' => 'active',
-            'days_left' => 300,
-            'expiry_date' => date('d/m/Y', strtotime('+300 days')),
-            'progress' => 18, // Đã tập khoảng 2 tháng
-            'benefits' => [
-                'Thời hạn: 365 ngày', 
-                'Tặng 5 buổi PT/Năm', 
-                'Giảm 10% các dịch vụ', 
-                'Ưu tiên đặt lịch'
-            ]
-        ]
-    ];
-@endphp
-
 <div x-data="{ currentTab: 'all' }">
     <!-- Tiêu đề trang -->
     <div class="mb-8">
@@ -124,7 +62,7 @@
                     x-transition.duration.300ms
                     class="bg-white rounded-2xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-gray-100 flex flex-col justify-between h-full hover:shadow-lg transition-shadow duration-300">       
                 
-                {{-- Nội dung Card (Giữ nguyên) --}}
+                {{-- Nội dung Card --}}
                 <div>
                     <h3 class="text-[20px] font-bold text-black font-montserrat mb-4 truncate" title="{{ $pack['name'] }}">
                         {{ $pack['name'] }}
@@ -178,4 +116,3 @@
 </div>
 
 @endsection
-

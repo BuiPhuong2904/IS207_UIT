@@ -44,9 +44,9 @@ Route::get('/api/related-products', [UserStoreController::class, 'loadMoreRelate
 // Authentication Routes
 
 
-// Route thử đăng nhập user với ID = 1 (chỉ dùng trong giai đoạn chưa có form đăng nhập)
+// Route thử đăng nhập user với ID = 11 (chỉ dùng trong giai đoạn chưa có form đăng nhập)
 Route::get('/test-login', function () {
-    $user = User::find(1); 
+    $user = User::find(11); 
     if ($user) {
         Auth::login($user);
         return redirect('/');
@@ -57,7 +57,6 @@ Route::get('/test-login', function () {
 
 // User Profile Routes
 Route::view('/ho-so', 'user.profile')->name('profile');
-Route::view('/goi-tap-da-mua', 'user.my_packages')->name('my_packages');
-Route::view('/lop-hoc-da-dang-ky', 'user.my_classes')->name('my_classes');
+Route::get('/goi-tap-da-mua', [UserPackageController::class, 'myPackages'])->name('my_packages');Route::view('/lop-hoc-da-dang-ky', 'user.my_classes')->name('my_classes');
 Route::view('/lich-su-don-hang', 'user.order_history')->name('order_history');
 Route::view('/lich-su-muon-tra', 'user.rental_history')->name('rental_history');
