@@ -6,7 +6,7 @@
 
 @section('content')
 
-{{-- 1. DỮ LIỆU GIẢ (Mô phỏng từ ClassScheduleSeeder) --}}
+{{-- 1. DỮ LIỆU GIẢ --}}
 @php
     $classes = [
         [
