@@ -6,6 +6,7 @@ use App\Http\Controllers\ChatbotController;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CheckoutController; 
+use App\Http\Controllers\CheckoutDetailController; 
 
 use App\Http\Controllers\UserPackageController;
 use App\Http\Controllers\UserClassController;
@@ -45,6 +46,10 @@ Route::get('/api/related-products', [UserStoreController::class, 'loadMoreRelate
 // Authentication Routes
 // Route Checkout
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+
+//
+// Route CheckoutDetail
+Route::get('/checkout-detail', [CheckoutDetailController::class, 'index'])->name('checkout-detail');
 
 // Route thử đăng nhập user với ID = 1 (chỉ dùng trong giai đoạn chưa có form đăng nhập)
 Route::get('/test-login', function () {
