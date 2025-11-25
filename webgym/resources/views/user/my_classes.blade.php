@@ -114,7 +114,7 @@
                 
                 {{-- Tên lớp học --}}
                 <div class="mb-3">
-                    <h3 class="text-xl font-bold text-[#000000] font-montserrat truncate" title="{{ $class['name'] }}">
+                    <h3 class="text-xl font-bold text-[#0D47A1] font-montserrat truncate" title="{{ $class['name'] }}">
                         {{ $class['name'] }}
                     </h3>
                 </div>
@@ -126,19 +126,19 @@
                 <div class="pl-2 flex-grow"> 
                     <div class="grid grid-cols-[90px_1fr] gap-y-3 text-sm">
                         
-                        <div class="text-[#333333]/80 font-medium">Thời gian:</div>
-                        <div class="text-black font-semibold">{{ $class['time'] }}</div>
+                        <div class="text-[#333333]/80 font-semibold">Thời gian:</div>
+                        <div class="text-black">{{ $class['time'] }}</div>
 
-                        <div class="text-[#333333]/80 font-medium">Ngày:</div>
-                        <div class="text-black font-semibold">{{ $class['date'] }}</div>
+                        <div class="text-[#333333]/80 font-semibold">Ngày:</div>
+                        <div class="text-black">{{ $class['date'] }}</div>
 
-                        <div class="text-[#333333]/80 font-medium">Phòng học:</div>
-                        <div class="text-black font-semibold">{{ $class['room'] }}</div>
+                        <div class="text-[#333333]/80 font-semibold">Phòng học:</div>
+                        <div class="text-black">{{ $class['room'] }}</div>
 
-                        <div class="text-[#333333]/80 font-medium">Chi nhánh:</div>
-                        <div class="text-black font-semibold">{{ $class['branch'] }}</div>
+                        <div class="text-[#333333]/80 font-semibold">Chi nhánh:</div>
+                        <div class="text-black">{{ $class['branch'] }}</div>
 
-                         <div class="text-[#333333]/80 font-medium">Trạng thái:</div>
+                         <div class="text-[#333333]/80 font-semibold">Trạng thái:</div>
                         <div class="{{ $statusColor }}">
                             {{ $class['status_label'] }}
                         </div>
