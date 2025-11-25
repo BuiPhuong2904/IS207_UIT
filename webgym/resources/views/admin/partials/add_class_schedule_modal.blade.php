@@ -20,13 +20,38 @@
                 <!-- Tên lớp -->
                 <div class="flex items-center text-black font-open-sans">
                     <label class="w-24 font-medium flex-shrink-0">Tên lớp</label>
-                    <div class="relative flex-1">
-                        <input 
-                            type="text" 
-                            name="class_name" 
-                            placeholder="Nhập tên lớp" 
-                            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500 bg-white text-[#333333] font-semibold"
-                        >
+                    
+                    <div class="relative flex-1 dropdown-container" id="add-class-dropdown-container">
+                        
+                        <input type="hidden" name="class_id" id="selected_class_id" value="">
+
+                        <button type="button" onclick="toggleDropdown('add-class-options')" class="w-full border border-gray-300 rounded-lg px-4 py-2 flex justify-between items-center bg-white focus:outline-none focus:border-blue-500 transition-colors">
+                            <span id="add-class-display-text" class="text-gray-500 font-semibold">-- Chọn tên lớp --</span>
+                            <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                        </button>
+
+                        <div id="add-class-options" class="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-xl hidden dropdown-panel">
+                            
+                            <div class="p-2 border-b border-gray-100">
+                                <div class="relative">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                        <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                        </svg>
+                                    </div>
+                                    <input type="text" id="add-class-search" onkeyup="filterAddClasses()" class="w-full bg-gray-100 text-gray-700 rounded-md py-1.5 pl-9 pr-3 text-sm focus:outline-none focus:bg-white focus:ring-1 focus:ring-blue-500 transition-colors" placeholder="Tìm kiếm . . .">
+                                </div>
+                            </div>
+
+                            <ul class="max-h-48 overflow-y-auto py-1 text-sm text-gray-700" id="add-class-list">
+                                @foreach($classes_list as $class)
+                                    <li onclick="selectAddClass('{{ $class['id'] }}', '{{ $class['name'] }}')" class="class-item cursor-pointer px-4 py-2 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                                        {{ $class['name'] }}
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </div>
+
                     </div>
                 </div>
 
@@ -64,19 +89,17 @@
 
                     <!-- Chi nhánh -->
                     <div class="flex items-center flex-1">
-                        <label class="w-24 font-medium text-gray-700 flex-shrink-0">Chi nhánh</label>
+                        <label class="w-24 font-medium text-gray-700 flex-shrink-0">Chi nhánh</label>                      
                         
-                        <div class="relative flex-1" id="branch-dropdown-container">
-                            
+                        <div class="relative flex-1 dropdown-container" id="branch-dropdown-container">                       
                             <input type="hidden" name="branch_id" id="selected_branch_id" value="">
-
+                            
                             <button type="button" onclick="toggleDropdown('branch-options')" class="w-full border border-gray-300 rounded-lg px-4 py-2 flex justify-between items-center bg-white focus:outline-none focus:border-blue-500 transition-colors">
                                 <span id="branch-display-text" class="text-gray-500 font-semibold">-- Chọn chi nhánh --</span>
                                 <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                             </button>
-
-                            <div id="branch-options" class="absolute z-5 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg hidden">
-                                
+                            
+                            <div id="branch-options" class="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg hidden dropdown-panel">                            
                                 <div class="p-2 border-b border-gray-100">
                                     <div class="relative">
                                         <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -87,7 +110,6 @@
                                         <input type="text" id="branch-search" onkeyup="filterBranches()" class="w-full bg-gray-100 text-gray-700 rounded-md py-1.5 pl-9 pr-3 text-sm focus:outline-none focus:bg-white focus:ring-1 focus:ring-blue-500 transition-colors" placeholder="Tìm kiếm . . .">
                                     </div>
                                 </div>
-
                                 <ul class="max-h-48 overflow-y-auto py-1 text-sm text-gray-700" id="branch-list">
                                     @foreach($branches_list as $branch)
                                         <li onclick="selectBranch('{{ $branch['id'] }}', '{{ $branch['name'] }}')" class="branch-item cursor-pointer px-4 py-2 hover:bg-blue-50 hover:text-blue-600 transition-colors">
@@ -96,8 +118,8 @@
                                     @endforeach
                                 </ul>
                             </div>
-
                         </div>
+
                     </div>
 
                     <!-- Phòng học -->
@@ -115,6 +137,49 @@
                     
                 </div>
 
+                <!-- Huấn luyện viên -->
+                <div class="flex flex-col md:flex-row gap-6 text-black font-open-sans">
+                    
+                    <div class="flex items-center flex-1">
+                        <label class="w-24 font-medium flex-shrink-0">HLV</label>
+                        
+                        <div class="relative flex-1 dropdown-container" id="trainer-dropdown-container">
+                            <input type="hidden" name="trainer_id" id="selected_trainer_id" value="">
+
+                            <button type="button" onclick="toggleDropdown('trainer-options')" class="w-full border border-gray-300 rounded-lg px-4 py-2 flex justify-between items-center bg-white focus:outline-none focus:border-blue-500 transition-colors">
+                                <span id="trainer-display-text" class="text-gray-500 font-semibold">-- Chọn HLV --</span>
+                                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </button>
+
+                            <div id="trainer-options" class="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-xl hidden dropdown-panel">
+                                
+                                <div class="p-2 border-b border-gray-100">
+                                    <div class="relative">
+                                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                            <svg class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                                        </div>
+                                        <input type="text" id="trainer-search" onkeyup="filterTrainers()" class="w-full bg-gray-100 text-gray-700 rounded-md py-1.5 pl-9 pr-3 text-sm focus:outline-none focus:bg-white focus:ring-1 focus:ring-blue-500 transition-colors" placeholder="Tìm kiếm . . .">
+                                    </div>
+                                </div>
+
+                                <ul class="max-h-48 overflow-y-auto py-1 text-sm text-gray-700" id="trainer-list">
+                                    @foreach($trainers_list as $trainer)
+                                        <li onclick="selectTrainer('{{ $trainer['id'] }}', '{{ $trainer['name'] }}')" class="trainer-item cursor-pointer px-4 py-2 hover:bg-blue-50 hover:text-blue-600 transition-colors flex justify-between">
+                                            <span class="text-gray-800">{{ $trainer['id'] }}</span>
+                                            <span class="text-gray-500 text-right">{{ $trainer['name'] }}</span>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hidden md:flex items-center flex-1">
+                        </div>
+
+                </div>
+                
+                <!-- Nút Hủy và Thêm thông tin -->
                 <div class="flex justify-center space-x-8 pt-6 mt-8">
                     <button type="button" onclick="toggleModal('add-modal')" class="bg-[#C4C4C4] hover:bg-gray-400 text-white font-medium py-2.5 px-10 rounded-lg transition-colors">Hủy</button>
                     <button type="submit" class="bg-[#28A745] hover:bg-[#218838] text-white font-medium py-2.5 px-6 rounded-lg transition-colors">Thêm thông tin</button>
@@ -126,71 +191,41 @@
 
 {{-- Script nằm luôn trong file này để đi kèm với Modal --}}
 <script>
-    function toggleModal(modalID) {
-        const modal = document.getElementById(modalID);
-        if(modal) {
-            modal.classList.toggle('hidden');
-        }
-    }
-
-    // 1. Hàm bật/tắt dropdown
-    function toggleDropdown(id) {
-        const dropdown = document.getElementById(id);
-        dropdown.classList.toggle('hidden');
-        
-        // Focus vào ô tìm kiếm khi mở
-        if (!dropdown.classList.contains('hidden')) {
-            document.getElementById('branch-search').focus();
-        }
-    }
-
-    // 2. Hàm chọn giá trị (ĐÃ SỬA THEO YÊU CẦU CỦA BẠN)
+    // --- CÁC HÀM CHỌN (Wrapper) ---
+    
     function selectBranch(id, name) {
-        // Cập nhật input ẩn (để gửi form)
-        document.getElementById('selected_branch_id').value = id;
-        
-        // Cập nhật text hiển thị trên nút
-        const display = document.getElementById('branch-display-text');
-        display.innerText = name;
-        
-        // Xử lý đổi màu và độ đậm nhạt
-        if(id) {
-            // Nếu đã chọn: Xóa màu xám, Thêm màu #333333 và in đậm
-            display.classList.remove('text-gray-500');
-            display.classList.add('text-[#333333]', 'font-semibold');
-        } else {
-            // Nếu chưa chọn (hoặc reset): Về lại màu xám, bỏ in đậm
-            display.classList.add('text-gray-500');
-            display.classList.remove('text-[#333333]', 'font-semibold');
-        }
-
-        // Đóng dropdown
-        document.getElementById('branch-options').classList.add('hidden');
+        ScheduleApp.selectItem({
+            inputId: 'selected_branch_id',
+            displayId: 'branch-display-text',
+            dropdownId: 'branch-options',
+            value: id,
+            text: name
+        });
     }
 
-    // 3. Hàm lọc (Search)
-    function filterBranches() {
-        const input = document.getElementById('branch-search');
-        const filter = input.value.toLowerCase();
-        const ul = document.getElementById('branch-list');
-        const li = ul.getElementsByTagName('li');
-
-        // Duyệt qua từng dòng li để ẩn/hiện
-        for (let i = 0; i < li.length; i++) {
-            const txtValue = li[i].textContent || li[i].innerText;
-            if (txtValue.toLowerCase().indexOf(filter) > -1) {
-                li[i].style.display = "";
-            } else {
-                li[i].style.display = "none";
-            }
-        }
+    function selectTrainer(id, name) {
+        ScheduleApp.selectItem({
+            inputId: 'selected_trainer_id',
+            displayId: 'trainer-display-text',
+            dropdownId: 'trainer-options',
+            value: id,
+            text: name
+        });
     }
 
-    // 4. Đóng dropdown khi click ra ngoài
-    window.addEventListener('click', function(e) {
-        const container = document.getElementById('branch-dropdown-container');
-        if (!container.contains(e.target)) {
-            document.getElementById('branch-options').classList.add('hidden');
-        }
-    });   
+    function selectAddClass(id, name) {
+        ScheduleApp.selectItem({
+            inputId: 'selected_class_id',
+            displayId: 'add-class-display-text',
+            dropdownId: 'add-class-options',
+            value: id,
+            text: name
+        });
+    }
+
+    // --- CÁC HÀM LỌC (Wrapper) ---
+    function filterBranches() { ScheduleApp.filterList('branch-search', 'branch-list'); }
+    function filterTrainers() { ScheduleApp.filterList('trainer-search', 'trainer-list'); }
+    function filterAddClasses() { ScheduleApp.filterList('add-class-search', 'add-class-list'); }
+
 </script>

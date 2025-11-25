@@ -15,6 +15,8 @@
             'room' => 'B1.20',
             'branch' => 'Võ Thị Sáu',
             'status' => 'completed',
+            'trainer_id' => 'KH0001',
+            'trainer_name' => 'Trấn Thành'
         ],
         [
             'id' => 'LL0002',
@@ -24,6 +26,8 @@
             'room' => 'B1.22',
             'branch' => 'Võ Thị Sáu',
             'status' => 'scheduled',
+            'trainer_id' => 'KH0002',
+            'trainer_name' => 'Sơn Tùng MTP' 
         ],
         [
             'id' => 'LL0003',
@@ -33,7 +37,19 @@
             'room' => 'B1.18',
             'branch' => 'Võ Thị Sáu',
             'status' => 'cancelled',
+            'trainer_id' => 'KH0005',          
+            'trainer_name' => 'Liên Bỉnh Phát'  
         ],
+    ];
+
+    // --- Danh sách Huấn Luyện Viên (Cho Form Thêm Lịch HLV) ---
+    $trainers_list = [
+        ['id' => 'KH0001', 'name' => 'Trấn Thành'],
+        ['id' => 'KH0002', 'name' => 'Sơn Tùng MTP'],
+        ['id' => 'KH0003', 'name' => 'Quân AP'],
+        ['id' => 'KH0004', 'name' => 'Anh Tú'],
+        ['id' => 'KH0005', 'name' => 'Liên Bỉnh Phát'],
+        ['id' => 'KH0006', 'name' => 'Liên Bỉnh'],
     ];
 
     // Dữ liệu giả cho Dropdown trong Modal
@@ -168,17 +184,133 @@
 @include('admin.partials.view_class_schedule_modal')
 
 <script>
+    // Nhận dữ liệu từ Laravel
     const studentLists = @json($student_lists);
-    // --- 1. Hàm Toggle Modal chung (Giữ nguyên) ---
-    function toggleModal(modalID) {
-        const modal = document.getElementById(modalID);
-        if(modal) {
-            modal.classList.toggle('hidden');
+
+    // --- ĐỐI TƯỢNG QUẢN LÝ CHUNG (NAMESPACE) ---
+    const ScheduleApp = {
+        
+        // 1. Toggle Modal
+        toggleModal: function(modalID) {
+            const modal = document.getElementById(modalID);
+            if(modal) modal.classList.toggle('hidden');
+        },
+
+        // 2. Toggle Dropdown
+        toggleDropdown: function(targetId) {
+            const allPanels = document.querySelectorAll('.dropdown-panel'); 
+            
+            allPanels.forEach(panel => {
+                if (panel.id === targetId) {
+                    panel.classList.toggle('hidden');
+                    // Tự động focus vào ô tìm kiếm
+                    if (!panel.classList.contains('hidden')) {
+                        const searchInput = panel.querySelector('input[type="text"]');
+                        if(searchInput) searchInput.focus();
+                    }
+                } else {
+                    panel.classList.add('hidden'); 
+                }
+            });
+        },
+
+        // 3. Hàm Chọn Item
+        selectItem: function(config) {
+            const hiddenInput = document.getElementById(config.inputId);
+            if(hiddenInput) hiddenInput.value = config.value;
+
+            const displayEl = document.getElementById(config.displayId);
+            if(displayEl) {
+                displayEl.innerText = config.text;
+                if(config.value && !config.isReset) {
+                    displayEl.classList.remove('text-gray-500');
+                    displayEl.classList.add('text-[#333333]', 'font-semibold');
+                } else {
+                    displayEl.classList.add('text-gray-500');
+                    displayEl.classList.remove('text-[#333333]', 'font-semibold');
+                }
+            }
+
+            if(config.dropdownId) {
+                const dropdown = document.getElementById(config.dropdownId);
+                if(dropdown) dropdown.classList.add('hidden');
+            }
+        },
+
+        // 4. Hàm Tìm kiếm/Lọc 
+        filterList: function(inputId, listId) {
+            const input = document.getElementById(inputId);
+            const listContainer = document.getElementById(listId);
+            if(!input || !listContainer) return;
+
+            const filter = input.value.toLowerCase();
+            const items = listContainer.getElementsByTagName('li');
+            
+            let hasMatch = false; // Biến cờ: Kiểm tra xem có tìm thấy gì không
+
+            // Duyệt qua các thẻ li (trừ thẻ báo lỗi nếu có)
+            for (let i = 0; i < items.length; i++) {
+                // Bỏ qua dòng thông báo "không tìm thấy" nếu nó đang tồn tại trong list
+                if (items[i].classList.contains('no-data-message')) continue;
+
+                const txtValue = items[i].textContent || items[i].innerText;
+                
+                if (txtValue.toLowerCase().indexOf(filter) > -1) {
+                    items[i].style.display = ""; // Hiện
+                    hasMatch = true; // Đánh dấu là có tìm thấy
+                } else {
+                    items[i].style.display = "none"; // Ẩn
+                }
+            }
+
+            // --- XỬ LÝ HIỂN THỊ "KHÔNG TÌM THẤY DỮ LIỆU" ---
+            let noDataMsg = listContainer.querySelector('.no-data-message');
+
+            if (!hasMatch) {
+                // Nếu KHÔNG tìm thấy gì
+                if (!noDataMsg) {
+                    // Nếu chưa có dòng thông báo thì tạo mới
+                    noDataMsg = document.createElement('li');
+                    // Thêm class styling (dùng Tailwind)
+                    noDataMsg.className = 'no-data-message text-center py-4 text-gray-500 italic text-sm select-none';
+                    noDataMsg.innerText = 'Không tìm thấy dữ liệu';
+                    listContainer.appendChild(noDataMsg);
+                }
+                // Hiển thị thông báo
+                noDataMsg.style.display = ""; 
+            } else {
+                // Nếu CÓ tìm thấy -> Ẩn thông báo đi (nếu nó đang tồn tại)
+                if (noDataMsg) {
+                    noDataMsg.style.display = "none";
+                }
+            }
+        },
+
+        // 5. Đóng tất cả dropdown 
+        closeAllDropdowns: function() {
+            document.querySelectorAll('.dropdown-panel').forEach(el => el.classList.add('hidden'));
         }
-    }
+    };
 
- 
+    // --- SỰ KIỆN TOÀN CỤC  ---
+    window.addEventListener('click', function(e) {
+        if (!e.target.closest('.dropdown-container')) {
+            ScheduleApp.closeAllDropdowns();
+        }
+    });
 
+    window.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.keyCode === 13) {
+            
+            if (e.target.closest('.dropdown-panel') && e.target.tagName === 'INPUT') {
+                e.preventDefault(); // CHẶN NGAY lập tức việc submit form
+                return false;
+            }
+        }
+    });
+
+    function toggleModal(id) { ScheduleApp.toggleModal(id); }
+    function toggleDropdown(id) { ScheduleApp.toggleDropdown(id); }
 </script>
 
 @endsection
