@@ -54,3 +54,10 @@ Route::get('/test-login', function () {
     // Báo lỗi nếu không tìm thấy user
     return 'Không tìm thấy user với ID này. Bạn đã tạo user trong database chưa?';
 });
+
+// User Profile Routes
+Route::view('/ho-so', 'user.profile')->name('profile');
+Route::view('/goi-tap-da-mua', 'user.my_packages')->name('my_packages');
+Route::view('/lop-hoc-da-dang-ky', 'user.my_classes')->name('my_classes');
+Route::view('/lich-su-don-hang', 'user.order_history')->name('order_history');
+Route::view('/lich-su-muon-tra', 'user.rental_history')->name('rental_history');
