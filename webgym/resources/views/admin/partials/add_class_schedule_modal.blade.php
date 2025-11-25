@@ -128,7 +128,7 @@
                         <div class="relative flex-1">
                             <input 
                                 type="text" 
-                                name="room_name" 
+                                name="room" 
                                 placeholder="Nhập phòng học" 
                                 class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500 bg-white text-[#333333] font-semibold"
                             >
@@ -188,44 +188,3 @@
         </div>
     </div>
 </div>
-
-{{-- Script nằm luôn trong file này để đi kèm với Modal --}}
-<script>
-    // --- CÁC HÀM CHỌN (Wrapper) ---
-    
-    function selectBranch(id, name) {
-        ScheduleApp.selectItem({
-            inputId: 'selected_branch_id',
-            displayId: 'branch-display-text',
-            dropdownId: 'branch-options',
-            value: id,
-            text: name
-        });
-    }
-
-    function selectTrainer(id, name) {
-        ScheduleApp.selectItem({
-            inputId: 'selected_trainer_id',
-            displayId: 'trainer-display-text',
-            dropdownId: 'trainer-options',
-            value: id,
-            text: name
-        });
-    }
-
-    function selectAddClass(id, name) {
-        ScheduleApp.selectItem({
-            inputId: 'selected_class_id',
-            displayId: 'add-class-display-text',
-            dropdownId: 'add-class-options',
-            value: id,
-            text: name
-        });
-    }
-
-    // --- CÁC HÀM LỌC (Wrapper) ---
-    function filterBranches() { ScheduleApp.filterList('branch-search', 'branch-list'); }
-    function filterTrainers() { ScheduleApp.filterList('trainer-search', 'trainer-list'); }
-    function filterAddClasses() { ScheduleApp.filterList('add-class-search', 'add-class-list'); }
-
-</script>

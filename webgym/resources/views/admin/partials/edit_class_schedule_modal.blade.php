@@ -1,4 +1,4 @@
-
+<!-- Modal Sửa Lịch Lớp -->
 
 <div id="edit-modal" class="fixed inset-0 z-50 hidden">
     
@@ -15,7 +15,7 @@
 
             <form action="" method="POST" class="space-y-6 text-gray-700 font-open-sans">
                 @csrf
-                @method('PUT') {{-- Giả lập phương thức PUT cho update --}}
+                @method('PUT')
                 
                 <div class="flex flex-col md:flex-row gap-6 text-black">
                     
@@ -213,139 +213,17 @@
                 </div>
 
                 <!-- Nút hành động -->
-                <div class="flex justify-center space-x-8 pt-6 mt-8">
-                    <button type="button" onclick="toggleModal('edit-modal')" class="bg-[#C4C4C4] hover:bg-gray-400 text-white font-medium py-2.5 px-10 rounded-lg transition-colors">Hủy</button>
-                    <button type="submit" class="bg-[#28A745] hover:bg-[#218838] text-white font-medium py-2.5 px-6 rounded-lg transition-colors">Lưu thông tin</button>
+                <div class="flex justify-between items-center mt-8 pt-4">
+                    <button type="button" id="btn-delete-class" class="px-5 py-2.5 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 font-semibold transition-colors flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        Xóa lớp
+                    </button>
+                    <div class="flex space-x-3">
+                        <button type="button" onclick="toggleModal('edit-modal')" class="bg-[#C4C4C4] hover:bg-gray-400 text-white font-medium py-2.5 px-10 rounded-lg transition-colors">Hủy</button>
+                        <button type="submit" class="bg-[#28A745] hover:bg-[#218838] text-white font-medium py-2.5 px-6 rounded-lg transition-colors">Lưu thông tin</button>
+                    </div>
                 </div>
-
             </form>
         </div>
     </div>
 </div>
-
-<script>
-    // --- LOGIC ĐẶC THÙ: MỞ MODAL SỬA ---
-    function openEditModal(data) {
-        ScheduleApp.toggleModal('edit-modal');
-
-        // 1. Đổ dữ liệu input cơ bản
-        const setVal = (id, val) => { 
-            if(document.getElementById(id)) document.getElementById(id).value = val; 
-        };
-        
-        setVal('edit_id', data.id);
-        setVal('edit_room', data.room);
-        
-        // --- Xử lý Dropdown Status ---
-        if(document.getElementById('edit_status')) {
-             document.getElementById('edit_status').value = data.status;
-             
-             // Logic cập nhật text status
-             let statusText = 'Chọn trạng thái';
-             if(data.status === 'completed') statusText = 'Đã hoàn thành';
-             else if(data.status === 'scheduled') statusText = 'Đã lên lịch';
-             else if(data.status === 'cancelled') statusText = 'Đã hủy';
-             
-             if(document.getElementById('status-display-text')) 
-                document.getElementById('status-display-text').innerText = statusText;
-        }
-
-        // --- Tái sử dụng hàm selectItem để hiển thị dữ liệu đã chọn ---
-        
-        // Lớp học
-        ScheduleApp.selectItem({
-            inputId: 'edit_selected_class_id',
-            displayId: 'edit-class-display-text',
-            value: data.class_code, // hoặc data.class_id
-            text: data.class_name || data.class_code
-        });
-
-        // Chi nhánh
-        ScheduleApp.selectItem({
-            inputId: 'edit_selected_branch_id',
-            displayId: 'edit-branch-display-text',
-            value: data.branch,
-            text: data.branch
-        });
-
-        // HLV
-        ScheduleApp.selectItem({
-            inputId: 'edit_selected_trainer_id',
-            displayId: 'edit-trainer-display-text',
-            value: data.trainer_id,
-            text: data.trainer_name || '-- Chọn HLV --',
-            isReset: !data.trainer_name // Nếu ko có tên thì hiện màu xám
-        });
-
-        // --- Xử lý Ngày (Convert dd/mm/yyyy -> yyyy-mm-dd) ---
-        if(document.getElementById('edit_date')) {
-             if(data.date && data.date.includes('/')) {
-                let parts = data.date.split('/'); 
-                document.getElementById('edit_date').value = `${parts[2]}-${parts[0]}-${parts[1]}`;
-             } else {
-                document.getElementById('edit_date').value = data.date;
-             }
-        }
-        
-        // --- Xử lý Giờ (AM/PM -> 24h) ---
-        if(data.time && data.time.includes('-')) {
-            // 1. Tách chuỗi: Dùng ' - ' (khoảng trắng gạch khoảng trắng)
-            // Nếu dữ liệu không có khoảng trắng thì fallback về '-'
-            let separator = data.time.includes(' - ') ? ' - ' : '-';
-            let times = data.time.split(separator);
-
-            // Hàm chuyển đổi giờ AM/PM sang 24h
-            const convertTo24h = (timeStr) => {
-                // Tạo ngày giả định để JS tự parse giờ
-                let date = new Date("1/1/2000 " + timeStr);
-                if (isNaN(date.getTime())) return ""; // Kiểm tra lỗi nếu format sai
-                
-                let h = date.getHours().toString().padStart(2, '0');
-                let m = date.getMinutes().toString().padStart(2, '0');
-                return `${h}:${m}`;
-            };
-
-            if(times.length >= 2) {
-                if(document.getElementById('edit_start_time'))
-                    document.getElementById('edit_start_time').value = convertTo24h(times[0]);
-                
-                if(document.getElementById('edit_end_time'))
-                    document.getElementById('edit_end_time').value = convertTo24h(times[1]);
-            }
-        }
-    }
-
-    // --- CÁC HÀM CHỌN CHO FORM SỬA (Wrapper) ---
-    function selectEditClass(id, name) {
-        ScheduleApp.selectItem({
-            inputId: 'edit_selected_class_id',
-            displayId: 'edit-class-display-text',
-            dropdownId: 'edit-class-options',
-            value: id, text: name
-        });
-    }
-    
-    function selectEditBranch(id, name) {
-        ScheduleApp.selectItem({
-            inputId: 'edit_selected_branch_id',
-            displayId: 'edit-branch-display-text',
-            dropdownId: 'edit-branch-options',
-            value: id, text: name
-        });
-    }
-
-    function selectEditTrainer(id, name) {
-        ScheduleApp.selectItem({
-            inputId: 'edit_selected_trainer_id',
-            displayId: 'edit-trainer-display-text',
-            dropdownId: 'edit-trainer-options',
-            value: id, text: name
-        });
-    }
-
-    // --- CÁC HÀM LỌC CHO FORM SỬA (Wrapper) ---
-    function filterEditClasses() { ScheduleApp.filterList('edit-class-search', 'edit-class-list'); }
-    function filterEditBranches() { ScheduleApp.filterList('edit-branch-search', 'edit-branch-list'); }
-    function filterEditTrainers() { ScheduleApp.filterList('edit-trainer-search', 'edit-trainer-list'); }
-
-</script>

@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Middleware\IsAdmin;
 
 use App\Http\Controllers\AdminController;
@@ -21,28 +20,25 @@ use App\Http\Controllers\TrainerController;
 use App\Http\Controllers\BorrowReturnController;
 
 // Admin Routes
-// Các route dành cho quản trị viên, bảo vệ bằng middleware 'auth' và 'admin.role'
-
+// Middleware 
 Route::middleware([/*'auth', 'admin.role'*/])->prefix('admin')->name('admin.')->group(function () {
 
-    // Trang dashboard
+    // 1. Dashboard
     Route::get('/', [AdminController::class, 'index'])->name('index');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Sử dụng resource cho các module CRUD
+    // 2. Packages (Gói tập)
     Route::resource('packages', PackageController::class);
 
-    Route::resource('store', StoreController::class);
-    // Cập nhật: Resource cho Store - Tập trung vào Products (CRUD chính)
+    // 3. Store (Cửa hàng)
     Route::prefix('store')->name('store.')->group(function () {
-
-        // Danh sách sản phẩm
+        // Trang danh sách sản phẩm (Giao diện chính)
         Route::get('/', [StoreController::class, 'index'])->name('index');
 
-        // CRUD Product chuẩn REST
+        // CRUD Product (API cho việc thêm/sửa/xóa sản phẩm trong modal)
         Route::resource('products', StoreController::class)->except(['index', 'show']);
 
-        // Variant nested
+        // Variants (Biến thể) nested trong Product
         Route::prefix('products/{product}')->name('products.')->group(function () {
             Route::get('variants', [StoreController::class, 'variants'])->name('variants.index');
             Route::post('variants', [StoreController::class, 'storeVariant'])->name('variants.store');
@@ -51,25 +47,31 @@ Route::middleware([/*'auth', 'admin.role'*/])->prefix('admin')->name('admin.')->
         });
     });
 
+    // 4. Class Schedule (Lịch lớp tập)
+    Route::resource('class_schedule', ClassScheduleController::class); 
+
+    // 5. Class List (Danh sách lớp tập)
+    Route::resource('class_list', ClassListController::class);
+
+    // 6. Trainer (Quản lý huấn luyện viên)
+    Route::resource('trainers', TrainerController::class);
+
     Route::resource('orders', OrderController::class);
     Route::resource('promotions', PromotionController::class);
     Route::resource('rentals', RentalController::class);
     Route::resource('payments', PaymentController::class);
     Route::resource('blogs', BlogController::class);
     Route::resource('branches', BranchController::class);
-    Route::resource('class_schedule', ClassScheduleController::class);
-    Route::resource('class_list', ClassListController::class);
+    
     Route::resource('customers', CustomerController::class);
-    Route::resource('trainers', TrainerController::class);
+    
     Route::get('borrow_return', [BorrowReturnController::class, 'index'])->name('borrow_return.index');
 
-
-
-    // Route tạm lấy CSRF token plain cho test (xóa sau)
+    // Route test CSRF (xóa khi production)
     Route::get('/csrf-token', function () {
         return response()->json([
-            'csrf_token' => csrf_token(),  // Token plain text
-            'session_id' => session()->getId()  // Để verify session
+            'csrf_token' => csrf_token(),
+            'session_id' => session()->getId()
         ]);
-    })->name('admin.csrf.token');
+    })->name('csrf.token');
 });
