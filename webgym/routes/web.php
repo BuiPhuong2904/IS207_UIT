@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ChatbotController;
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CheckoutController; 
 
 use App\Http\Controllers\UserPackageController;
 use App\Http\Controllers\UserClassController;
@@ -42,7 +43,8 @@ Route::get('/san-pham/{slug}', [UserStoreController::class, 'detail'])->name('pr
 Route::get('/api/related-products', [UserStoreController::class, 'loadMoreRelated'])->name('api.related_products');
 
 // Authentication Routes
-
+// Route Checkout
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 
 // Route thử đăng nhập user với ID = 1 (chỉ dùng trong giai đoạn chưa có form đăng nhập)
 Route::get('/test-login', function () {
