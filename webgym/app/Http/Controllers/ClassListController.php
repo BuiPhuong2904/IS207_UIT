@@ -8,9 +8,10 @@ use Illuminate\Http\Request;
 
 class ClassListController extends Controller
 {
-    // 1. Chỉ có index trả view
+    // Trả về View danh sách
     public function index()
     {
+        // Lấy danh sách lớp
         $classes = GymClass::select(
             'class_id',
             'class_name',
@@ -21,14 +22,17 @@ class ClassListController extends Controller
             'image_url',
             'created_at'
         )
-            ->latest('class_id', 'asc')
-            ->paginate(15); // hoặc get() nếu muốn load hết
+        ->orderBy('class_id', 'asc')
+        ->paginate(10);
 
-        return view('admin.class_list', compact('classes'));
+        // Lấy danh sách TYPES từ Model để truyền sang View cho Dropdown
+        $types = GymClass::TYPES; 
+
+        // Truyền cả $classes và $types sang View
+        return view('admin.class_list', compact('classes', 'types'));
     }
 
-
-    // 3. API: Tạo mới lớp
+    // API: Tạo mới lớp
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -46,7 +50,7 @@ class ClassListController extends Controller
             $path = $request->file('image_url')->store('packages', 'public');
             $data['image_url'] = '/storage/' . $path;
         } else {
-            $data['image_url'] = 'https://via.placeholder.com/150';
+            $data['image_url'] = 'https://res.cloudinary.com/dna9qbejm/image/upload/v1762341321/ava_ntqezy.jpg';
         }
 
         $class_list = GymClass::create($data);
@@ -58,17 +62,16 @@ class ClassListController extends Controller
         ], 201);
     }
 
-    // 4. API: Lấy chi tiết 1 lớp
+    // API: Lấy chi tiết 1 lớp
     public function show(GymClass $class_list)
     {
-
         return response()->json([
             'success' => true,
             'data'    => $class_list
         ]);
     }
 
-    // 5. API: Cập nhật lớp
+    // API: Cập nhật lớp
     public function update(Request $request, GymClass $class_list)
     {
         $validated = $request->validate([
@@ -77,8 +80,16 @@ class ClassListController extends Controller
             'max_capacity'  => 'required|integer|min:1|max:100',
             'description'   => 'nullable|string',
             'is_active'     => 'required|boolean',
-            'image_url'     => 'nullable|url|max:500',
+            'image_url'     => 'nullable',
         ]);
+
+        // Xử lý logic Upload ảnh mới 
+        if ($request->hasFile('image_url')) {
+            $path = $request->file('image_url')->store('packages', 'public');
+            $validated['image_url'] = '/storage/' . $path; 
+        } else {
+            unset($validated['image_url']); 
+        }
 
         $class_list->update($validated);
 
@@ -89,7 +100,7 @@ class ClassListController extends Controller
         ]);
     }
 
-    // 6. API: Xóa lớp (kiểm tra nếu đang có lịch dạy thì không cho xóa)
+    // API: Xóa lớp (kiểm tra nếu đang có lịch dạy thì không cho xóa)
     public function destroy(GymClass $class_list)
     {
         // Kiểm tra nếu lớp này đang có lịch dạy → không cho xóa

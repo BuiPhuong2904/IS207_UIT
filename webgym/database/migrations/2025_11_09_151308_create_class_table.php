@@ -14,12 +14,11 @@ return new class extends Migration
             $table->id('class_id');
             $table->string('class_name');
             $table->string('image_url')->nullable();
-            $table->string('type')->nullable();
-            $table->integer('max_capacity')->nullable();
+            $table->enum('type', ['cardio', 'strength', 'mind_body', 'combat', 'dance'])->default('cardio');
+            $table->integer('max_capacity')->default(20);
             $table->text('description')->nullable();
             $table->boolean('is_active')->default(true);
             $table->timestamps();
-
 
         });
     }
