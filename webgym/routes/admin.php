@@ -18,6 +18,7 @@ use App\Http\Controllers\ClassListController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\TrainerController;
 use App\Http\Controllers\BorrowReturnController;
+use App\Http\Controllers\PackageRegistrationController;
 
 // Admin Routes
 // Middleware 
@@ -29,6 +30,7 @@ Route::middleware([/*'auth', 'admin.role'*/])->prefix('admin')->name('admin.')->
 
     // 2. Packages (Gói tập)
     Route::resource('packages', PackageController::class);
+    Route::resource('package_registrations', PackageRegistrationController::class);
 
     // 3. Store (Cửa hàng)
     Route::prefix('store')->name('store.')->group(function () {
