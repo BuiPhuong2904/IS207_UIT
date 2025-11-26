@@ -6,119 +6,155 @@
 
 {{-- DỮ LIỆU GIẢ (MOCK DATA) ĐƯỢC CHÈN TRỰC TIẾP VÀÀO BLADE --}}
 <?php
-// Dữ liệu sản phẩm
-$items = [
-    // Sản phẩm 1: Hàng hóa (Product)
+// Dữ liệu giỏ hàng - ĐÃ SỬA THÀNH $cart_items và keys theo CSDL
+$cart_items = [
+    // Sản phẩm 1: Hàng hóa (Product) -> order_detail.variant_id
     [
+        'variant_id' => 12, // Thêm ID sản phẩm biến thể
         'name' => 'Tạ tập gym', 
-        'type' => 'product', // THÊM TRƯỜNG TYPE
+        'type' => 'product', 
         'size' => '2kg', 
         'color' => 'Light Green', 
-        'price' => 110000, 
-        'original_price' => 110000, 
-        'item_discount' => 0, 
-        'quantity' => 1, 
+        'final_price' => 110000, // Giá cuối cùng sau khi giảm giá riêng của item
+        'unit_price' => 110000, // Giá gốc (cart_item.unit_price)
+        'discount_value' => 0, // Giá trị giảm giá riêng của item này
+        'quantity' => 1, // cart_item.quantity
         'image_url' => 'https://via.placeholder.com/80x80/90EE90/FFFFFF?text=TA+GYM'
     ],
     // Sản phẩm 2: Hàng hóa (Product) (Có giảm giá riêng)
     [
+        'variant_id' => 25,
         'name' => 'Tạ Kettlebell', 
         'type' => 'product',
         'size' => '5kg', 
         'color' => 'Pink', 
-        'price' => 149000, 
-        'original_price' => 170000, 
-        'item_discount' => 21000, 
+        'final_price' => 149000, 
+        'unit_price' => 170000, 
+        'discount_value' => 21000, 
         'quantity' => 2, 
         'image_url' => 'https://via.placeholder.com/80x80/90B0EE/FFFFFF?text=BELL'
     ],
-    // Sản phẩm 3: Gói tập (Membership)
+    // Sản phẩm 3: Gói tập (Membership) -> package_registration.package_id
     [
+        'package_id' => 5, // Thêm ID gói tập
         'name' => 'Gói Tập Gym VIP', 
-        'type' => 'membership', // GÓI TẬP CÓ TYPE LÀ 'membership'
-        'duration' => '3 tháng', // THÊM TRƯỜNG DURATION
-        'price' => 2000000, 
-        'original_price' => 2500000, 
-        'item_discount' => 500000, 
+        'type' => 'membership', 
+        'duration' => '3 tháng', 
+        'final_price' => 2000000, 
+        'unit_price' => 2500000, 
+        'discount_value' => 500000, 
         'quantity' => 1, 
         'image_url' => 'https://via.placeholder.com/80x80/FFA500/FFFFFF?text=VIP+GYM'
     ],
     // Sản phẩm 4: Hàng hóa (Product) (Có giảm giá riêng)
     [
+        'variant_id' => 38,
         'name' => 'Quần tập dài', 
         'type' => 'product',
         'size' => 'L', 
         'color' => 'White', 
-        'price' => 206000, 
-        'original_price' => 250000, 
-        'item_discount' => 44000, 
+        'final_price' => 206000, 
+        'unit_price' => 250000, 
+        'discount_value' => 44000, 
         'quantity' => 1, 
         'image_url' => 'https://via.placeholder.com/80x80/374151/FFFFFF?text=PANTS'
     ]
 ];
 
-// DỮ LIỆU MOCK CHO MÃ GIẢM GIÁ
-$mock_promotions = [
-    'SALE30' => ['discount_value' => 30, 'is_percent' => true, 'min_order_amount' => 500000, 'max_discount' => 50000, 'description' => 'Giảm 30% tối đa 50K cho đơn từ 500K'],
-    'FREESHIP' => ['discount_value' => 30000, 'is_percent' => false, 'min_order_amount' => 0, 'max_discount' => 30000, 'description' => 'Miễn phí vận chuyển 30K'],
-    'TEST10K' => ['discount_value' => 10000, 'is_percent' => false, 'min_order_amount' => 100000, 'max_discount' => 10000, 'description' => 'Giảm thẳng 10K cho đơn từ 100K'],
-    'FAIL200' => ['discount_value' => 20, 'is_percent' => true, 'min_order_amount' => 2000000, 'max_discount' => 100000, 'description' => 'Giảm 20% tối đa 100K (Đơn hàng cần 2M)'], 
+// DỮ LIỆU MOCK CHO MÃ GIẢM GIÁ - ĐÃ SỬA THÀNH $promotions_data
+$promotions_data = [
+    'SALE30' => [
+        'discount_value' => 30, // promotion.discount_value
+        'is_percent' => true, // promotion.is_percent
+        'min_order_amount' => 500000, // promotion.min_order_amount
+        'max_discount' => 50000, // promotion.max_discount
+        'title' => 'Sale cuối năm 30%', // promotion.title
+        'description' => 'Giảm 30% tối đa 50K cho đơn từ 500K' // promotion.description
+    ],
+    'FREESHIP' => [
+        'discount_value' => 30000, 
+        'is_percent' => false, 
+        'min_order_amount' => 0, 
+        'max_discount' => 30000, 
+        'title' => 'Miễn phí vận chuyển',
+        'description' => 'Miễn phí vận chuyển 30K'
+    ],
+    'TEST10K' => [
+        'discount_value' => 10000, 
+        'is_percent' => false, 
+        'min_order_amount' => 100000, 
+        'max_discount' => 10000, 
+        'title' => 'Giảm thẳng 10K',
+        'description' => 'Giảm thẳng 10K cho đơn từ 100K'
+    ],
+    'FAIL200' => [
+        'discount_value' => 20, 
+        'is_percent' => true, 
+        'min_order_amount' => 2000000, 
+        'max_discount' => 100000, 
+        'title' => 'Sale lớn 2M',
+        'description' => 'Giảm 20% tối đa 100K (Đơn hàng cần 2M)'
+    ], 
 ];
 
-// Hàm tính toán tổng tiền (Mô phỏng logic Controller)
-function calculateTotals($items, $promo_code = null) {
-    global $mock_promotions;
+// Hàm tính toán tổng tiền - ĐÃ ĐỔI TÊN HÀM VÀ BIẾN
+function calculateOrderTotals($cart_items, $promotion_code = null) {
+    global $promotions_data;
 
-    $subtotal = array_sum(array_map(fn($item) => $item['original_price'] * $item['quantity'], $items));
-    $item_discount_total = array_sum(array_map(fn($item) => $item['item_discount'] * $item['quantity'], $items));
-    $coupon_discount = 0;
+    // Tính Tổng phụ (dựa trên giá gốc 'unit_price')
+    $subtotal_amount = array_sum(array_map(fn($item) => $item['unit_price'] * $item['quantity'], $cart_items));
+    // Tính Tổng giảm giá riêng của từng item (dựa trên 'discount_value' của item)
+    $item_discount_total = array_sum(array_map(fn($item) => $item['discount_value'] * $item['quantity'], $cart_items));
+    
+    $promotion_discount = 0; // Giảm giá từ mã khuyến mãi (orders.promotion_code)
     $shipping_fee = 30000;
     $promo_message = '';
 
-    if ($promo_code && isset($mock_promotions[$promo_code])) {
-        $promo = $mock_promotions[$promo_code];
+    if ($promotion_code && isset($promotions_data[$promotion_code])) {
+        $promo = $promotions_data[$promotion_code];
         
         // Kiểm tra điều kiện đơn hàng tối thiểu
-        if ($subtotal >= $promo['min_order_amount']) {
+        if ($subtotal_amount >= $promo['min_order_amount']) {
             if ($promo['is_percent']) {
-                $calculated_discount = $subtotal * ($promo['discount_value'] / 100);
-                $coupon_discount = min($calculated_discount, $promo['max_discount']);
-                $promo_message = "Áp dụng thành công mã {$promo_code}: Giảm {$promo['discount_value']}% (Tối đa " . number_format($promo['max_discount'], 0, ',', '.') . " VNĐ)";
+                $calculated_discount = $subtotal_amount * ($promo['discount_value'] / 100);
+                $promotion_discount = min($calculated_discount, $promo['max_discount']);
+                $promo_message = "Áp dụng thành công mã {$promotion_code} ({$promo['title']}): Giảm tối đa " . number_format($promo['max_discount'], 0, ',', '.') . " VNĐ."; 
             } else {
-                $coupon_discount = $promo['discount_value'];
-                $promo_message = "Áp dụng thành công mã {$promo_code}: Giảm " . number_format($promo['discount_value'], 0, ',', '.') . " VNĐ";
+                $promotion_discount = $promo['discount_value'];
+                $promo_message = "Áp dụng thành công mã {$promotion_code} ({$promo['title']}): Giảm " . number_format($promo['discount_value'], 0, ',', '.') . " VNĐ."; 
             }
         } else {
-            $promo_message = "Mã {$promo_code} chỉ áp dụng cho đơn hàng từ " . number_format($promo['min_order_amount'], 0, ',', '.') . " VNĐ.";
+            $promo_message = "Mã {$promotion_code} chỉ áp dụng cho đơn hàng từ " . number_format($promo['min_order_amount'], 0, ',', '.') . " VNĐ. (Nội dung: {$promo['description']})";
         }
-    } else if ($promo_code) {
-        $promo_message = "Mã giảm giá \"{$promo_code}\" không hợp lệ.";
+    } else if ($promotion_code) {
+        $promo_message = "Mã giảm giá \"{$promotion_code}\" không hợp lệ.";
     }
 
-    $discount = $item_discount_total + $coupon_discount;
-    $total = $subtotal - $discount + $shipping_fee;
+    $total_discount = $item_discount_total + $promotion_discount;
+    // total_amount = subtotal_amount (giá gốc) - total_discount + shipping_fee
+    $total_amount = $subtotal_amount - $total_discount + $shipping_fee; // orders.total_amount
 
     return [
-        'subtotal' => $subtotal,
-        'item_discount_total' => $item_discount_total,
-        'coupon_discount' => $coupon_discount,
-        'discount' => $discount,
-        'shipping_fee' => $shipping_fee,
-        'total' => $total,
+        'subtotal_amount' => $subtotal_amount, 
+        'item_discount_total' => $item_discount_total, 
+        'promotion_discount' => $promotion_discount, 
+        'total_discount' => $total_discount, 
+        'shipping_fee' => $shipping_fee, 
+        'total_amount' => $total_amount, 
         'promo_message' => $promo_message,
     ];
 }
 
-// Tính toán lần đầu khi tải trang (không có mã)
-$initial_totals = calculateTotals($items);
-$subtotal = $initial_totals['subtotal'];
-$discount = $initial_totals['discount'];
+// Tính toán lần đầu khi tải trang (không có mã) - ĐÃ ĐỔI TÊN BIẾN
+$initial_totals = calculateOrderTotals($cart_items);
+$subtotal_amount = $initial_totals['subtotal_amount'];
+$total_discount = $initial_totals['total_discount'];
 $shipping_fee = $initial_totals['shipping_fee'];
-$total = $initial_totals['total'];
+$total_amount = $initial_totals['total_amount'];
 
-// Chuẩn bị dữ liệu cho JavaScript
-$items_json = json_encode($items);
-$promotions_json = json_encode($mock_promotions);
+// Chuẩn bị dữ liệu cho JavaScript - ĐÃ ĐỔI TÊN BIẾN
+$items_json = json_encode($cart_items);
+$promotions_json = json_encode($promotions_data);
 ?>
 
 <div class="container mx-auto px-4 py-8 font-['Roboto']">
@@ -157,8 +193,8 @@ $promotions_json = json_encode($mock_promotions);
             {{-- THÊM ID VÀO CONTAINER DANH SÁCH SẢN PHẨM --}}
             <div class="space-y-4" id="cart_item_list">
                 
-                {{-- Dùng Blade loop để render danh sách sản phẩm --}}
-                @foreach ($items as $item)
+                {{-- Dùng Blade loop để render danh sách sản phẩm - ĐÃ DÙNG BIẾN MỚI $cart_items --}}
+                @foreach ($cart_items as $item)
                 <div class="flex items-start border-b border-gray-200 pb-4 last:border-b-0 last:pb-0">
                     <div class="w-20 h-20 flex-shrink-0 mr-4">
                         <img src="{{ $item['image_url'] }}" alt="{{ $item['name'] }}" class="w-full h-full object-cover rounded-lg">
@@ -172,10 +208,10 @@ $promotions_json = json_encode($mock_promotions);
                             <p class="font-bold text-gray-800">{{ $item['name'] }}</p>
                         </div>
                         
-                        {{-- HÀNG GIỮA: Size/Color HOẶC Thời hạn (SỬ DỤNG IF/ELSE Ở ĐÂY) --}}
+                        {{-- HÀNG GIỮA: Size/Color HOẶC Thời hạn (Dùng các keys đã đổi tên) --}}
                         <div class="flex flex-col items-start text-sm text-gray-500">
                             @if (isset($item['type']) && $item['type'] === 'membership')
-                                <p>Thời hạn: **{{ $item['duration'] ?? 'N/A' }}**</p>
+                                <p>Thời hạn: {{ $item['duration'] ?? 'N/A' }}</p>
                             @else
                                 <p>Size: {{ $item['size'] ?? 'N/A' }}</p>
                                 <p>Color: {{ $item['color'] ?? 'N/A' }}</p>
@@ -187,15 +223,15 @@ $promotions_json = json_encode($mock_promotions);
 
                         {{-- HÀNG 3: Giá sản phẩm (Giá hiện tại và Giá gốc gạch ngang) --}}
                         <div class="flex items-end">
-                            {{-- 1. Giá ĐÃ GIẢM (Giá hiện tại) --}}
+                            {{-- 1. Giá ĐÃ GIẢM (final_price) --}}
                             <p class="text-xl font-bold text-gray-900">
-                                {{ number_format($item['price'], 0, ',', '.') }} VNĐ
+                                {{ number_format($item['final_price'], 0, ',', '.') }} VNĐ
                             </p>
                             
-                            {{-- 2. Giá GỐC (Chỉ hiển thị nếu giá gốc > giá bán) --}}
-                            @if (isset($item['original_price']) && $item['original_price'] > $item['price'])
+                            {{-- 2. Giá GỐC (unit_price) --}}
+                            @if (isset($item['unit_price']) && $item['unit_price'] > $item['final_price'])
                                 <p class="text-sm text-gray-400 line-through ml-2 mb-0.5">
-                                    {{ number_format($item['original_price'], 0, ',', '.') }} VNĐ
+                                    {{ number_format($item['unit_price'], 0, ',', '.') }} VNĐ
                                 </p>
                             @endif
                         </div>
@@ -210,7 +246,7 @@ $promotions_json = json_encode($mock_promotions);
                             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 6h-7l-1-2H7C6.4 4 6 4.4 6 5v1H4v2h1v12c0 1.1 0.9 2 2 2h10c1.1 0 2-0.9 2-2V8h1V6h-2zM9 18H8v-6h1v6zm4 0h-2v-6h2v6zm4 0h-2v-6h2v6z"/></svg>
                         </button>
                         
-                        {{-- KHỐI SỐ LƯỢNG HOẶC THÔNG BÁO (Đã sửa) --}}
+                        {{-- KHỐI SỐ LƯỢNG HOẶC THÔNG BÁO --}}
                         @if (isset($item['type']) && $item['type'] === 'membership')
                             
                         @else
@@ -235,18 +271,18 @@ $promotions_json = json_encode($mock_promotions);
             {{-- Summary Details --}}
             <div class="space-y-3 text-gray-700">
                 
-                {{-- 1. TỔNG PHỤ (SUBTOTAL) --}}
+                {{-- 1. TỔNG PHỤ (SUBTOTAL) - Dùng biến mới $subtotal_amount --}}
                 <div class="flex justify-between items-center text-base">
                     <span>Tổng phụ</span>
-                    <span id="subtotal_value" class="font-semibold">{{ number_format($subtotal, 0, ',', '.') }} VNĐ</span>
+                    <span id="subtotal_value" class="font-semibold">{{ number_format($subtotal_amount, 0, ',', '.') }} VNĐ</span>
                 </div>
                 
-                {{-- 2. GIẢM GIÁ (TOTAL DISCOUNT) --}}
+                {{-- 2. GIẢM GIÁ (TOTAL DISCOUNT) - Dùng biến mới $total_discount --}}
                 <div class="flex justify-between items-center text-base">
                     <span>Giảm giá</span>
                     {{-- Thẻ này sẽ được cập nhật bởi JS --}}
-                    @if ($discount > 0)
-                        <span id="discount_value" class="text-red-600 font-semibold">-{{ number_format($discount, 0, ',', '.') }} VNĐ</span>
+                    @if ($total_discount > 0)
+                        <span id="discount_value" class="text-red-600 font-semibold">-{{ number_format($total_discount, 0, ',', '.') }} VNĐ</span>
                     @else
                         <span id="discount_value" class="font-semibold">0 VNĐ</span>
                     @endif
@@ -258,15 +294,15 @@ $promotions_json = json_encode($mock_promotions);
                     <span id="shipping_fee_value" class="font-semibold">{{ number_format($shipping_fee, 0, ',', '.') }} VNĐ</span>
                 </div>
                 
-                {{-- 4. TỔNG CỘNG (TOTAL) --}}
+                {{-- 4. TỔNG CỘNG (TOTAL) - Dùng biến mới $total_amount --}}
                 <div class="flex justify-between items-center text-xl pt-3">
                     <span class="font-bold">Tổng cộng</span>
-                    <span id="total_value" class="font-bold text-gray-900">{{ number_format($total, 0, ',', '.') }} VNĐ</span>
+                    <span id="total_value" class="font-bold text-gray-900">{{ number_format($total_amount, 0, ',', '.') }} VNĐ</span>
                 </div>
                 
             </div>
             
-            <hr class="my-6"> {{-- ĐÃ THÊM ĐƯỜNG NGĂN CÁCH TỪ FILE 2 --}}
+            <hr class="my-6"> 
 
             {{-- ---------------------------------------------------- --}}
             {{-- KHỐI QUẢN LÝ MÃ GIẢM GIÁ --}}
@@ -303,24 +339,24 @@ $promotions_json = json_encode($mock_promotions);
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         
-        // Lấy dữ liệu từ PHP đã được encode sang JSON
-        let ITEMS = JSON.parse('{!! $items_json !!}');
+        // Lấy dữ liệu từ PHP đã được encode sang JSON - ĐÃ ĐỔI TÊN BIẾN
+        let CART_ITEMS = JSON.parse('{!! $items_json !!}');
         const PROMOTIONS_DATA = JSON.parse('{!! $promotions_json !!}');
         const SHIPPING_FEE = parseFloat({{ $shipping_fee }});
         
-        // DOM Elements
+        // DOM Elements (Giữ nguyên tên)
         const couponInput = document.getElementById('coupon_input');
         const applyCouponBtn = document.getElementById('apply_coupon_btn');
         const promoMessage = document.getElementById('promo_message');
         const appliedCouponTag = document.getElementById('applied_coupon_tag');
         const couponInputContainer = document.getElementById('coupon_input_container');
-        const cartItemListContainer = document.getElementById('cart_item_list'); // Container sản phẩm
-        const mainContainer = document.querySelector('main'); // Phần tử lắng nghe chính
+        const cartItemListContainer = document.getElementById('cart_item_list'); 
+        const mainContainer = document.querySelector('main'); 
         
-        // Biến lưu trữ mã giảm giá đang được áp dụng
-        let currentCouponCode = '';
+        // Biến lưu trữ mã giảm giá đang được áp dụng - ĐÃ ĐỔI TÊN BIẾN
+        let currentPromotionCode = ''; 
 
-        // --- HÀM TẠO GIAO DIỆN TICKET MINI ---
+        // --- HÀM TẠO GIAO DIỆN TICKET MINI --- 
         function renderAppliedCoupon(code) {
             const displayCode = code.toUpperCase();
             const colorBase = 'bg-blue-100'; 
@@ -350,61 +386,67 @@ $promotions_json = json_encode($mock_promotions);
             return Math.round(amount).toLocaleString('vi-VN') + ' VNĐ'; 
         }
 
-        function calculateTotalsJS(currentItems, promoCode) {
-            let subtotal = 0;
+        // ĐÃ ĐỔI TÊN BIẾN VÀ KEYS TRONG HÀM NÀY
+        function calculateTotalsJS(currentItems, promotionCode) {
+            let subtotalAmount = 0; // Tổng tiền hàng (Giá gốc * Số lượng)
             let itemDiscountTotal = 0;
 
             currentItems.forEach(item => {
-                if(item && item.original_price && item.quantity) {
-                    subtotal += item.original_price * item.quantity;
-                    itemDiscountTotal += (item.item_discount || 0) * item.quantity;
+                // SỬ DỤNG unit_price VÀ quantity
+                if(item && item.unit_price && item.quantity) {
+                    subtotalAmount += item.unit_price * item.quantity;
+                    // SỬ DỤNG discount_value
+                    itemDiscountTotal += (item.discount_value || 0) * item.quantity;
                 }
             });
 
-            let couponDiscount = 0;
+            let promotionDiscount = 0;
             let message = '';
             
-            let tempCouponCode = '';
+            let tempPromotionCode = '';
 
-            const promo = PROMOTIONS_DATA[promoCode];
+            const promo = PROMOTIONS_DATA[promotionCode];
 
             if (promo) {
-                if (subtotal >= promo.min_order_amount) {
+                // SỬ DỤNG subtotalAmount để kiểm tra điều kiện min_order_amount
+                if (subtotalAmount >= promo.min_order_amount) {
                     let calculatedDiscount = 0;
                     if (promo.is_percent) {
-                        calculatedDiscount = subtotal * (promo.discount_value / 100);
-                        couponDiscount = Math.min(calculatedDiscount, promo.max_discount);
-                        message = `Áp dụng thành công mã ${promoCode}.`;
+                        calculatedDiscount = subtotalAmount * (promo.discount_value / 100);
+                        promotionDiscount = Math.min(calculatedDiscount, promo.max_discount);
+                        message = `Áp dụng thành công mã ${promotionCode}. (${promo.title || 'Giảm giá thành công'})`;
                     } else {
-                        couponDiscount = promo.discount_value;
-                        message = `Áp dụng thành công mã ${promoCode}.`;
+                        promotionDiscount = promo.discount_value;
+                        message = `Áp dụng thành công mã ${promotionCode}. (${promo.title || 'Giảm giá thành công'})`;
                     }
-                    tempCouponCode = promoCode;
+                    tempPromotionCode = promotionCode;
                 } else {
-                    message = `Mã "${promoCode}" chỉ áp dụng cho đơn hàng từ ${formatCurrency(promo.min_order_amount)}.`;
-                    couponDiscount = 0;
-                    tempCouponCode = currentCouponCode;
+                    message = `Mã "${promotionCode}" chỉ áp dụng cho đơn hàng từ ${formatCurrency(promo.min_order_amount)}. (Nội dung: ${promo.description || 'Kiểm tra điều kiện'})`;
+                    promotionDiscount = 0;
+                    tempPromotionCode = currentPromotionCode; // Giữ lại mã cũ nếu không thỏa mãn điều kiện
                 }
-            } else if (promoCode) {
-                message = `Mã giảm giá "${promoCode}" không hợp lệ.`;
-                tempCouponCode = ''; 
+            } else if (promotionCode) {
+                message = `Mã giảm giá "${promotionCode}" không hợp lệ.`;
+                tempPromotionCode = ''; 
             } else {
-                couponDiscount = 0;
-                tempCouponCode = ''; 
+                promotionDiscount = 0;
+                tempPromotionCode = ''; 
             }
             
-            currentCouponCode = tempCouponCode;
+            currentPromotionCode = tempPromotionCode; // Cập nhật biến toàn cục
 
-            const totalDiscount = itemDiscountTotal + couponDiscount;
-            const total = subtotal - totalDiscount + SHIPPING_FEE;
+            const totalDiscount = itemDiscountTotal + promotionDiscount;
+            // total_amount = subtotal_amount - total_discount + SHIPPING_FEE
+            const totalAmount = subtotalAmount - totalDiscount + SHIPPING_FEE;
 
-            return { subtotal, totalDiscount, total, message, itemDiscountTotal, couponDiscount };
+            return { subtotalAmount, totalDiscount, totalAmount, message, itemDiscountTotal, promotionDiscount };
         }
         
+        // ĐÃ ĐỔI TÊN BIẾN KHI CẬP NHẬT GIAO DIỆN
         function updateSummary(totals) {
-            document.getElementById('subtotal_value').textContent = formatCurrency(totals.subtotal);
+            document.getElementById('subtotal_value').textContent = formatCurrency(totals.subtotalAmount);
             document.getElementById('discount_value').textContent = (totals.totalDiscount > 0 ? '-' : '') + formatCurrency(totals.totalDiscount);
-            document.getElementById('total_value').textContent = formatCurrency(totals.total);
+            document.getElementById('total_value').textContent = formatCurrency(totals.totalAmount);
             
             const discountSpan = document.getElementById('discount_value');
             if (totals.totalDiscount > 0) {
@@ -414,9 +456,9 @@ $promotions_json = json_encode($mock_promotions);
             }
             
             // Cập nhật giao diện mã giảm giá
-            if (currentCouponCode) {
+            if (currentPromotionCode) {
                 couponInputContainer.classList.add('hidden');
-                renderAppliedCoupon(currentCouponCode);
+                renderAppliedCoupon(currentPromotionCode);
                 
                 promoMessage.textContent = totals.message;
                 promoMessage.classList.add('text-green-600');
@@ -444,21 +486,23 @@ $promotions_json = json_encode($mock_promotions);
             }
         }
 
+        // ĐÃ ĐỔI TÊN BIẾN
         function applyCoupon() {
             const code = couponInput.value.toUpperCase().trim();
-            const totals = calculateTotalsJS(ITEMS, code);
+            const totals = calculateTotalsJS(CART_ITEMS, code);
             updateSummary(totals);
         }
 
+        // ĐÃ ĐỔI TÊN BIẾN
         function cancelCoupon() {
-            const oldCode = currentCouponCode;
-            currentCouponCode = ''; 
-            const totals = calculateTotalsJS(ITEMS, '');
+            const oldCode = currentPromotionCode;
+            currentPromotionCode = ''; 
+            const totals = calculateTotalsJS(CART_ITEMS, '');
             totals.message = `Mã ${oldCode} đã được hủy bỏ.`;
             updateSummary(totals);
         }
         
-        // --- HÀM XỬ LÝ SỐ LƯỢNG VÀ XÓA SẢN PHẨM ---
+        // --- HÀM XỬ LÝ SỐ LƯỢNG VÀ XÓA SẢN PHẨM --- 
         
         function getItemIndex(element) {
             const itemContainer = element.closest('.flex.items-start'); 
@@ -471,10 +515,9 @@ $promotions_json = json_encode($mock_promotions);
 
         function updateQuantity(button, delta) {
             const itemIndex = getItemIndex(button);
-            if(itemIndex === -1 || itemIndex >= ITEMS.length) return; 
+            if(itemIndex === -1 || itemIndex >= CART_ITEMS.length) return; 
             
-            // Do đã ẩn nút +/- trong Blade, dòng này chủ yếu là bảo vệ logic
-            if (ITEMS[itemIndex].type === 'membership') return;
+            if (CART_ITEMS[itemIndex].type === 'membership') return;
 
             const itemContainer = button.closest('.flex.items-start');
             const quantitySpan = itemContainer.querySelector('.item-quantity');
@@ -490,10 +533,10 @@ $promotions_json = json_encode($mock_promotions);
                 // Cập nhật DOM
                 quantitySpan.textContent = newQty;
                 
-                // CẬP NHẬT DỮ LIỆU GỐC TRONG MẢNG ITEMS
-                ITEMS[itemIndex].quantity = newQty; 
+                // CẬP NHẬT DỮ LIỆU GỐC TRONG MẢNG CART_ITEMS
+                CART_ITEMS[itemIndex].quantity = newQty; 
                 
-                const totals = calculateTotalsJS(ITEMS, currentCouponCode);
+                const totals = calculateTotalsJS(CART_ITEMS, currentPromotionCode);
                 updateSummary(totals);
             }
         }
@@ -503,20 +546,20 @@ $promotions_json = json_encode($mock_promotions);
                 
                 const itemToDeleteIndex = getItemIndex(button);
                 
-                if(itemToDeleteIndex === -1 || itemToDeleteIndex >= ITEMS.length) return; 
+                if(itemToDeleteIndex === -1 || itemToDeleteIndex >= CART_ITEMS.length) return; 
                 
                 const itemContainer = button.closest('.flex.items-start'); 
                 
-                // XÓA DỮ LIỆU KHỎI MẢNG ITEMS
-                ITEMS.splice(itemToDeleteIndex, 1);
+                // XÓA DỮ LIỆU KHỎI MẢNG CART_ITEMS
+                CART_ITEMS.splice(itemToDeleteIndex, 1);
                 
                 // XÓA DOM
                 itemContainer.remove();
                 
-                const totals = calculateTotalsJS(ITEMS, currentCouponCode);
+                const totals = calculateTotalsJS(CART_ITEMS, currentPromotionCode);
                 updateSummary(totals);
 
-                if (ITEMS.length === 0) {
+                if (CART_ITEMS.length === 0) {
                     cartItemListContainer.innerHTML = '<p class="text-center py-8 text-gray-500">Giỏ hàng của bạn đang trống.</p>';
                 }
             }
@@ -544,7 +587,7 @@ $promotions_json = json_encode($mock_promotions);
             }
         });
         
-        updateSummary(calculateTotalsJS(ITEMS, currentCouponCode));
+        updateSummary(calculateTotalsJS(CART_ITEMS, currentPromotionCode));
     });
 </script>
 
