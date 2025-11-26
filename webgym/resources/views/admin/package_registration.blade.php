@@ -7,108 +7,6 @@
 {{-- CSRF TOKEN --}}
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
-@php
-    // 1. KHAI BÁO DỮ LIỆU GIẢ CHO DROPDOWN (Cần thêm phần này)
-    
-    // Giả lập danh sách GÓI TẬP (để sửa lỗi Undefined variable $packages)
-    if (!isset($packages)) {
-        $packages = collect([
-            (object)['id' => 1, 'package_name' => 'Gói 1 Tháng', 'price' => 500000, 'duration' => 30],
-            (object)['id' => 2, 'package_name' => 'Gói 3 Tháng', 'price' => 1200000, 'duration' => 90],
-            (object)['id' => 3, 'package_name' => 'Gói PT Cá Nhân', 'price' => 5000000, 'duration' => 30],
-            (object)['id' => 4, 'package_name' => 'Gói 6 Tháng', 'price' => 2000000, 'duration' => 180],
-            (object)['id' => 5, 'package_name' => 'Gói Cực Tạ', 'price' => 9000000, 'duration' => 365],
-        ]);
-    }
-
-    // Giả lập danh sách KHÁCH HÀNG (để sửa lỗi cho dropdown Khách hàng)
-    if (!isset($users)) {
-        $users = collect([
-            (object)['id' => 101, 'full_name' => 'Nguyễn Văn A'],
-            (object)['id' => 102, 'full_name' => 'Trần Thị B'],
-            (object)['id' => 103, 'full_name' => 'Lê Văn C'],
-            (object)['id' => 104, 'full_name' => 'Phạm Thị D'],
-            (object)['id' => 105, 'full_name' => 'Hoàng Văn E'],
-            (object)['id' => 106, 'full_name' => 'Sơn Tùng MTP'],
-        ]);
-    }
-
-    // 2. KHAI BÁO DỮ LIỆU GIẢ CHO DANH SÁCH ĐĂNG KÝ
-    $fakeRawData = [
-        (object)[
-            'id' => 1,
-            'user_id' => 101,
-            'user' => (object)['full_name' => 'Nguyễn Văn A'],
-            'package_id' => 1,
-            'package' => (object)['package_name' => 'Gói 1 Tháng'],
-            'start_date' => '2025-11-26 00:00:00',
-            'end_date' => '2025-12-26 00:00:00',
-            'status' => 'active' 
-        ],
-        (object)[
-            'id' => 2,
-            'user_id' => 102,
-            'user' => (object)['full_name' => 'Trần Thị B'],
-            'package_id' => 2,
-            'package' => (object)['package_name' => 'Gói 3 Tháng'],
-            'start_date' => '2025-10-26 00:00:00',
-            'end_date' => '2026-01-26 00:00:00',
-            'status' => 'completed' 
-        ],
-        (object)[
-            'id' => 3,
-            'user_id' => 103,
-            'user' => (object)['full_name' => 'Lê Văn C'],
-            'package_id' => 3,
-            'package' => (object)['package_name' => 'Gói PT Cá Nhân'],
-            'start_date' => '2025-09-01 00:00:00',
-            'end_date' => '2025-10-01 00:00:00',
-            'status' => 'completed' 
-        ],
-        (object)[
-            'id' => 4,
-            'user_id' => 104,
-            'user' => (object)['full_name' => 'Phạm Thị D'],
-            'package_id' => 1,
-            'package' => (object)['package_name' => 'Gói 1 Tháng'],
-            'start_date' => '2025-11-01 00:00:00',
-            'end_date' => '2025-12-01 00:00:00',
-            'status' => 'completed'
-        ],
-        (object)[
-            'id' => 5,
-            'user_id' => 105,
-            'user' => (object)['full_name' => 'Hoàng Văn E'],
-            'package_id' => 2,
-            'package' => (object)['package_name' => 'Gói 6 Tháng'],
-            'start_date' => '2024-01-01 00:00:00',
-            'end_date' => '2024-07-01 00:00:00',
-            'status' => 'expired' 
-        ],
-        (object)[
-            'id' => 6,
-            'user_id' => 106,
-            'user' => (object)['full_name' => 'Đặng Thị F'],
-            'package_id' => 1,
-            'package' => (object)['package_name' => 'Gói 1 Tháng'],
-            'start_date' => '2025-11-28 00:00:00',
-            'end_date' => '2025-12-28 00:00:00',
-            'status' => 'active'
-        ],
-    ];
-
-    // 3. Giả lập Paginator của Laravel
-    if (!isset($registrations)) {
-        $perPage = 10;
-        $currentPage = Illuminate\Pagination\LengthAwarePaginator::resolveCurrentPage();
-        $collection = collect($fakeRawData);
-        $currentPageItems = $collection->slice(($currentPage - 1) * $perPage, $perPage)->all();
-        $registrations = new Illuminate\Pagination\LengthAwarePaginator($currentPageItems, count($collection), $perPage);
-        $registrations->setPath(request()->url());
-    }
-@endphp
-
-
 @if(session('success'))
     <div id="alert-success" class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
         <strong class="font-bold">Thành công!</strong>
@@ -183,7 +81,7 @@
             <tbody class="text-sm text-gray-700 text-center">
                 @foreach($registrations as $item)
                     @php
-                        $formattedId = 'DK' . str_pad($item->id, 4, '0', STR_PAD_LEFT);
+                        $formattedId = 'DK' . str_pad($item->registration_id, 4, '0', STR_PAD_LEFT);
 
                         $isOdd = $loop->odd;
                         $rowBg = $isOdd ? 'bg-[#1976D2]/20' : 'bg-white'; 
@@ -192,7 +90,7 @@
 
                         // Chuẩn bị dữ liệu để sửa
                         $editData = [
-                            'id' => $item->id,
+                            'id' => $item->registration_id,
                             'formatted_id' => $formattedId,
                             'user_id' => $item->user_id,
                             'user_name' => $item->user->full_name ?? 'Khách lẻ',
@@ -268,6 +166,14 @@
 @include('admin.partials.edit_package_registration_modal')
 
 <script>
+    // Chuyển dữ liệu $packages từ Laravel sang JSON 
+    const packagesData = @json($packages->map(function($p) {
+        return [
+            'id' => $p->package_id,
+            'duration' => $p->duration_months ?? 1 
+        ];
+    }));
+
     // --- 1. CORE LOGIC (RegistrationApp) ---
     const RegistrationApp = {
         // Toggle Modal Visibility
@@ -329,6 +235,54 @@
         }
     };
 
+    // --- HÀM TÍNH NGÀY TỰ ĐỘNG  ---
+    function autoCalculateEndDate() {
+        // 1. Lấy thẻ HTML theo đúng ID bạn đã đặt trong Modal
+        const packageEl = document.getElementById('selected_package_id');
+        const startDateEl = document.getElementById('add_start_date'); 
+        const endDateEl = document.getElementById('add_end_date');
+
+        // Kiểm tra an toàn: Nếu không tìm thấy thẻ thì dừng
+        if (!packageEl || !startDateEl || !endDateEl) {
+            console.warn("Không tìm thấy đủ thẻ input để tính ngày."); 
+            return;
+        }
+
+        // 2. Lấy giá trị
+        const packageId = packageEl.value;
+        const startDateVal = startDateEl.value; 
+
+        // Nếu chưa chọn đủ thông tin thì dừng
+        if (!packageId || !startDateVal) return;
+
+        // 3. Tìm thời hạn gói
+        const selectedPackage = packagesData.find(p => p.id == packageId);
+        
+        if (selectedPackage) {
+            const duration = selectedPackage.duration;
+            
+            let date = new Date(startDateVal);
+
+            // 4. Tính toán
+            if (duration == 0) {
+                // Gói lẻ: Giữ nguyên ngày bắt đầu
+            } else {
+                // Gói tháng: Cộng tháng
+                date.setMonth(date.getMonth() + parseInt(duration));
+            }
+
+            // 5. Format hiển thị
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            
+            const formattedDate = `${year}-${month}-${day}`;
+
+            // Gán giá trị vào ô Đến ngày
+            endDateEl.value = formattedDate;
+        }
+    }
+
     // --- 2. EVENT BINDINGS ---
     
     // Close dropdowns when clicking outside
@@ -347,7 +301,16 @@
     function selectUser(id, name) { RegistrationApp.selectItem({inputId: 'selected_user_id', displayId: 'user-display', dropdownId: 'user-options', value: id, text: name}); }
     
     function filterPackages() { RegistrationApp.filterList('package-search', 'package-list'); }
-    function selectPackage(id, name) { RegistrationApp.selectItem({inputId: 'selected_package_id', displayId: 'package-display', dropdownId: 'package-options', value: id, text: name}); }
+    function selectPackage(id, name) { 
+        RegistrationApp.selectItem({
+            inputId: 'selected_package_id', 
+            displayId: 'package-display', 
+            dropdownId: 'package-options', 
+            value: id, 
+            text: name}
+        ); 
+        autoCalculateEndDate();
+    }
 
     // Wrappers for EDIT Modal
     function filterEditUsers() { RegistrationApp.filterList('edit-user-search', 'edit-user-list'); }
@@ -366,7 +329,7 @@
 
         // 1. Set Form Action (Dynamic ID)
         const form = document.querySelector('#edit-package-modal form');
-        if(form) form.action = `/admin/package_registration/${data.id}`;
+        if(form) form.action = `/admin/package_registrations/${data.id}`;
 
         // 2. Fill Input Fields
         if(document.getElementById('display_id')) document.getElementById('display_id').value = data.formatted_id;

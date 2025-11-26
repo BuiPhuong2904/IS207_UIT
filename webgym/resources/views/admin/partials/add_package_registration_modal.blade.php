@@ -41,7 +41,7 @@
                             
                             <ul class="max-h-48 overflow-y-auto py-1 text-sm text-gray-700 custom-scrollbar" id="package-list">
                                 @foreach($packages as $pkg)
-                                    <li onclick="selectPackage('{{ $pkg->id }}', '{{ $pkg->package_name }}')" 
+                                    <li onclick="selectPackage('{{ $pkg->package_id }}', '{{ $pkg->package_name }}')" 
                                         class="package-item cursor-pointer px-4 py-2 hover:bg-blue-50 hover:text-blue-600 transition-colors truncate">
                                         {{ $pkg->package_name }}
                                     </li>
@@ -94,6 +94,8 @@
                             id="add_start_date"
                             value="{{ date('Y-m-d') }}"
                             class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500 bg-white text-[#333333] font-semibold"
+                            required 
+                            onchange = "autoCalculateEndDate()"
                         >
                     </div>
 
@@ -103,7 +105,7 @@
                             type="date" 
                             name="end_date" 
                             id="add_end_date"
-                            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none bg-[#F3F4F6] text-[#333333] h-[42px]"
+                            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500 bg-white text-[#333333] h-[42px]"
                             readonly
                         >
                     </div>

@@ -50,7 +50,7 @@
                                 </div>
                                 <ul class="max-h-48 overflow-y-auto py-1 text-sm text-gray-700" id="edit-package-list">
                                     @foreach($packages as $pkg)
-                                        <li onclick="selectEditPackage('{{ $pkg->id }}', '{{ $pkg->package_name }}')" class="cursor-pointer px-4 py-2 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                                        <li onclick="selectEditPackage('{{ $pkg->package_id }}', '{{ $pkg->package_name }}')" class="cursor-pointer px-4 py-2 hover:bg-blue-50 hover:text-blue-600 transition-colors">
                                             {{ $pkg->package_name }}
                                         </li>
                                     @endforeach
@@ -133,13 +133,15 @@
                     <div class="flex-1 hidden md:block"></div>
                 </div>
 
-                <div class="flex justify-center space-x-8 pt-6 mt-8">
-                    <button type="button" onclick="toggleModal('edit-package-modal')" class="bg-[#C4C4C4] hover:bg-gray-400 text-white font-medium py-2.5 px-10 rounded-lg transition-colors">
-                        Hủy
+                <div class="flex justify-between items-center mt-8 pt-4">
+                    <button type="button" id="btn-delete-registration" class="px-5 py-2.5 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 font-semibold transition-colors flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        Xóa đăng ký
                     </button>
-                    <button type="submit" class="bg-[#28A745] hover:bg-[#218838] text-white font-medium py-2.5 px-6 rounded-lg transition-colors">
-                        Lưu thông tin
-                    </button>
+                    <div class="flex space-x-3">
+                        <button type="button" onclick="toggleModal('edit-package-modal')" class="bg-[#C4C4C4] hover:bg-gray-400 text-white font-medium py-2.5 px-10 rounded-lg transition-colors">Hủy</button>
+                        <button type="submit" class="bg-[#28A745] hover:bg-[#218838] text-white font-medium py-2.5 px-6 rounded-lg transition-colors">Lưu thông tin</button>
+                    </div>
                 </div>
 
             </form>
