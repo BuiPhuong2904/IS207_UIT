@@ -172,7 +172,7 @@
 
         
         <!-- Xác nhận đăng ký -->
-        <div class="mt-8 pt-6 border-t border-gray-200 text-center font-open-sans">
+        <div class="mt-8 pt-6 border-t border-gray-300 text-center font-open-sans">
             
             {{-- Mặc định hiển thị khi chưa chọn gì --}}
             <div id="no-selection-msg" class="text-gray-500 italic">
