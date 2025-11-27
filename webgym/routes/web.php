@@ -33,6 +33,7 @@ Route::get('/package', [UserPackageController::class, 'index'])->name('package')
 
 // Class 
 Route::get('/class', [UserClassController::class, 'index'])->name('class'); 
+Route::get('/class_booking', function () { return view('user.class_booking'); })->name('class_booking');
 
 // Product
 Route::view('/product', 'user.product')->name('product');
