@@ -17,7 +17,7 @@
                 @csrf
                 @method('PUT')
                 
-                <div class="flex flex-col md:flex-row gap-6 text-black">
+                <div class="flex flex-col md:flex-row gap-6 text-black font-open-sans">
                     
                     <!-- ID Lớp học (Chỉ đọc) -->
                     <div class="flex items-center flex-1">
