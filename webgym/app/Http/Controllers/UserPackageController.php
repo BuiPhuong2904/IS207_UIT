@@ -19,7 +19,7 @@ class UserPackageController extends Controller
         $packages = MembershipPackage::where('status', 'active')->get();
 
         // Trả về view danh sách sản phẩm 
-        return view('user.packages.list', [ 
+        return view('user.package', [ 
             'packages' => $packages 
         ]);
     }

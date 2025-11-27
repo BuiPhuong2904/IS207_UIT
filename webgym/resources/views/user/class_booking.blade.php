@@ -1,53 +1,8 @@
 @extends('user.layouts.user_layout')
 
-@section('title', 'GRYND - Đặt lịch học')
+@section('title', 'GRYND - Đặt lịch ' . $gymClass->class_name)
 
 @section('content')
-
-@php
-    // 1. Lấy chi nhánh đang chọn từ URL (Mặc định là Võ Thị Sáu nếu không có trên URL)
-    $selectedBranch = request('branch', 'Chi nhánh Võ Thị Sáu');
-
-    // 2. Dữ liệu giả (Đã thêm data Quận 1 để test lọc)
-    $fakeRawData = [
-        // --- CHI NHÁNH VÕ THỊ SÁU ---
-        (object)['id'=>1, 'day_label'=>'Thứ 2', 'start_time'=>'08:00', 'end_time'=>'09:00', 'trainer_name'=>'HLV Sơn Tùng', 'class_name'=>'HIIT', 'branch'=>'Chi nhánh Võ Thị Sáu', 'is_active'=>true],
-        (object)['id'=>2, 'day_label'=>'Thứ 2', 'start_time'=>'10:00', 'end_time'=>'11:00', 'trainer_name'=>'HLV Trấn Thành', 'class_name'=>'Zumba', 'branch'=>'Chi nhánh Võ Thị Sáu', 'is_active'=>false], // Inactive
-        (object)['id'=>3, 'day_label'=>'Thứ 4', 'start_time'=>'08:00', 'end_time'=>'09:00', 'trainer_name'=>'HLV Liên Bỉnh Phát', 'class_name'=>'Gym', 'branch'=>'Chi nhánh Võ Thị Sáu', 'is_active'=>true],
-        (object)['id'=>4, 'day_label'=>'Thứ 4', 'start_time'=>'13:00', 'end_time'=>'15:00', 'trainer_name'=>'HLV Atus', 'class_name'=>'Cardio', 'branch'=>'Chi nhánh Võ Thị Sáu', 'is_active'=>true],
-        (object)['id'=>5, 'day_label'=>'Thứ 5', 'start_time'=>'08:00', 'end_time'=>'09:00', 'trainer_name'=>'HLV Liên Bỉnh Phát', 'class_name'=>'Gym', 'branch'=>'Chi nhánh Võ Thị Sáu', 'is_active'=>true],
-        (object)['id'=>6, 'day_label'=>'Thứ 5', 'start_time'=>'13:00', 'end_time'=>'15:00', 'trainer_name'=>'HLV Atus', 'class_name'=>'Cardio', 'branch'=>'Chi nhánh Võ Thị Sáu', 'is_active'=>true],
-        (object)['id'=>7, 'day_label'=>'Thứ 6', 'start_time'=>'14:00', 'end_time'=>'15:00', 'trainer_name'=>'HLV Sơn Tùng', 'class_name'=>'HIIT', 'branch'=>'Chi nhánh Võ Thị Sáu', 'is_active'=>true],
-        (object)['id'=>8, 'day_label'=>'Thứ 6', 'start_time'=>'16:00', 'end_time'=>'18:00', 'trainer_name'=>'HLV Atus', 'class_name'=>'Gym', 'branch'=>'Chi nhánh Võ Thị Sáu', 'is_active'=>true],
-        (object)['id'=>9, 'day_label'=>'Thứ 7', 'start_time'=>'09:00', 'end_time'=>'10:30', 'trainer_name'=>'HLV Isaac', 'class_name'=>'Dance', 'branch'=>'Chi nhánh Võ Thị Sáu', 'is_active'=>true],
-        (object)['id'=>10,'day_label'=>'Thứ 7', 'start_time'=>'15:00', 'end_time'=>'16:00', 'trainer_name'=>'HLV Song Luân', 'class_name'=>'Boxing', 'branch'=>'Chi nhánh Võ Thị Sáu', 'is_active'=>true],
-        (object)['id'=>11,'day_label'=>'Chủ Nhật', 'start_time'=>'08:00', 'end_time'=>'09:30', 'trainer_name'=>'HLV Chi Pu', 'class_name'=>'Yoga', 'branch'=>'Chi nhánh Võ Thị Sáu', 'is_active'=>false], // Inactive
-
-        // --- CHI NHÁNH QUẬN 1 (Dữ liệu test để lọc) ---
-        (object)['id'=>12, 'day_label'=>'Thứ 2', 'start_time'=>'18:00', 'end_time'=>'19:00', 'trainer_name'=>'HLV Q1 A', 'class_name'=>'Yoga', 'branch'=>'Chi nhánh Quận 1', 'is_active'=>true],
-        (object)['id'=>13, 'day_label'=>'Thứ 3', 'start_time'=>'06:00', 'end_time'=>'07:00', 'trainer_name'=>'HLV Q1 B', 'class_name'=>'Cycling', 'branch'=>'Chi nhánh Quận 1', 'is_active'=>true],
-        
-        // --- CHI NHÁNH THỦ ĐỨC (Test) ---
-        (object)['id'=>14, 'day_label'=>'Thứ 7', 'start_time'=>'09:00', 'end_time'=>'10:00', 'trainer_name'=>'HLV Thủ Đức', 'class_name'=>'Swimming', 'branch'=>'Chi nhánh Thủ Đức', 'is_active'=>true],
-    ];
-
-    $collection = collect($fakeRawData);
-
-    // 3. TỰ ĐỘNG LẤY DANH SÁCH CHI NHÁNH (Không code cứng)
-    // Lấy tất cả branch trong data -> unique -> sort
-    $allBranches = $collection->pluck('branch')->unique()->sort()->values();
-
-    // 4. LỌC DỮ LIỆU THEO CHI NHÁNH & ACTIVE
-    // Chỉ lấy item nào có branch trùng với $selectedBranch VÀ đang active
-    $filteredData = $collection->filter(function ($item) use ($selectedBranch) {
-        return $item->branch === $selectedBranch && $item->is_active === true;
-    });
-
-    // 5. Group dữ liệu đã lọc để hiển thị
-    $groupedSchedules = $filteredData->groupBy('day_label');
-    
-    $weekDays = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7', 'Chủ Nhật'];
-@endphp
 
 <div class="bg-white max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-10 font-open-sans">
     
@@ -60,18 +15,19 @@
         </p>
     </div>
 
+    @csrf
     <div class="bg-[#F5F7FA] rounded-[20px] shadow-sm border border-slate-100 p-6 md:p-8">
         
         <!-- Tiêu đề và bộ lọc chi nhánh -->
         <div class="font-open-sans flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-            <h2 class="font-montserrat text-[28px] font-bold text-[#0D47A1]">Các lịch tập hiện hoạt</h2>
+            <h2 class="font-montserrat text-[28px] font-bold text-[#0D47A1]">{{ $gymClass->class_name }} hiện hoạt</h2>
             
             <div class="relative w-72 font-sans" id="dropdown-soft">
         
                 <!-- Nút bấm hiển thị chi nhánh đang chọn -->
                 <button onclick="toggleSoft()" 
-                        class="w-full bg-white text-black font-bold border-2 border-[#1976D2] rounded-[10px] py-2.5 px-5 transition-all duration-200 flex items-center justify-between hover:shadow-md">
-                    <span id="label-soft" class="truncate">{{ $selectedBranch }}</span>
+                        class="w-full bg-white text-black border-1 border-[#1976D2] rounded-[10px] py-2.5 px-5 transition-all duration-200 flex items-center justify-between hover:shadow-md">
+                    <span id="label-soft" class="truncate">{{ $selectedBranch ?? 'Chọn chi nhánh' }}</span>
                     <svg id="arrow-soft" class="w-5 h-5 ml-2 text-slate-500 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                     </svg>
@@ -80,18 +36,22 @@
                 <!-- Menu xổ xuống (Được tạo động từ PHP) -->
                 <div id="menu-soft" class="absolute z-50 w-full mt-2 bg-white rounded-2xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.15)] overflow-hidden hidden animate-fade-in-down origin-top">
                     <ul class="text-sm font-medium max-h-[300px] overflow-y-auto">
-                        
-                        @foreach($allBranches as $branch)
-                            @php
-                                $isSelected = $branch === $selectedBranch;
-                                $style = $isSelected ? 'bg-blue-50 text-blue-600' : 'hover:bg-blue-50 hover:text-blue-600';
-                            @endphp
-                            <li onclick="selectBranch('{{ $branch }}')" 
-                                class="px-5 py-3 cursor-pointer transition-colors border-b border-gray-50 last:border-0 {{ $style }}">
-                                {{ $branch }}
+                        @if($allBranches->isEmpty())
+                            <li class="px-5 py-3 text-gray-500 text-center">
+                                Chưa có lịch tại bất kỳ chi nhánh nào.
                             </li>
-                        @endforeach
-
+                        @else
+                            @foreach($allBranches as $branch)
+                                @php
+                                    $isSelected = $branch === $selectedBranch;
+                                    $style = $isSelected ? 'bg-blue-50 text-blue-600' : 'hover:bg-blue-50 hover:text-blue-600';
+                                @endphp
+                                <li onclick="selectBranch('{{ $branch }}')" 
+                                    class="px-5 py-3 cursor-pointer transition-colors border-b border-gray-50 last:border-0 {{ $style }}">
+                                    {{ $branch }}
+                                </li>
+                            @endforeach
+                        @endif
                     </ul>
                 </div>
             </div>
@@ -131,10 +91,11 @@
                                     @foreach($schedulesForDay as $schedule)
                                         
                                         <div onclick="toggleSelect(this)" 
+                                            data-id="{{ $schedule->id }}"
                                             data-day="{{ $dayLabel }}" 
                                             data-time="{{ $schedule->start_time }} - {{ $schedule->end_time }}" 
                                             data-trainer="{{ $schedule->trainer_name }}" 
-                                            {{-- Đã bỏ data-class ở đây --}}
+
                                             class="schedule-card bg-white border border-[#5E9FE0] shadow-sm rounded-[20px] p-2 text-center cursor-pointer transition duration-200 hover:shadow-md transform hover:-translate-y-0.5 select-none">
                                             
                                             <div class="text-sm font-extrabold text-black pointer-events-none">
@@ -168,8 +129,6 @@
                 </button>
             </div>
         </div>
-
-
         
         <!-- Xác nhận đăng ký -->
         <div class="mt-8 pt-6 border-t border-gray-300 text-center font-open-sans">
@@ -290,6 +249,7 @@
 
     function toggleSelect(element) {
         // A. Lấy dữ liệu
+        const id = element.getAttribute('data-id');
         const day = element.getAttribute('data-day');
         const time = element.getAttribute('data-time');
         const trainer = element.getAttribute('data-trainer');
@@ -300,7 +260,7 @@
         const uniqueId = `${day}_${time}_${trainer}`;
 
         // B. Kiểm tra chọn/bỏ chọn
-        const index = selectedSchedules.findIndex(item => item.id === uniqueId);
+        const index = selectedSchedules.findIndex(item => item.id == id);
 
         if (index > -1) {
             // BỎ CHỌN
@@ -309,7 +269,7 @@
             element.classList.add('bg-white', 'border-[#5E9FE0]');
 
         } else {
-            selectedSchedules.push({ id: uniqueId, day, time, startTime, trainer });            
+            selectedSchedules.push({ id: id, day, time, startTime, trainer });            
             element.classList.remove('bg-white', 'border-[#5E9FE0]');
             element.classList.add('bg-[#BAD6F2]', 'border-[#5E9FE0]', 'text-black', 'shadow-lg', 'scale-105');
         }
@@ -344,7 +304,8 @@
                 return `<div class="mb-2 pb-2 border-b border-gray-100 last:border-0 last:pb-0 last:mb-0">
                             <span class="font-bold text-gray-800">${item.day}</span> 
                             <span class="text-sm text-gray-500">(${item.time})</span> 
-                            với <span class="font-bold text-[#1976D2]">${item.trainer}</span>
+                            <span class="font-normal text-black"> với 
+                            <span class="font-bold text-[#1976D2]">${item.trainer}</span>
                         </div>`;
             }).join('');
 
@@ -354,7 +315,39 @@
 
     function submitRegistration() {
         if (selectedSchedules.length === 0) return;
-        alert("Đang đăng ký " + selectedSchedules.length + " lớp học!");
+
+        // Lấy danh sách ID
+        const scheduleIds = selectedSchedules.map(item => item.id);
+        const token = document.querySelector('input[name="_token"]').value;
+
+        // Gọi về Server
+        fetch("{{ route('user.class.booking.store') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': token
+            },
+            body: JSON.stringify({
+                schedule_ids: scheduleIds
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.success) {
+                alert("Đăng ký thành công!");
+                location.reload();
+            } else {
+                alert("Lỗi: " + data.message);
+                // Reset lại nút bấm nếu có lỗi
+                btn.innerText = originalText;
+                btn.disabled = false;
+                btn.classList.remove('opacity-70', 'cursor-not-allowed');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert("Có lỗi xảy ra, vui lòng thử lại.");
+        });
     }
 </script>
 

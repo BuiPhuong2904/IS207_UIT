@@ -33,7 +33,10 @@ Route::get('/package', [UserPackageController::class, 'index'])->name('package')
 
 // Class 
 Route::get('/class', [UserClassController::class, 'index'])->name('class'); 
-Route::get('/class_booking', function () { return view('user.class_booking'); })->name('class_booking');
+Route::get('/class-booking/{id}', [UserClassController::class, 'booking'])->name('user.class.booking');
+
+// route để xử lý hành động lưu đăng ký
+Route::post('/class-booking/store', [UserClassController::class, 'storeBooking'])->name('user.class.booking.store');
 
 // Product
 Route::view('/product', 'user.product')->name('product');
