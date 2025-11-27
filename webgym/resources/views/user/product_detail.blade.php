@@ -50,12 +50,12 @@
     <section class="bg-white py-8 font-['Roboto']">
         <div class="container mx-auto px-4">
             <div class="grid grid-cols-1 lg:grid-cols-7 gap-12">
-                
+
                 <!-- Hình ảnh sản phẩm -->
                 <div id="product-gallery" class="w-full lg:col-span-3">
                     <div class="relative aspect-square w-full overflow-hidden rounded-[24px] mb-6 bg-[#F4F4F4]">
-                        <img id="main-image" src="{{ $product->image_url }}" 
-                            alt="{{ $product->product_name }}" 
+                        <img id="main-image" src="{{ $product->image_url }}"
+                            alt="{{ $product->product_name }}"
                             class="w-full h-full object-cover object-center mix-blend-multiply transition-opacity duration-300"
                             onerror="this.src='https://via.placeholder.com/600?text=No+Image'">
                     </div>
@@ -68,19 +68,19 @@
                         <div class="flex-1 overflow-hidden">
                             <div id="thumbnail-track" class="flex gap-4 transition-transform duration-300 ease-out" style="width: 100%;">
                                 <!-- Ảnh gốc -->
-                                <div class="thumb-item active w-[calc(33.33%-11px)] shrink-0 aspect-square rounded-[16px] overflow-hidden border-2 border-[#9d1c30] p-1 cursor-pointer transition-all" 
+                                <div class="thumb-item active w-[calc(33.33%-11px)] shrink-0 aspect-square rounded-[16px] overflow-hidden border-2 border-[#9d1c30] p-1 cursor-pointer transition-all"
                                     onclick="changeImage(this, '{{ $product->image_url }}')">
                                     <div class="w-full h-full rounded-[10px] overflow-hidden bg-[#F4F4F4]">
                                         <img src="{{ $product->image_url }}" class="w-full h-full object-cover mix-blend-multiply" onerror="this.src='https://via.placeholder.com/150'">
                                     </div>
                                 </div>
                                 <!-- Loop ảnh các biến thể -->
-                                @php 
+                                @php
                                     $variantImages = $product->variants->whereNotNull('image_url')->unique('image_url');
                                 @endphp
                                 @foreach($variantImages as $variant)
                                     @if($variant->image_url != $product->image_url)
-                                    <div class="thumb-item w-[calc(33.33%-11px)] shrink-0 aspect-square rounded-[16px] overflow-hidden border-2 border-transparent p-1 cursor-pointer hover:border-gray-300 transition-all" 
+                                    <div class="thumb-item w-[calc(33.33%-11px)] shrink-0 aspect-square rounded-[16px] overflow-hidden border-2 border-transparent p-1 cursor-pointer hover:border-gray-300 transition-all"
                                         onclick="changeImage(this, '{{ $variant->image_url }}')">
                                         <div class="w-full h-full rounded-[10px] overflow-hidden bg-[#F4F4F4]">
                                             <img src="{{ $variant->image_url }}" class="w-full h-full object-cover mix-blend-multiply" onerror="this.src='https://via.placeholder.com/150'">
@@ -102,7 +102,7 @@
                     <h1 class="text-[40px] leading-tight font-extrabold text-[#350504] mb-2 tracking-tight drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]">
                         {{ $product->product_name }}
                     </h1>
-                    
+
                     <div class="flex items-center mb-3 space-x-2">
                         <div class="flex text-yellow-400 text-lg">
                             @for($i=0; $i<5; $i++) <span>★</span> @endfor
@@ -124,7 +124,7 @@
                     <div class="text-gray-500 text-sm mb-4 leading-relaxed font-normal font-open-sans">
                         <p>{!! nl2br(e($product->description)) !!}</p>
                     </div>
-                    <hr class="border-gray-300 my-3"> 
+                    <hr class="border-gray-300 my-3">
 
                     <!-- Color Selector -->
                     @if($colors->count() > 0)
@@ -137,10 +137,10 @@
                             <div id="color-scroll-container" class="flex gap-3 overflow-x-auto scroll-smooth px-1 py-1 w-full no-scrollbar">
                                 @foreach($colors as $key => $color)
                                 <label class="cursor-pointer shrink-0">
-                                    <input type="radio" name="color_id" value="{{ $color }}" class="peer sr-only" {{ $loop->first ? 'checked' : '' }}> 
-                                    <span class="block px-6 py-2 text-sm font-medium bg-[#F3F4F6] text-gray-600 rounded-full border border-transparent 
-                                    hover:bg-gray-200 
-                                    peer-checked:bg-white peer-checked:border-[#8B1D28] peer-checked:text-[#8B1D28] 
+                                    <input type="radio" name="color_id" value="{{ $color }}" class="peer sr-only" {{ $loop->first ? 'checked' : '' }}>
+                                    <span class="block px-6 py-2 text-sm font-medium bg-[#F3F4F6] text-gray-600 rounded-full border border-transparent
+                                    hover:bg-gray-200
+                                    peer-checked:bg-white peer-checked:border-[#8B1D28] peer-checked:text-[#8B1D28]
                                     peer-checked:hover:bg-white peer-checked:hover:text-[#8B1D28] transition-all whitespace-nowrap">
                                         {{ $color }}
                                     </span>
@@ -152,7 +152,7 @@
                             </button>
                         </div>
                     </div>
-                    <hr class="border-gray-300 my-3"> 
+                    <hr class="border-gray-300 my-3">
                     @endif
 
                     <!-- Size Selector -->
@@ -169,9 +169,9 @@
                                 @foreach($sizes as $key => $size)
                                 <label class="cursor-pointer shrink-0">
                                     <input type="radio" name="size_id" value="{{ $size }}" class="peer sr-only" {{ $loop->first ? 'checked' : '' }}>
-                                    <span class="block px-6 py-2 text-sm font-medium bg-[#F3F4F6] text-gray-600 rounded-full border border-transparent 
-                                    hover:bg-gray-200 
-                                    peer-checked:bg-white peer-checked:border-[#8B1D28] peer-checked:text-[#8B1D28] 
+                                    <span class="block px-6 py-2 text-sm font-medium bg-[#F3F4F6] text-gray-600 rounded-full border border-transparent
+                                    hover:bg-gray-200
+                                    peer-checked:bg-white peer-checked:border-[#8B1D28] peer-checked:text-[#8B1D28]
                                     peer-checked:hover:bg-white peer-checked:hover:text-[#8B1D28] transition-all whitespace-nowrap">
                                         {{ $size }}
                                     </span>
@@ -184,7 +184,7 @@
                         </div>
                         <p id="stock-display" class="text-xs text-gray-400 mt-2 font-open-sans ml-1">Kho: Đang kiểm tra...</p>
                     </div>
-                    <hr class="border-gray-300 my-3"> 
+                    <hr class="border-gray-300 my-3">
                     @endif
 
                     <!-- Quantity Selector -->
@@ -196,7 +196,7 @@
                             <button type="button" id="increase-btn" class="px-3 text-gray-600 hover:text-black transition-colors text-xl font-medium focus:outline-none cursor-pointer select-none">+</button>
                         </div>
                     </div>
-                    <hr class="border-gray-300 my-3"> 
+                    <hr class="border-gray-300 my-3">
 
                     <!-- Action Buttons -->
                     <div class="flex gap-4 mt-2 font-open-sans">
@@ -226,7 +226,7 @@
             </button>
         </div>
 
-        <div class="w-full lg:w-11/12 mx-auto min-h-[300px]"> 
+        <div class="w-full lg:w-11/12 mx-auto min-h-[300px]">
             <!-- Chi tiết -->
             <div id="content-details" class="flex flex-col gap-y-6 text-[15px] animate-fade-in">
                 <div class="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-2">
@@ -247,7 +247,7 @@
                     <span class="text-gray-900 font-medium">{{ $colors->implode(', ') }}</span>
                 </div>
                 @endif
-                
+
                 <div class="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-2">
                     <span class="text-gray-500 font-normal">Kích thước/Trọng lượng</span>
                     <span class="text-gray-900 font-medium">{{ $sizes->count() > 0 ? $sizes->implode(', ') : '' }}</span>
@@ -336,11 +336,11 @@
     <h2 class="text-2xl font-bold text-left text-black mb-6 font-['Montserrat'] uppercase">
         Có thể bạn cũng thích
     </h2>
-    
+
     <div id="related-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         @foreach($relatedProducts as $related)
         @php
-            // Tính toán giá cho từng sản phẩm liên quan ngay 
+            // Tính toán giá cho từng sản phẩm liên quan ngay
             $rVariant = $related->variants->first();
             $rPrice = 0; $rOriginalPrice = null; $rDiscount = 0;
 
@@ -355,7 +355,7 @@
                 }
             }
         @endphp
-        
+
         <div class="group flex flex-col rounded-[20px] border border-gray-200 bg-white p-4 shadow-sm transition-all hover:shadow-lg hover:-translate-y-1">
             <div class="relative w-full aspect-square overflow-hidden rounded-[16px] bg-gray-100 mb-4">
                 <a href="{{ route('product.detail', ['slug' => $related->slug]) }}">
@@ -374,7 +374,7 @@
                         <span class="inline-flex items-center justify-center rounded-lg bg-red-50 px-2.5 py-0.5 text-xs font-bold text-red-500">
                             -{{ $rDiscount }}%
                         </span>
-                        </div> 
+                        </div>
                         <p class="text-sm text-gray-400 line-through italic mt-1">
                             {{ number_format($rOriginalPrice, 0, ',', '.') }} VNĐ
                         </p>
@@ -382,13 +382,13 @@
                         <p class="text-lg font-bold text-red-800 font-open-sans">
                             {{ number_format($rPrice, 0, ',', '.') }} VNĐ
                         </p>
-                        </div> 
+                        </div>
                     @endif
             </div>
         </div>
         @endforeach
     </div>
-    
+
     <div class="text-center mt-10">
         <button id="load-more-related-btn" class="px-8 py-2 border border-gray-300 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 hover:border-gray-500 hover:text-gray-900 transition-colors">
             Xem thêm
@@ -429,7 +429,7 @@
         if (sortText) sortText.innerText = text;
         toggleSortDropdown();
     }
-    
+
     function changeImage(element, newSrc) {
         const mainImg = document.getElementById('main-image');
         if(!mainImg) return;
@@ -449,7 +449,7 @@
     };
 
     document.addEventListener('DOMContentLoaded', function() {
-        
+
         // 1. Logic Biến thể & Giá
         const productVariants = @json($product->variants);
         let selectedColor = document.querySelector('input[name="color_id"]:checked')?.value || null;
@@ -505,10 +505,10 @@
             input.addEventListener('change', (e) => { selectedSize = e.target.value; updateProductInfo(); });
         });
 
-        // 2. Logic Load More Related Products 
+        // 2. Logic Load More Related Products
         const loadMoreBtn = document.getElementById('load-more-related-btn');
         const relatedGrid = document.getElementById('related-products-grid');
-        let relatedSkip = 4; 
+        let relatedSkip = 4;
         const currentCatId = {{ $product->category_id }};
         const currentProdId = {{ $product->product_id }};
 
@@ -567,8 +567,8 @@
                         relatedSkip += 4;
                         btn.innerText = "Xem thêm";
                         btn.disabled = false;
-                    } 
-                    
+                    }
+
                     if(!data.hasMore || data.products.length === 0) {
                         btn.style.display = 'none';
                     }
@@ -589,7 +589,7 @@
 
         window.addEventListener('click', function(e) {
             const menu = document.getElementById('sort-dropdown-menu');
-            const button = document.querySelector('button[onclick="toggleSortDropdown()"]'); 
+            const button = document.querySelector('button[onclick="toggleSortDropdown()"]');
             if (menu && button && !menu.contains(e.target) && !button.contains(e.target)) {
                 menu.classList.add('hidden');
             }
@@ -615,7 +615,51 @@
 
         updateProductInfo();
     });
-    
+
+    const addToCartBtn = document.getElementById('add-to-cart-btn');
+    if (addToCartBtn) {
+        addToCartBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            const variantId = selectedVariantId; // Lấy từ JS hiện có (updateProductInfo set cái này)
+            const quantity = parseInt(document.getElementById('quantity-input').value) || 1;
+            const userId = 1; // Tạm thời, sau này lấy từ auth
+
+            if (!variantId) {
+                alert('Vui lòng chọn biến thể sản phẩm (màu sắc, kích thước)');
+                return;
+            }
+
+            fetch('/api/checkout/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    user_id: userId,
+                    type: 'product',
+                    id: variantId,
+                    quantity: quantity
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Đã thêm sản phẩm vào giỏ hàng!');
+                        // Optional: Update cart icon/count nếu có, ví dụ gọi API getCartItems để update mini cart
+                    } else {
+                        alert('Lỗi: ' + (data.message || 'Không thể thêm vào giỏ hàng'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Lỗi kết nối. Vui lòng thử lại.');
+                });
+        });
+    }
+    });
+
     const track = document.getElementById('thumbnail-track');
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
@@ -623,8 +667,8 @@
         const itemsToShow = 3; let currentIndex = 0; const totalItems = track.children.length;
         prevBtn.classList.remove('hidden'); nextBtn.classList.remove('hidden');
         function updateSlider() {
-            const translateValue = -(currentIndex * (100 / itemsToShow)); 
-            track.style.transform = `translateX(calc(${translateValue}% - ${currentIndex * 1.33}rem))`; 
+            const translateValue = -(currentIndex * (100 / itemsToShow));
+            track.style.transform = `translateX(calc(${translateValue}% - ${currentIndex * 1.33}rem))`;
         }
         nextBtn.addEventListener('click', () => { if (currentIndex < totalItems - itemsToShow) { currentIndex++; updateSlider(); } });
         prevBtn.addEventListener('click', () => { if (currentIndex > 0) { currentIndex--; updateSlider(); } });
