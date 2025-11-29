@@ -100,49 +100,105 @@ $promotions_json = json_encode($promotions_data);
 
             {{-- THÊM ID VÀO CONTAINER DANH SÁCH SẢN PHẨM --}}
             <div class="space-y-4" id="cart_item_list">
-
-                {{-- Dùng Blade loop để render danh sách sản phẩm - ĐÃ DÙNG BIẾN MỚI $cart_items --}}
+                @auth
+                {{-- Đã đăng nhập: dùng dữ liệu từ server --}}
                 @foreach ($cart_items as $item)
                 <div class="flex items-start border-b border-gray-200 pb-4 last:border-b-0 last:pb-0">
                     <div class="w-20 h-20 flex-shrink-0 mr-4">
                         <img src="{{ $item['image_url'] }}" alt="{{ $item['name'] }}" class="w-full h-full object-cover rounded-lg">
                     </div>
-
-                    {{-- KHỐI THÔNG TIN SẢN PHẨM --}}
                     <div class="flex-1 flex flex-col justify-between">
-
-                        {{-- HÀNG 1: Tên sản phẩm --}}
-                        <div>
-                            <p class="font-bold text-gray-800">{{ $item['name'] }}</p>
-                        </div>
-
-                        {{-- HÀNG GIỮA: Size/Color HOẶC Thời hạn (Dùng các keys đã đổi tên) --}}
+                        <p class="font-bold text-gray-800">{{ $item['name'] }}</p>
                         <div class="flex flex-col items-start text-sm text-gray-500">
-                            @if (isset($item['type']) && $item['type'] === 'membership')
-                                <p>Thời hạn: {{ $item['duration'] ?? 'N/A' }}</p>
+                            @if($item['type'] ?? '' === 'membership')
+                            <p>Thời hạn: {{ $item['duration'] ?? 'N/A' }}</p>
                             @else
-                                <p>Size: {{ $item['size'] ?? 'N/A' }}</p>
-                                <p>Color: {{ $item['color'] ?? 'N/A' }}</p>
+                            <p>Size: {{ $item['size'] ?? 'N/A' }}</p>
+                            <p>Color: {{ $item['color'] ?? 'N/A' }}</p>
                             @endif
                         </div>
-
-                        {{-- KHOẢNG TRỐNG (Dòng trắng) --}}
                         <div class="h-4"></div>
-
-                        {{-- HÀNG 3: Giá sản phẩm (Giá hiện tại và Giá gốc gạch ngang) --}}
                         <div class="flex items-end">
-                            {{-- 1. Giá ĐÃ GIẢM (final_price) --}}
                             <p class="text-xl font-bold text-gray-900">
                                 {{ number_format($item['final_price'], 0, ',', '.') }} VNĐ
                             </p>
-
-                            {{-- 2. Giá GỐC (unit_price) --}}
-                            @if (isset($item['unit_price']) && $item['unit_price'] > $item['final_price'])
-                                <p class="text-sm text-gray-400 line-through ml-2 mb-0.5">
-                                    {{ number_format($item['unit_price'], 0, ',', '.') }} VNĐ
-                                </p>
+                            @if($item['unit_price'] > $item['final_price'])
+                            <p class="text-sm text-gray-400 line-through ml-2 mb-0.5">
+                                {{ number_format($item['unit_price'], 0, ',', '.') }} VNĐ
+                            </p>
                             @endif
                         </div>
+                    </div>
+                    <div class="flex flex-col items-end justify-between h-20 text-gray-500">
+                        <button class="btn-delete-item text-red-500 hover:text-red-700 w-6 h-6">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 6h-7l-1-2H7C6.4 4 6 4.4 6 5v1H4v2h1v12c0 1.1 0.9 2 2 2h10c1.1 0 2-0.9 2-2V8h1V6h-2zM9 18H8v-6h1v6zm4 0h-2v-6h2v6zm4 0h-2v-6h2v6z"/></svg>
+                        </button>
+                        @if(($item['type'] ?? '') !== 'membership')
+                        <div class="flex items-center border border-gray-300 rounded-full px-1 py-0.5 mt-auto">
+                            <button class="btn-qty-minus w-7 h-7 text-xl">-</button>
+                            <span class="item-quantity text-base font-semibold px-2">{{ $item['quantity'] }}</span>
+                            <button class="btn-qty-plus w-7 h-7 text-xl">+</button>
+                        </div>
+                        @endif
+                    </div>
+                </div>
+                @endforeach
+                @else
+                {{-- Chưa đăng nhập: dùng localStorage --}}
+                <script>
+                    document.addEventListener('DOMContentLoaded', () => {
+                        const guestCart = (() => {
+                            try { return JSON.parse(localStorage.getItem('grynd_guest_cart') || '[]'); }
+                            catch { return []; }
+                        })();
+
+                        const container = document.getElementById('cart_item_list');
+                        if (guestCart.length === 0) {
+                            container.innerHTML = '<p class="text-center py-8 text-gray-500">Giỏ hàng của bạn đang trống.</p>';
+                            return;
+                        }
+
+                        // Gán vào biến toàn cục để JS tính tiền dùng
+                        window.CART_ITEMS = guestCart;
+
+                        guestCart.forEach((item, idx) => {
+                            const html = `
+                    <div class="flex items-start border-b border-gray-200 pb-4 last:border-b-0 last:pb-0" data-index="${idx}">
+                        <div class="w-20 h-20 flex-shrink-0 mr-4">
+                            <img src="${item.image_url}" class="w-full h-full object-cover rounded-lg">
+                        </div>
+                        <div class="flex-1 flex flex-col justify-between">
+                            <p class="font-bold text-gray-800">${item.product_name}</p>
+                            <div class="flex flex-col items-start text-sm text-gray-500">
+                                ${item.size ? `<p>Size: ${item.size}</p>` : ''}
+                                ${item.color ? `<p>Color: ${item.color}</p>` : ''}
+                            </div>
+                            <div class="h-4"></div>
+                            <div class="flex items-end">
+                                <p class="text-xl font-bold text-gray-900">${item.final_price.toLocaleString('vi-VN')} VNĐ</p>
+                                ${item.unit_price > item.final_price ? `<p class="text-sm text-gray-400 line-through ml-2 mb-0.5">${item.unit_price.toLocaleString('vi-VN')} VNĐ</p>` : ''}
+                            </div>
+                        </div>
+                        <div class="flex flex-col items-end justify-between h-20 text-gray-500">
+                            <button class="btn-delete-item text-red-500 hover:text-red-700 w-6 h-6">
+                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M19 6h-7l-1-2H7C6.4 4 6 4.4 6 5v1H4v2h1v12c0 1.1 0.9 2 2 2h10c1.1 0 2-0.9 2-2V8h1V6h-2zM9 18H8v-6h1v6zm4 0h-2v-6h2v6zm4 0h-2v-6h2v6z"/></svg>
+                            </button>
+                            <div class="flex items-center border border-gray-300 rounded-full px-1 py-0.5 mt-auto">
+                                <button class="btn-qty-minus w-7 h-7 text-xl">-</button>
+                                <span class="item-quantity text-base font-semibold px-2">${item.quantity}</span>
+                                <button class="btn-qty-plus w-7 h-7 text-xl">+</button>
+                            </div>
+                        </div>
+                    </div>`;
+                            container.insertAdjacentHTML('beforeend', html);
+                        });
+
+                        // Cập nhật tổng tiền
+                        updateSummary(calculateTotalsJS(guestCart, currentPromotionCode));
+                    });
+                </script>
+                @endauth
+            </div>
 
                     </div>
                     {{-- KHỐI QUẢN LÝ TƯƠNG TÁC (Nút xóa và Số lượng) --}}
