@@ -1,12 +1,13 @@
 <?php
 
+use App\Http\Controllers\OrderHistoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ChatbotController;
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CheckoutController; 
-use App\Http\Controllers\CheckoutDetailController; 
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CheckoutDetailController;
 
 use App\Http\Controllers\UserPackageController;
 use App\Http\Controllers\UserClassController;
@@ -31,10 +32,10 @@ Route::get('/blog2', function () { return view('blogs.blog_2'); })->name('blog2'
 Route::get('/blog3', function () { return view('blogs.blog_3'); })->name('blog3');
 
 // Package
-Route::get('/package', [UserPackageController::class, 'index'])->name('package'); 
+Route::get('/package', [UserPackageController::class, 'index'])->name('package');
 
-// Class 
-Route::get('/class', [UserClassController::class, 'index'])->name('class'); 
+// Class
+Route::get('/class', [UserClassController::class, 'index'])->name('class');
 
 // Product
 Route::view('/product', 'user.product')->name('product');
@@ -53,7 +54,7 @@ Route::get('/checkout-detail', [CheckoutDetailController::class, 'index'])->name
 
 // Route thử đăng nhập user với ID = 1 (chỉ dùng trong giai đoạn chưa có form đăng nhập)
 Route::get('/test-login', function () {
-    $user = User::find(1); 
+    $user = User::find(1);
     if ($user) {
         Auth::login($user);
         return redirect('/');
@@ -66,5 +67,6 @@ Route::get('/test-login', function () {
 Route::view('/ho-so', 'user.profile')->name('profile');
 Route::view('/goi-tap-da-mua', 'user.my_packages')->name('my_packages');
 Route::view('/lop-hoc-da-dang-ky', 'user.my_classes')->name('my_classes');
-Route::view('/lich-su-don-hang', 'user.order_history')->name('order_history');
+Route::get('/lich-su-don-hang', [OrderHistoryController::class, 'index'])
+    ->name('order_history');
 Route::view('/lich-su-muon-tra', 'user.rental_history')->name('rental_history');
