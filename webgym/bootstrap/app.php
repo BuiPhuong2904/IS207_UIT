@@ -20,8 +20,9 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         
-        // Đăng ký middleware IsAdmin
+        // Register IsAdmin middleware with both aliases for flexibility
         $middleware->alias([
+            'isAdmin' => \App\Http\Middleware\IsAdmin::class,
             'admin.role' => \App\Http\Middleware\IsAdmin::class,
         ]);
 
