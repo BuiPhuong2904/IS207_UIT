@@ -39,7 +39,6 @@ class DatabaseSeeder extends Seeder
             ClassRegistrationSeeder::class,
             // -- OrderDetailSeeder::class,
             PaymentSeeder::class,
-            CartItemSeeder::class,
         ]);
 
         // BẬT LẠI KIỂM TRA KHÓA NGOẠI
