@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
             MembershipPackageSeeder::class,
             PromotionSeeder::class,
             TrainerSeeder::class,
-            
+
             // -- BlogPostSeeder::class,
             RentalItemSeeder::class,
             ProductSeeder::class,
