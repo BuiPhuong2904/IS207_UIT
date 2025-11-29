@@ -17,14 +17,11 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        //  Định nghĩa các role được phép truy cập
-        /*$allowedRoles = ['admin', 'manager', 'trainer'];
-
-        // Kiểm tra xem role của user hiện tại có nằm trong danh sách
-        if ( ! in_array(Auth::user()->role, $allowedRoles) ) {
-            abort(403,'Bạn không có quyền truy cập.');
+        // Check if user is authenticated and has admin role
+        if (!Auth::check() || Auth::user()->role !== 'admin') {
+            abort(403, 'Bạn không có quyền truy cập.');
         }
-        */
+
         return $next($request);
     }
 }
