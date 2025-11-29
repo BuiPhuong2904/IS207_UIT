@@ -55,9 +55,9 @@
                 <div id="product-gallery" class="w-full lg:col-span-3">
                     <div class="relative aspect-square w-full overflow-hidden rounded-[24px] mb-6 bg-[#F4F4F4]">
                         <img id="main-image" src="{{ $product->image_url }}"
-                            alt="{{ $product->product_name }}"
-                            class="w-full h-full object-cover object-center mix-blend-multiply transition-opacity duration-300"
-                            onerror="this.src='https://via.placeholder.com/600?text=No+Image'">
+                             alt="{{ $product->product_name }}"
+                             class="w-full h-full object-cover object-center mix-blend-multiply transition-opacity duration-300"
+                             onerror="this.src='https://via.placeholder.com/600?text=No+Image'">
                     </div>
 
                     <div class="flex items-center justify-between gap-4 relative">
@@ -69,24 +69,24 @@
                             <div id="thumbnail-track" class="flex gap-4 transition-transform duration-300 ease-out" style="width: 100%;">
                                 <!-- Ảnh gốc -->
                                 <div class="thumb-item active w-[calc(33.33%-11px)] shrink-0 aspect-square rounded-[16px] overflow-hidden border-2 border-[#9d1c30] p-1 cursor-pointer transition-all"
-                                    onclick="changeImage(this, '{{ $product->image_url }}')">
+                                     onclick="changeImage(this, '{{ $product->image_url }}')">
                                     <div class="w-full h-full rounded-[10px] overflow-hidden bg-[#F4F4F4]">
                                         <img src="{{ $product->image_url }}" class="w-full h-full object-cover mix-blend-multiply" onerror="this.src='https://via.placeholder.com/150'">
                                     </div>
                                 </div>
                                 <!-- Loop ảnh các biến thể -->
                                 @php
-                                    $variantImages = $product->variants->whereNotNull('image_url')->unique('image_url');
+                                $variantImages = $product->variants->whereNotNull('image_url')->unique('image_url');
                                 @endphp
                                 @foreach($variantImages as $variant)
-                                    @if($variant->image_url != $product->image_url)
-                                    <div class="thumb-item w-[calc(33.33%-11px)] shrink-0 aspect-square rounded-[16px] overflow-hidden border-2 border-transparent p-1 cursor-pointer hover:border-gray-300 transition-all"
-                                        onclick="changeImage(this, '{{ $variant->image_url }}')">
-                                        <div class="w-full h-full rounded-[10px] overflow-hidden bg-[#F4F4F4]">
-                                            <img src="{{ $variant->image_url }}" class="w-full h-full object-cover mix-blend-multiply" onerror="this.src='https://via.placeholder.com/150'">
-                                        </div>
+                                @if($variant->image_url != $product->image_url)
+                                <div class="thumb-item w-[calc(33.33%-11px)] shrink-0 aspect-square rounded-[16px] overflow-hidden border-2 border-transparent p-1 cursor-pointer hover:border-gray-300 transition-all"
+                                     onclick="changeImage(this, '{{ $variant->image_url }}')">
+                                    <div class="w-full h-full rounded-[10px] overflow-hidden bg-[#F4F4F4]">
+                                        <img src="{{ $variant->image_url }}" class="w-full h-full object-cover mix-blend-multiply" onerror="this.src='https://via.placeholder.com/150'">
                                     </div>
-                                    @endif
+                                </div>
+                                @endif
                                 @endforeach
                             </div>
                         </div>
@@ -340,20 +340,20 @@
     <div id="related-products-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         @foreach($relatedProducts as $related)
         @php
-            // Tính toán giá cho từng sản phẩm liên quan ngay
-            $rVariant = $related->variants->first();
-            $rPrice = 0; $rOriginalPrice = null; $rDiscount = 0;
+        // Tính toán giá cho từng sản phẩm liên quan ngay
+        $rVariant = $related->variants->first();
+        $rPrice = 0; $rOriginalPrice = null; $rDiscount = 0;
 
-            if ($rVariant) {
-                $rPrice = $rVariant->price;
-                if ($rVariant->is_discounted && $rVariant->discount_price > 0) {
-                    $rPrice = $rVariant->discount_price;
-                    $rOriginalPrice = $rVariant->price;
-                    if ($rOriginalPrice > 0) {
-                        $rDiscount = round((($rOriginalPrice - $rPrice) / $rOriginalPrice) * 100);
-                    }
-                }
-            }
+        if ($rVariant) {
+        $rPrice = $rVariant->price;
+        if ($rVariant->is_discounted && $rVariant->discount_price > 0) {
+        $rPrice = $rVariant->discount_price;
+        $rOriginalPrice = $rVariant->price;
+        if ($rOriginalPrice > 0) {
+        $rDiscount = round((($rOriginalPrice - $rPrice) / $rOriginalPrice) * 100);
+        }
+        }
+        }
         @endphp
 
         <div class="group flex flex-col rounded-[20px] border border-gray-200 bg-white p-4 shadow-sm transition-all hover:shadow-lg hover:-translate-y-1">
@@ -368,32 +368,32 @@
                 </h3>
                 <div class="flex items-center mt-2 space-x-3">
                     @if($rDiscount > 0)
-                        <p class="text-lg font-bold text-red-800 font-open-sans">
-                            {{ number_format($rPrice, 0, ',', '.') }} VNĐ
-                        </p>
-                        <span class="inline-flex items-center justify-center rounded-lg bg-red-50 px-2.5 py-0.5 text-xs font-bold text-red-500">
+                    <p class="text-lg font-bold text-red-800 font-open-sans">
+                        {{ number_format($rPrice, 0, ',', '.') }} VNĐ
+                    </p>
+                    <span class="inline-flex items-center justify-center rounded-lg bg-red-50 px-2.5 py-0.5 text-xs font-bold text-red-500">
                             -{{ $rDiscount }}%
                         </span>
-                        </div>
-                        <p class="text-sm text-gray-400 line-through italic mt-1">
-                            {{ number_format($rOriginalPrice, 0, ',', '.') }} VNĐ
-                        </p>
-                    @else
-                        <p class="text-lg font-bold text-red-800 font-open-sans">
-                            {{ number_format($rPrice, 0, ',', '.') }} VNĐ
-                        </p>
-                        </div>
-                    @endif
+                </div>
+                <p class="text-sm text-gray-400 line-through italic mt-1">
+                    {{ number_format($rOriginalPrice, 0, ',', '.') }} VNĐ
+                </p>
+                @else
+                <p class="text-lg font-bold text-red-800 font-open-sans">
+                    {{ number_format($rPrice, 0, ',', '.') }} VNĐ
+                </p>
             </div>
+            @endif
         </div>
-        @endforeach
     </div>
+    @endforeach
+</div>
 
-    <div class="text-center mt-10">
-        <button id="load-more-related-btn" class="px-8 py-2 border border-gray-300 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 hover:border-gray-500 hover:text-gray-900 transition-colors">
-            Xem thêm
-        </button>
-    </div>
+<div class="text-center mt-10">
+    <button id="load-more-related-btn" class="px-8 py-2 border border-gray-300 text-gray-700 rounded-full text-sm font-medium hover:bg-gray-200 hover:border-gray-500 hover:text-gray-900 transition-colors">
+        Xem thêm
+    </button>
+</div>
 </div>
 
 {{-- Script JS --}}
@@ -519,14 +519,14 @@
                 btn.disabled = true;
 
                 fetch(`{{ route('api.related_products') }}?category_id=${currentCatId}&product_id=${currentProdId}&skip=${relatedSkip}`)
-                .then(response => response.json())
-                .then(data => {
-                    if(data.products.length > 0) {
-                        data.products.forEach(prod => {
-                            // Logic hiển thị giá
-                            let priceHtml = '';
-                            if (prod.discount > 0) {
-                                priceHtml = `
+                    .then(response => response.json())
+                    .then(data => {
+                        if(data.products.length > 0) {
+                            data.products.forEach(prod => {
+                                // Logic hiển thị giá
+                                let priceHtml = '';
+                                if (prod.discount > 0) {
+                                    priceHtml = `
                                     <p class="text-lg font-bold text-red-800 font-open-sans">
                                         ${prod.price}
                                     </p>
@@ -538,16 +538,16 @@
                                         ${prod.originalPrice}
                                     </p>
                                 `;
-                            } else {
-                                priceHtml = `
+                                } else {
+                                    priceHtml = `
                                     <p class="text-lg font-bold text-red-800 font-open-sans">
                                         ${prod.price}
                                     </p>
                                     </div>
                                 `;
-                            }
+                                }
 
-                            const html = `
+                                const html = `
                             <div class="group flex flex-col rounded-[20px] border border-gray-200 bg-white p-4 shadow-sm transition-all hover:shadow-lg hover:-translate-y-1">
                                 <div class="relative w-full aspect-square overflow-hidden rounded-[16px] bg-gray-100 mb-4">
                                     <a href="${prod.detail_url}">
@@ -562,21 +562,21 @@
                                         ${priceHtml}
                                 </div>
                             </div>`;
-                            relatedGrid.insertAdjacentHTML('beforeend', html);
-                        });
-                        relatedSkip += 4;
-                        btn.innerText = "Xem thêm";
-                        btn.disabled = false;
-                    }
+                                relatedGrid.insertAdjacentHTML('beforeend', html);
+                            });
+                            relatedSkip += 4;
+                            btn.innerText = "Xem thêm";
+                            btn.disabled = false;
+                        }
 
-                    if(!data.hasMore || data.products.length === 0) {
-                        btn.style.display = 'none';
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    btn.innerText = "Lỗi tải trang";
-                });
+                        if(!data.hasMore || data.products.length === 0) {
+                            btn.style.display = 'none';
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        btn.innerText = "Lỗi tải trang";
+                    });
             });
         }
 
@@ -614,50 +614,6 @@
         setupScrollSlider('size-scroll-container', 'size-prev-btn', 'size-next-btn');
 
         updateProductInfo();
-    });
-
-    const addToCartBtn = document.getElementById('add-to-cart-btn');
-    if (addToCartBtn) {
-        addToCartBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-
-            const variantId = selectedVariantId; // Lấy từ JS hiện có (updateProductInfo set cái này)
-            const quantity = parseInt(document.getElementById('quantity-input').value) || 1;
-            const userId = 1; // Tạm thời, sau này lấy từ auth
-
-            if (!variantId) {
-                alert('Vui lòng chọn biến thể sản phẩm (màu sắc, kích thước)');
-                return;
-            }
-
-            fetch('/api/checkout/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({
-                    user_id: userId,
-                    type: 'product',
-                    id: variantId,
-                    quantity: quantity
-                })
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Đã thêm sản phẩm vào giỏ hàng!');
-                        // Optional: Update cart icon/count nếu có, ví dụ gọi API getCartItems để update mini cart
-                    } else {
-                        alert('Lỗi: ' + (data.message || 'Không thể thêm vào giỏ hàng'));
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Lỗi kết nối. Vui lòng thử lại.');
-                });
-        });
-    }
     });
 
     const track = document.getElementById('thumbnail-track');
