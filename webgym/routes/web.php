@@ -51,7 +51,8 @@ Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 //
 // Route CheckoutDetail
 Route::get('/checkout-detail', [CheckoutDetailController::class, 'index'])->name('checkout-detail');
-
+// Thêm dòng này vào web.php
+Route::post('/checkout-detail', [CheckoutDetailController::class, 'index'])->name('checkout-detail');
 // Route thử đăng nhập user với ID = 1 (chỉ dùng trong giai đoạn chưa có form đăng nhập)
 Route::get('/test-login', function () {
     $user = User::find(1);
@@ -70,3 +71,6 @@ Route::view('/lop-hoc-da-dang-ky', 'user.my_classes')->name('my_classes');
 Route::get('/lich-su-don-hang', [OrderHistoryController::class, 'index'])
     ->name('order_history');
 Route::view('/lich-su-muon-tra', 'user.rental_history')->name('rental_history');
+
+
+
