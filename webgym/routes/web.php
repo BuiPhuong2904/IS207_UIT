@@ -50,7 +50,6 @@ if (class_exists(\App\Http\Controllers\Auth\SocialAuthController::class)) {
 
 // Pages (Static & Dynamic)
 Route::view('/about', 'user.about')->name('about');
-Route::view('/package', 'user.package')->name('package');
 Route::view('/product', 'user.product')->name('product');
 Route::view('/contact', 'user.contact')->name('contact');
 
@@ -61,6 +60,9 @@ Route::get('/class-booking/{id}', [UserClassController::class, 'booking'])->name
 // Store 
 Route::get('/san-pham/{slug}', [UserStoreController::class, 'detail'])->name('product.detail');
 Route::get('/api/related-products', [UserStoreController::class, 'loadMoreRelated'])->name('api.related_products');
+
+// Membership Pakage 
+Route::get('/package', [UserPackageController::class, 'index'])->name('package');
 
 // Blog 
 Route::view('/blog/1', 'blog.blog_1')->name('blog1');
