@@ -30,10 +30,10 @@
             </div>
             <!-- Trường hợp chưa đăng nhập -->
             @guest
-                <a href="#" class="border border-gray-300 text-gray-700 px-3 py-1.5 rounded text-sm
+                <a href="{{ route('login') }}" class="border border-gray-300 text-gray-700 px-3 py-1.5 rounded text-sm
                         hover:border-blue-500 hover:text-blue-500 active:bg-blue-50 transition-colors">Đăng nhập</a>
 
-                <a href="#" class="bg-[#1976D2] text-white px-3 py-1.5 rounded text-sm hover:bg-blue-700
+                <a href="{{ route('register') }}" class="bg-[#1976D2] text-white px-3 py-1.5 rounded text-sm hover:bg-blue-700
                         active:bg-blue-800 hover:scale-105 transition-all duration-200 ease-in-out">Đăng ký</a>
             @endguest
             <!-- Trường hợp đã đăng nhập -->
@@ -83,7 +83,7 @@
                         <a href="{{ route('rental_history') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Lịch sử mượn/trả</a>
 
                         <!-- Đăng xuất -->
-                        <form method="POST" action="#">
+                        <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100">
                                 Đăng xuất
@@ -134,7 +134,7 @@
                 <a href="#" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Lịch sử đơn hàng</a>
                 <a href="#" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Lịch sử mượn/trả</a>   
                 
-                <form method="POST" action="#">
+                <form method="POST" action="{{ route('logout') }}">
                     @csrf
                     <button type="submit" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">
                         Đăng xuất

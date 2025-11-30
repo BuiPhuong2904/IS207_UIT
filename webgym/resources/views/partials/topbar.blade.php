@@ -60,11 +60,11 @@
                     style="display: none;">
                     
                     <div class="py-1">
-                        <a href="{{ route('user.profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-semibold">
+                        <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-semibold">
                             Hồ sơ
                         </a>
                         
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-semibold">
+                        <a href="{{ route('logout') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 font-semibold">
                             Đăng xuất
                         </a>
                     </div>

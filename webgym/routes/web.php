@@ -49,19 +49,23 @@ if (class_exists(\App\Http\Controllers\Auth\SocialAuthController::class)) {
 }
 
 // Pages (Static & Dynamic)
-Route::view('/about', 'user.pages.about')->name('about');
-Route::view('/package', 'user.pages.package')->name('package');
-Route::view('/product', 'user.pages.product')->name('product');
-Route::view('/contact', 'user.pages.contact')->name('contact');
+Route::view('/about', 'user.about')->name('about');
+Route::view('/package', 'user.package')->name('package');
+Route::view('/product', 'user.product')->name('product');
+Route::view('/contact', 'user.contact')->name('contact');
 
 // Class 
 Route::get('/class', [UserClassController::class, 'index'])->name('class'); 
 Route::get('/class-booking/{id}', [UserClassController::class, 'booking'])->name('user.class.booking');
 
+// Store 
+Route::get('/san-pham/{slug}', [UserStoreController::class, 'detail'])->name('product.detail');
+Route::get('/api/related-products', [UserStoreController::class, 'loadMoreRelated'])->name('api.related_products');
+
 // Blog 
-Route::view('/blog/1', 'user.blog.blog1')->name('blog1');
-Route::view('/blog/2', 'user.blog.blog2')->name('blog2');
-Route::view('/blog/3', 'user.blog.blog3')->name('blog3');
+Route::view('/blog/1', 'blog.blog_1')->name('blog1');
+Route::view('/blog/2', 'blog.blog_2')->name('blog2');
+Route::view('/blog/3', 'blog.blog_3')->name('blog3');
 
 // User Profile Routes (requires authentication)
 Route::middleware('auth')->group(function () {

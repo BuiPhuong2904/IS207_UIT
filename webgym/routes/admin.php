@@ -16,7 +16,7 @@ use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ClassScheduleController;
 use App\Http\Controllers\ClassListController;
 
-use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\CustomerController;
 
 use App\Http\Controllers\TrainerController;
 use App\Http\Controllers\BorrowReturnController;
