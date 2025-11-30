@@ -24,9 +24,11 @@
                     class="h-[60px] w-[60px] object-contain">
                 
                 <!-- Tiêu đề -->
-                <h1 class="text-3xl font-extrabold bg-gradient-to-r from-[#0D47A1] to-[#42A5F5] bg-clip-text text-transparent font-montserrat">
-                    GRYND
-                </h1>
+                <a href="{{ route('home') }}" class="hover:opacity-80 transition-opacity">
+                    <h1 class="text-3xl font-extrabold bg-gradient-to-r from-[#0D47A1] to-[#42A5F5] bg-clip-text text-transparent font-montserrat">
+                        GRYND
+                    </h1>
+                </a>
 
             </div>
 

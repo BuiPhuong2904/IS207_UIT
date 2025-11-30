@@ -5,27 +5,6 @@
 @section('content')
 
 <!-- Background Section -->
-<!--<section class="relative bg-black h-[75vh] flex items-center">
-  
-    <div class="relative w-full h-[300px] md:h-[400px] lg:h-[540px] overflow-hidden">
-        
-        <div class="absolute inset-0">
-            <img
-                src="{{ asset('images/package/package.png') }}"
-                alt="GRYND - Background"
-                class="h-full w-full object-cover object-top opacity-80 transition-opacity duration-500">
-        </div>
-    </div>
-
-    <div class="relative z-10 max-w-6xl px-20 text-white">
-    
-        <div class="grid grid-cols-1 gap-8 md:grid-cols-3 md:items-center">
-
-            <div class="hidden md:block"></div>
-
-        </div>
-    </div>
-</section>-->
 <div class="relative w-full 
             aspect-[4/3] 
             sm:aspect-video 

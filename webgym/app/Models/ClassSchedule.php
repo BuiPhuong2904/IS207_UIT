@@ -29,11 +29,16 @@ class ClassSchedule extends Model
 
     public function trainer()
     {
-        return $this->belongsTo(Trainer::class, 'trainer_id');
+        return $this->belongsTo(Trainer::class, 'trainer_id', 'user_id');
     }
 
     public function branch()
     {
         return $this->belongsTo(Branch::class, 'branch_id');
+    }
+
+    // Accessor để định dạng schedule_id thành LL0001
+    public function getFormattedIdAttribute() {
+        return 'LL' . str_pad($this->schedule_id, 4, '0', STR_PAD_LEFT);
     }
 }

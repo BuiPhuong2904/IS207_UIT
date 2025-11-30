@@ -77,7 +77,7 @@ class MembershipPackageSeeder extends Seeder
                 'package_name' => 'Gói Tập Lẻ 1 Ngày',
                 'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1763028674/ticket_arlacs.png',
                 'description' => 'Thời hạn: 1 ngày. Không giới hạn khu vực. Dành cho khách tập thử. Dịch vụ tiện ích đầy đủ',
-                'duration_months' => null,
+                'duration_months' => 0,
                 'price' => 50000.00,
                 'slug' => Str::slug('Gói Tập Lẻ 1 Ngày'),
                 'status' => 'active',

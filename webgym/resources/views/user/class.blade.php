@@ -76,7 +76,8 @@
                     </p>
                 
                     <div class="mt-6">
-                        <a href="#" class="block w-full text-center text-white px-6 py-3 rounded-[20px] transition-colors font-open-sans font-bold bg-[#1976D2] hover:bg-blue-800">
+                        <a href="{{ route('user.class.booking', ['id' => $class->class_id]) }}" 
+                            class="block w-full text-center text-white px-6 py-3 rounded-[20px] transition-colors font-open-sans font-bold bg-[#1976D2] hover:bg-blue-800">
                         Đặt lịch ngay
                         </a>
                     </div>
