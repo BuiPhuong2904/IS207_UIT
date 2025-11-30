@@ -27,7 +27,7 @@ class PackageRegistrationSeeder extends Seeder
 
             // 1. Gói Năm
             [
-                'user_id' => 11,
+                'user_id' => 25,
                 'package_id' => 3,
                 'start_date' => $today->copy(),
                 'end_date' => $today->copy()->addMonths(12),
@@ -37,7 +37,7 @@ class PackageRegistrationSeeder extends Seeder
             ],
             // 2. Gói Quý
             [
-                'user_id' => 12,
+                'user_id' => 26,
                 'package_id' => 2,
                 'start_date' => $today->copy()->subMonths(1)->subDays(15), 
                 'end_date' => $today->copy()->addMonths(1)->addDays(15), 
@@ -47,7 +47,7 @@ class PackageRegistrationSeeder extends Seeder
             ],
             // 3. Gói Tháng
             [
-                'user_id' => 13,
+                'user_id' => 27,
                 'package_id' => 1,
                 'start_date' => $today->copy()->subDays(25), 
                 'end_date' => $today->copy()->addDays(5),
@@ -57,7 +57,7 @@ class PackageRegistrationSeeder extends Seeder
             ],
             // 4. Gói PT Cá Nhân
             [
-                'user_id' => 14, 
+                'user_id' => 28, 
                 'package_id' => 4, 
                 'start_date' => $today->copy()->subDays(10),
                 'end_date' => $today->copy()->addDays(20),
@@ -67,7 +67,7 @@ class PackageRegistrationSeeder extends Seeder
             ],
             // 5. Gói Quý 
             [
-                'user_id' => 15, 
+                'user_id' => 29, 
                 'package_id' => 2,
                 'start_date' => $today->copy()->subDays(50),
                 'end_date' => $today->copy()->addDays(40),
@@ -77,7 +77,7 @@ class PackageRegistrationSeeder extends Seeder
             ],
             // 6. Gói Năm
             [
-                'user_id' => 16, 
+                'user_id' => 30, 
                 'package_id' => 3,
                 'start_date' => $today->copy()->subMonths(6),
                 'end_date' => $today->copy()->addMonths(6),
@@ -87,7 +87,7 @@ class PackageRegistrationSeeder extends Seeder
             ],
             // 7. Gói 10 Buổi
             [
-                'user_id' => 17,
+                'user_id' => 31,
                 'package_id' => 6,
                 'start_date' => $today->copy(),
                 'end_date' => $today->copy()->addMonths(3),
@@ -97,7 +97,7 @@ class PackageRegistrationSeeder extends Seeder
             ],
             // 8. Gói PT Cá Nhân
             [
-                'user_id' => 18,
+                'user_id' => 32,
                 'package_id' => 4,
                 'start_date' => $today->copy(),
                 'end_date' => $today->copy()->addMonths(1),
@@ -107,7 +107,7 @@ class PackageRegistrationSeeder extends Seeder
             ],
             // 9. Gói Tập Lẻ 
             [
-                'user_id' => 19, 
+                'user_id' => 33, 
                 'package_id' => 5,
                 'start_date' => $today->copy(),
                 'end_date' => $today->copy()->addDay(1),
@@ -117,7 +117,7 @@ class PackageRegistrationSeeder extends Seeder
             ],
             // 10. Gói Quý 
             [
-                'user_id' => 20, 
+                'user_id' => 26, 
                 'package_id' => 2,
                 'start_date' => $today->copy()->subMonths(2),
                 'end_date' => $today->copy()->addMonths(1),
@@ -130,7 +130,7 @@ class PackageRegistrationSeeder extends Seeder
             
             // 11. Gói đã hết hạn 1 tháng trước 
             [
-                'user_id' => 11,
+                'user_id' => 25,
                 'package_id' => 1, 
                 'start_date' => $today->copy()->subMonths(2),
                 'end_date' => $today->copy()->subMonths(1),
@@ -140,7 +140,7 @@ class PackageRegistrationSeeder extends Seeder
             ],
             // 12. Gói PT đã hoàn thành
             [
-                'user_id' => 14,
+                'user_id' => 28,
                 'package_id' => 4, 
                 'start_date' => $today->copy()->subMonths(3),
                 'end_date' => $today->copy()->subMonths(2),

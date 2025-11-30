@@ -40,6 +40,11 @@
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         // --- Định nghĩa tất cả các menu ---
+        // Menu gói tập
+        const goitapBtn = document.getElementById('goitap-btn');
+        const goitapMenu = document.getElementById('goitap-menu');
+        const goitapArrow = document.getElementById('arrow-goitap');
+
         // 1. Menu Lịch Lớp
         const lichlopBtn = document.getElementById('lichlop-btn');
         const lichlopMenu = document.getElementById('lichlop-menu');
@@ -57,6 +62,7 @@
 
         // --- Tạo một mảng chứa tất cả các menu ---
         const allMenus = [
+            { btn: goitapBtn, menu: goitapMenu, arrow: goitapArrow },
             { btn: lichlopBtn, menu: lichlopMenu, arrow: lichlopArrow },
             { btn: muondoBtn, menu: muondoMenu, arrow: muondoArrow },
             { btn: nguoidungBtn, menu: nguoidungMenu, arrow: nguoidungArrow }

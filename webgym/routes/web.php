@@ -20,56 +20,64 @@ use App\Http\Controllers\User\ProfileController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
+// Home 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Chatbot 
 Route::post('/chatbot/message', [ChatbotController::class, 'chat'])->name('chatbot.message');
 
+// Authentication 
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register'])->name('register.post');
 
-// Login view route (used by header links)
 Route::get('/login', function () { return view('auth.login'); })->name('login');
-
-// Handle login form submit
 Route::post('/login', [LoginController::class, 'login'])->name('login.post');
 
-// Logout route
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// If SocialAuthController exists, keep Google routes (no-op if file absent)
+// Password Reset
+Route::get('/forget-password', [ForgotPasswordController::class, 'show'])->name('forget-password');
+Route::post('/forget-password', [ForgotPasswordController::class, 'send'])->name('forget-password.send');
+
+Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
+Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])->name('password.update');
+
+// Social Auth (Google) - Kiểm tra file tồn tại để tránh lỗi
 if (class_exists(\App\Http\Controllers\Auth\SocialAuthController::class)) {
 	Route::get('/auth/google/redirect', [SocialAuthController::class, 'redirectToGoogle'])->name('auth.google');
 	Route::get('/auth/google/callback', [SocialAuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
 }
 
-// Blog placeholder routes used by homepage links
+// Pages (Static & Dynamic)
+Route::view('/about', 'user.pages.about')->name('about');
+Route::view('/package', 'user.pages.package')->name('package');
+Route::view('/product', 'user.pages.product')->name('product');
+Route::view('/contact', 'user.pages.contact')->name('contact');
+
+// Class 
+Route::get('/class', [UserClassController::class, 'index'])->name('class'); 
+Route::get('/class-booking/{id}', [UserClassController::class, 'booking'])->name('user.class.booking');
+
+// Blog 
 Route::view('/blog/1', 'user.blog.blog1')->name('blog1');
 Route::view('/blog/2', 'user.blog.blog2')->name('blog2');
 Route::view('/blog/3', 'user.blog.blog3')->name('blog3');
 
-// Placeholder routes for header navigation links
-Route::view('/about', 'user.pages.about')->name('about');
-Route::view('/package', 'user.pages.package')->name('package');
-Route::view('/class', 'user.pages.class')->name('class');
-Route::view('/product', 'user.pages.product')->name('product');
-Route::view('/contact', 'user.pages.contact')->name('contact');
-
-// Forgot Password
-Route::get('/forget-password', [ForgotPasswordController::class, 'show'])->name('forget-password');
-Route::post('/forget-password', [ForgotPasswordController::class, 'send'])->name('forget-password.send');
-
-// Reset Password
-Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
-Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])->name('password.update');
-
 // User Profile Routes (requires authentication)
 Route::middleware('auth')->group(function () {
+    // Route để xử lý hành động lưu đăng ký
+    Route::post('/class-booking/store', [UserClassController::class, 'storeBooking'])->name('user.class.booking.store');
+
+    // Profile 
 	Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
 	Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 	Route::post('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.change-password');
-});
 
-// Admin Customer Management Routes (requires authentication and admin role)
-Route::middleware(['auth', 'isAdmin'])->prefix('admin')->name('admin.')->group(function () {
-	Route::resource('customers', \App\Http\Controllers\Admin\CustomerController::class);
-});
+    // User Personal
+    Route::view('/ho-so', 'user.profile')->name('profile');
+    Route::get('/goi-tap-da-mua', [UserPackageController::class, 'myPackages'])->name('my_packages');
+    Route::get('/lop-hoc-da-dang-ky', [UserClassController::class, 'myClasses'])->name('my_classes');
+    Route::view('/lich-su-don-hang', 'user.order_history')->name('order_history');
+    Route::view('/lich-su-muon-tra', 'user.rental_history')->name('rental_history');
 
+});

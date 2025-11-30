@@ -76,10 +76,11 @@
                             <span class="block text-sm text-gray-500 truncate">{{ Auth::user()->email }}</span>
                         </div>
                         
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Hồ sơ</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Lớp học đã đăng ký</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Lịch sử đơn hàng</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Lịch sử mượn/trả</a>
+                        <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Hồ sơ</a>
+                        <a href="{{ route('my_packages') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Gói tập đã mua</a>
+                        <a href="{{ route('my_classes') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Lớp học đã đăng ký</a>
+                        <a href="{{ route('order_history') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Lịch sử đơn hàng</a>
+                        <a href="{{ route('rental_history') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Lịch sử mượn/trả</a>
 
                         <!-- Đăng xuất -->
                         <form method="POST" action="#">
