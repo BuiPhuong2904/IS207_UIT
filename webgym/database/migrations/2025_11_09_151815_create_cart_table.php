@@ -10,6 +10,7 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void {
+
         Schema::create('cart', function (Blueprint $table) {
             $table->id('cart_id');
             $table->unsignedBigInteger('user_id');

@@ -10,19 +10,25 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void {
-        Schema::create('cart_item', function (Blueprint $table) {
 
-            $table->primary(['cart_id', 'variant_id']);
+        Schema::dropIfExists('cart_item');
+
+        Schema::create('cart_item', function (Blueprint $table) {
+            // Khóa chính ghép: cart_id + item_id + item_type → giống hệt order_detail
+            $table->primary(['cart_id', 'item_id', 'item_type']);
 
             $table->unsignedBigInteger('cart_id');
-            $table->unsignedBigInteger('variant_id');
-            $table->integer('quantity');
-            $table->decimal('unit_price', 10, 2);
-            $table->timestamps();
+            $table->morphs('item');                    // tạo item_id + item_type
+            $table->unsignedInteger('quantity')->default(1);
+            $table->decimal('unit_price', 12, 2);
 
-            $table->foreign('cart_id')->references('cart_id')->on('cart')->onDelete('cascade');
-            $table->foreign('variant_id')->references('variant_id')->on('product_variant')->onDelete('cascade');
+            // Foreign key
+            $table->foreign('cart_id')
+                ->references('cart_id')
+                ->on('cart')
+                ->onDelete('cascade');
         });
+
     }
 
     /**

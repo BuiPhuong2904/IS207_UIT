@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrderHistoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ChatbotController;
@@ -7,7 +8,8 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\SocialAuthController;
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CheckoutController; 
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CheckoutDetailController;
 
 use App\Http\Controllers\UserPackageController;
 use App\Http\Controllers\UserClassController;
