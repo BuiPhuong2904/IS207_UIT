@@ -65,12 +65,13 @@ class PromotionHelper
         if (!empty($promo['target_type']) && !empty($promo['target_ids'])) {
             $matched = false;
             foreach ($cart_items as $item) {
-                $itemType = $item['type'] ?? 'product'; // membership / product
+                $itemType = $item['type'] ?? 'product';
 
+                // SỬA 3 DÒNG NÀY:
                 if ($promo['target_type'] === 'category' && !empty($item['category_id']) && in_array($item['category_id'], $promo['target_ids'])) {
                     $matched = true; break;
                 }
-                if ($promo['target_type'] === 'product' && !empty($item['product_id']) && in_array($item['product_id'], $promo['target_ids'])) {
+                if ($promo['target_type'] === 'product' && !empty($item['variant_id']) && in_array($item['variant_id'], $promo['target_ids'])) {
                     $matched = true; break;
                 }
                 if ($promo['target_type'] === 'membership' && $itemType === 'membership') {

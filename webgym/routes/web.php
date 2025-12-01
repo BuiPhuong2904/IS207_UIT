@@ -98,6 +98,9 @@ Route::middleware('auth')->group(function () {
         ->name('checkout-detail');
     Route::post('/order', [OrderController::class, 'store'])
         ->name('order.store');
+    // Thêm dòng này vào trong Route::middleware('auth')->group(...)
+    Route::get('/order/success/{order_code}', [OrderController::class, 'thankYou'])
+        ->name('order.thankyou');
 });
 
 
