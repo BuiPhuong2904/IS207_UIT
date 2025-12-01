@@ -24,7 +24,7 @@ class OrderHistoryController
         }
 
         $orders = Order::with(['details.product'])
-            ->where('user_id', 25)
+            ->where('user_id', Auth::id())
             ->where('status', $status)
             ->latest('order_date')
             ->get();

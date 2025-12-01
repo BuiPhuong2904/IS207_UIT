@@ -86,6 +86,7 @@ Route::middleware('auth')->group(function () {
     Route::view('/ho-so', 'user.profile')->name('profile');
     Route::get('/goi-tap-da-mua', [UserPackageController::class, 'myPackages'])->name('my_packages');
     Route::get('/lop-hoc-da-dang-ky', [UserClassController::class, 'myClasses'])->name('my_classes');
+
     Route::get('/lich-su-don-hang',[OrderHistoryController::class,'index'])->name('order_history');
     Route::view('/lich-su-muon-tra', 'user.rental_history')->name('rental_history');
 
@@ -98,4 +99,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/order', [OrderController::class, 'store'])
         ->name('order.store');
 });
+
 
