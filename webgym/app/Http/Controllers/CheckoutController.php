@@ -19,7 +19,7 @@ class CheckoutController extends Controller
      */
     public function index()
     {
-        $userId = 1; // Nếu chưa auth, dùng test user_id=1
+        $userId = Auth::id(); // Nếu chưa auth, dùng test user_id=1
 
         $cart = Cart::with('items.item')
             ->where('user_id', $userId)

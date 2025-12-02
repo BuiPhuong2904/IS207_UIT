@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderHistoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -22,13 +23,13 @@ use App\Http\Controllers\User\ProfileController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
-// Home 
+// Home
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Chatbot 
+// Chatbot
 Route::post('/chatbot/message', [ChatbotController::class, 'chat'])->name('chatbot.message');
 
-// Authentication 
+// Authentication
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register'])->name('register.post');
 
@@ -55,18 +56,18 @@ Route::view('/about', 'user.about')->name('about');
 Route::view('/product', 'user.product')->name('product');
 Route::view('/contact', 'user.contact')->name('contact');
 
-// Class 
-Route::get('/class', [UserClassController::class, 'index'])->name('class'); 
+// Class
+Route::get('/class', [UserClassController::class, 'index'])->name('class');
 Route::get('/class-booking/{id}', [UserClassController::class, 'booking'])->name('user.class.booking');
 
-// Store 
+// Store
 Route::get('/san-pham/{slug}', [UserStoreController::class, 'detail'])->name('product.detail');
 Route::get('/api/related-products', [UserStoreController::class, 'loadMoreRelated'])->name('api.related_products');
 
-// Membership Pakage 
+// Membership Pakage
 Route::get('/package', [UserPackageController::class, 'index'])->name('package');
 
-// Blog 
+// Blog
 Route::view('/blog/1', 'blog.blog_1')->name('blog1');
 Route::view('/blog/2', 'blog.blog_2')->name('blog2');
 Route::view('/blog/3', 'blog.blog_3')->name('blog3');
@@ -76,7 +77,7 @@ Route::middleware('auth')->group(function () {
     // Route để xử lý hành động lưu đăng ký
     Route::post('/class-booking/store', [UserClassController::class, 'storeBooking'])->name('user.class.booking.store');
 
-    // Profile 
+    // Profile
 	Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
 	Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 	Route::post('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.change-password');
@@ -85,7 +86,21 @@ Route::middleware('auth')->group(function () {
     Route::view('/ho-so', 'user.profile')->name('profile');
     Route::get('/goi-tap-da-mua', [UserPackageController::class, 'myPackages'])->name('my_packages');
     Route::get('/lop-hoc-da-dang-ky', [UserClassController::class, 'myClasses'])->name('my_classes');
-    Route::get('/lich-su-don-hang', [OrderHistoryController::class, 'index'])->name('order_history');
+
+    Route::get('/lich-su-don-hang',[OrderHistoryController::class,'index'])->name('order_history');
     Route::view('/lich-su-muon-tra', 'user.rental_history')->name('rental_history');
 
+    // Checkout
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+    Route::post('/checkout-detail', [CheckoutDetailController::class, 'index'])
+        ->name('checkout-detail');
+    Route::get('/checkout-detail', [CheckoutDetailController::class, 'index'])
+        ->name('checkout-detail');
+    Route::post('/order', [OrderController::class, 'store'])
+        ->name('order.store');
+    // Thêm dòng này vào trong Route::middleware('auth')->group(...)
+    Route::get('/order/success/{order_code}', [OrderController::class, 'thankYou'])
+        ->name('order.thankyou');
 });
+
+
