@@ -39,6 +39,8 @@
             <form action="{{ route('login.post') ?? '#' }}" method="POST" class="space-y-4">
                 @csrf
 
+                <input type="hidden" name="return_url" value="{{ request('return_url') }}">
+                
                 <div>
                     <label class="block text-gray-700 font-medium mb-1">Email</label>
                     <input type="email" name="email" value="{{ old('email') }}"

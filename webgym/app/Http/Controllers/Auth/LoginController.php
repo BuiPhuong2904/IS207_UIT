@@ -22,11 +22,19 @@ class LoginController extends Controller
             $request->session()->regenerate();
 
             $user = Auth::user();
+            
+            // 1. Nếu là Admin/Trainer thì về dashboard
             if ($user->role === 'admin' || $user->role === 'trainer') {
-                
                 return redirect()->route('admin.dashboard'); 
             }
 
+            // 2. Kiểm tra tham số 'return_url' (được gửi từ JS thêm giỏ hàng)
+            $returnUrl = $request->input('return_url');
+            if ($returnUrl) {
+                return redirect($returnUrl);
+            }
+
+            // 3. Về trang chủ hoặc trang dự định truy cập trước đó
             return redirect()->intended(route('home'));
         }
 

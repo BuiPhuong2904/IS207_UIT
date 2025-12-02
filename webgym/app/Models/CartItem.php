@@ -13,9 +13,9 @@ class CartItem extends Model
     public $incrementing = false;
     public $timestamps = false;
 
+    protected $primaryKey = ['cart_id', 'variant_id'];
 
-    protected $primaryKey = ['cart_id', 'item_id', 'item_type'];
-
+    protected $fillable = ['cart_id', 'variant_id', 'quantity', 'unit_price'];
 
     protected function setKeysForSaveQuery($query)
     {
@@ -31,12 +31,9 @@ class CartItem extends Model
         return $query;
     }
 
-    protected $fillable = ['cart_id', 'item_id', 'item_type', 'quantity', 'unit_price'];
-
-
-    public function item()
+    public function variant()
     {
-        return $this->morphTo();
+        return $this->belongsTo(ProductVariant::class, 'variant_id', 'variant_id');
     }
 
     public function cart()

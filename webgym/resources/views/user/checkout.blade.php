@@ -40,8 +40,7 @@
             <div class="space-y-4" id="cart_item_list">
                 @auth
                     @forelse($cart_items ?? [] as $item)
-                    <div class="flex items-start border-b border-gray-200 pb-4 last:border-b-0 last:pb-0" data-id="{{ $item['id'] ?? $loop->index }}">
-                        <div class="w-20 h-20 flex-shrink-0 mr-4">
+                        <div class="flex items-start border-b border-gray-200 pb-4 last:border-b-0 last:pb-0" data-variant-id="{{ $item['variant_id'] }}">                        <div class="w-20 h-20 flex-shrink-0 mr-4">
                             <img src="{{ $item['image_url'] }}" alt="{{ $item['name'] }}" class="w-full h-full object-cover rounded-lg">
                         </div>
                         
@@ -117,7 +116,7 @@
                 
                 <div class="flex justify-between items-center text-xl pt-3">
                     <span class="font-bold">Tổng cộng</span>
-                    <span id="total_value" class="font-bold text-gray-900 text-blue-600">0 VNĐ</span>
+                    <span id="total_value" class="font-bold text-gray-900">0 VNĐ</span>
                 </div>
             </div>
             
@@ -155,8 +154,12 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        
+        // Lấy data từ Controller
         let rawItems = @json($cart_items ?? []);
+        const userId = {{ Auth::id() }};
+        const csrfToken = '{{ csrf_token() }}';
+
+        // Map data để dùng trong JS
         let ITEMS = rawItems.map(item => {
             return {
                 ...item,
@@ -166,16 +169,10 @@
             };
         });
 
-        // Mock Data Coupons
-        const PROMOTIONS_DATA = {
-            'SALE30': { discount_value: 30, is_percent: true, min_order_amount: 500000, max_discount: 50000 },
-            'FREESHIP': { discount_value: 30000, is_percent: false, min_order_amount: 0, max_discount: 30000 },
-            'TEST10K': { discount_value: 10000, is_percent: false, min_order_amount: 100000, max_discount: 10000 },
-            'FAIL200': { discount_value: 20, is_percent: true, min_order_amount: 2000000, max_discount: 100000 }
-        };
-
+        // Config
+        const PROMOTIONS_DATA = @json($promotions_data ?? []);
         const SHIPPING_FEE = 30000;
-        
+
         // DOM Elements
         const couponInput = document.getElementById('coupon_input');
         const applyCouponBtn = document.getElementById('apply_coupon_btn');
@@ -187,27 +184,28 @@
         
         let currentCouponCode = '';
 
-        // --- 1. RENDER APPLIED COUPON ---
+        // --- 1. HÀM CẬP NHẬT HEADER (Badge Giỏ Hàng) ---
+        function updateHeaderBadge(count) {
+            const badge = document.getElementById('cart-badge');
+            if (badge) {
+                badge.innerText = count;
+                if (count > 0) {
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+        }
+
+        // --- 2. RENDER COUPON ---
         function renderAppliedCoupon(code) {
             const displayCode = code.toUpperCase();
-            const colorBase = 'bg-blue-100'; 
-            const textColor = 'text-blue-800'; 
-            const buttonClass = 'text-gray-500 hover:text-gray-700'; 
-
             appliedCouponTag.innerHTML = `
-                <div class="inline-flex items-center space-x-2 py-1.5 px-3 rounded-lg ${colorBase} border border-blue-300">
-                    
-                    <svg class="w-5 h-5 ${textColor}" fill="currentColor" viewBox="0 0 24 24"><path d="M22 10V6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v4c1.1 0 2 .9 2 2s-.9 2-2 2v4c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2v-4c-1.1 0-2-.9-2-2s.9-2 2-2zM6 17v-2h12v2H6zm0-4v-2h12v2H6z"/></svg>
-                    
+                <div class="inline-flex items-center space-x-2 py-1.5 px-3 rounded-lg bg-blue-100 border border-blue-300">
                     <span class="font-bold text-sm text-gray-900">${displayCode}</span>
-                    
-                    <button type="button" id="cancel_coupon_btn" class="w-5 h-5 flex items-center justify-center ${buttonClass}">
-                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                    </button>
-                </div>
-            `;
+                    <button type="button" id="cancel_coupon_btn" class="text-gray-500 hover:text-gray-700">x</button>
+                </div>`;
             appliedCouponTag.classList.remove('hidden');
-
             document.getElementById('cancel_coupon_btn').addEventListener('click', cancelCoupon);
         }
 
@@ -215,23 +213,22 @@
             return Math.round(amount).toLocaleString('vi-VN') + ' VNĐ'; 
         }
 
-        // --- LOGIC TÍNH TOÁN ---
+        // --- 3. TÍNH TOÁN TIỀN ---
         function calculateTotalsJS(currentItems, promoCode) {
             let subtotal = 0;
             let itemDiscountTotal = 0;
 
             currentItems.forEach(item => {
-                if(item && item.original_price && item.quantity) {
-                    subtotal += item.original_price * item.quantity;
-                    itemDiscountTotal += (item.item_discount || 0) * item.quantity;
-                }
+                subtotal += item.original_price * item.quantity;
+                itemDiscountTotal += (item.item_discount || 0) * item.quantity;
             });
 
             let couponDiscount = 0;
             let message = '';
             let tempCouponCode = '';
             
-            const promo = PROMOTIONS_DATA[promoCode];
+            // Tìm promo trong list (Controller đã truyền xuống)
+            const promo = Object.values(PROMOTIONS_DATA).find(p => p.code === promoCode) || PROMOTIONS_DATA[promoCode];
 
             if (promo) {
                 if (subtotal >= promo.min_order_amount) {
@@ -246,23 +243,18 @@
                     tempCouponCode = promoCode;
                 } else {
                     message = `Mã "${promoCode}" chỉ áp dụng cho đơn hàng từ ${formatCurrency(promo.min_order_amount)}.`;
-                    couponDiscount = 0;
                     tempCouponCode = currentCouponCode;
                 }
             } else if (promoCode) {
                 message = `Mã giảm giá "${promoCode}" không hợp lệ.`;
                 tempCouponCode = ''; 
-            } else {
-                couponDiscount = 0;
-                tempCouponCode = ''; 
             }
             
             currentCouponCode = tempCouponCode;
-
             const totalDiscount = itemDiscountTotal + couponDiscount;
             const total = subtotal - totalDiscount + SHIPPING_FEE;
 
-            return { subtotal, totalDiscount, total, message, itemDiscountTotal, couponDiscount };
+            return { subtotal, totalDiscount, total, message, couponDiscount };
         }
         
         function updateSummary(totals) {
@@ -270,102 +262,117 @@
             document.getElementById('discount_value').textContent = (totals.totalDiscount > 0 ? '-' : '') + formatCurrency(totals.totalDiscount);
             document.getElementById('total_value').textContent = formatCurrency(totals.total);
             
-            const discountSpan = document.getElementById('discount_value');
-            if (totals.totalDiscount > 0) discountSpan.classList.add('text-red-600');
-            else discountSpan.classList.remove('text-red-600');
-            
-            // UI Handling
+            // Xử lý hiển thị Coupon Input / Message
             if (currentCouponCode) {
                 couponInputContainer.classList.add('hidden');
                 renderAppliedCoupon(currentCouponCode);
-                
                 promoMessage.textContent = totals.message;
+                promoMessage.classList.remove('hidden', 'text-red-500');
                 promoMessage.classList.add('text-green-600');
-                promoMessage.classList.remove('text-red-500', 'hidden');
             } else {
-                appliedCouponTag.innerHTML = '';
                 appliedCouponTag.classList.add('hidden');
                 couponInputContainer.classList.remove('hidden');
                 couponInput.value = '';
-
-                if (totals.message) {
+                if(totals.message) {
                     promoMessage.textContent = totals.message;
-                    promoMessage.classList.remove('hidden');
-                    if (totals.message.includes('thành công') || totals.message.includes('đã được hủy bỏ') || totals.message.includes('Mã chỉ áp dụng cho đơn hàng từ')) {
-                        promoMessage.classList.add('text-gray-500');
-                        promoMessage.classList.remove('text-red-500', 'text-green-600');
-                    } else {
-                        promoMessage.classList.add('text-red-500');
-                        promoMessage.classList.remove('text-green-600');
-                    }
+                    promoMessage.classList.remove('hidden', 'text-green-600');
+                    promoMessage.classList.add('text-red-500');
                 } else {
                     promoMessage.classList.add('hidden');
                 }
             }
         }
 
-        // --- ACTIONS ---
-        function applyCoupon() {
-            const code = couponInput.value.toUpperCase().trim();
-            const totals = calculateTotalsJS(ITEMS, code);
-            updateSummary(totals);
-        }
-
-        function cancelCoupon() {
-            const oldCode = currentCouponCode;
-            currentCouponCode = ''; 
-            const totals = calculateTotalsJS(ITEMS, '');
-            totals.message = `Mã ${oldCode} đã được hủy bỏ.`;
-            updateSummary(totals);
-        }
-        
-        function getItemIndex(element) {
-            const itemContainer = element.closest('.flex.items-start'); 
-            if (itemContainer === null) return -1;
-            const allItemContainers = Array.from(document.querySelectorAll('#cart_item_list > .flex.items-start'));
-            return allItemContainers.findIndex(el => el === itemContainer);
-        }
-
+        // --- 4. GỌI API CẬP NHẬT SỐ LƯỢNG ---
         function updateQuantity(button, delta) {
-            const itemIndex = getItemIndex(button);
-            if(itemIndex === -1 || itemIndex >= ITEMS.length) return; 
-            
-            if (ITEMS[itemIndex].type === 'membership') return;
-
             const itemContainer = button.closest('.flex.items-start');
+            // Lấy variant_id từ data attribute (Bước 1 đã thêm)
+            const variantId = itemContainer.getAttribute('data-variant-id'); 
             const quantitySpan = itemContainer.querySelector('.item-quantity');
             
             let currentQty = parseInt(quantitySpan.textContent);
             let newQty = currentQty + delta;
             
-            if (newQty < 1) newQty = 1;
+            if (newQty < 1) return; // Không cho giảm dưới 1
 
-            if (newQty !== currentQty) {
-                quantitySpan.textContent = newQty;
-                ITEMS[itemIndex].quantity = newQty; 
-                const totals = calculateTotalsJS(ITEMS, currentCouponCode);
-                updateSummary(totals);
-            }
+            // Gọi API
+            fetch('/api/checkout/update', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    user_id: userId,
+                    item_id: variantId, // Backend nhận key là item_id
+                    quantity: newQty
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    // Cập nhật giao diện sau khi API thành công
+                    quantitySpan.textContent = newQty;
+                    // Cập nhật mảng ITEMS local để tính lại tiền
+                    const itemIndex = ITEMS.findIndex(i => i.variant_id == variantId);
+                    if(itemIndex !== -1) {
+                        ITEMS[itemIndex].quantity = newQty;
+                        updateSummary(calculateTotalsJS(ITEMS, currentCouponCode));
+                    }
+                } else {
+                    alert(data.message || 'Lỗi cập nhật');
+                }
+            })
+            .catch(err => console.error('Error:', err));
         }
 
+        // --- 5. GỌI API XÓA SẢN PHẨM ---
         function deleteItem(button) {
-            if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?')) {
-                const itemToDeleteIndex = getItemIndex(button);
-                if(itemToDeleteIndex === -1 || itemToDeleteIndex >= ITEMS.length) return; 
-                
-                const itemContainer = button.closest('.flex.items-start'); 
-                ITEMS.splice(itemToDeleteIndex, 1);
-                itemContainer.remove();
-                
-                const totals = calculateTotalsJS(ITEMS, currentCouponCode);
-                updateSummary(totals);
+            if (!confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?')) return;
 
-                if (ITEMS.length === 0) {
-                    cartItemListContainer.innerHTML = '<p class="text-center py-8 text-gray-500">Giỏ hàng của bạn đang trống.</p>';
+            const itemContainer = button.closest('.flex.items-start');
+            const variantId = itemContainer.getAttribute('data-variant-id');
+
+            fetch('/api/checkout/remove', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    user_id: userId,
+                    item_id: variantId // Backend nhận key là item_id
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    // 1. Xóa khỏi giao diện
+                    itemContainer.remove();
+                    
+                    // 2. Xóa khỏi mảng ITEMS local
+                    const itemIndex = ITEMS.findIndex(i => i.variant_id == variantId);
+                    if (itemIndex !== -1) ITEMS.splice(itemIndex, 1);
+
+                    // 3. Cập nhật lại tiền
+                    updateSummary(calculateTotalsJS(ITEMS, currentCouponCode));
+
+                    // 4. CẬP NHẬT BADGE TRÊN HEADER (Số đỏ đỏ)
+                    if(data.cart_count !== undefined) {
+                        updateHeaderBadge(data.cart_count);
+                    }
+
+                    if (ITEMS.length === 0) {
+                        cartItemListContainer.innerHTML = '<p class="text-center py-8 text-gray-500">Giỏ hàng của bạn đang trống.</p>';
+                    }
+                } else {
+                    alert(data.message || 'Lỗi khi xóa');
                 }
-            }
+            })
+            .catch(err => console.error('Error:', err));
         }
         
+        // Event Delegation
         mainContainer.addEventListener('click', (e) => {
             const target = e.target.closest('button');
             if (!target) return;
@@ -379,19 +386,30 @@
             }
         });
         
+        // Coupon Events
+        function applyCoupon() {
+            const code = couponInput.value.toUpperCase().trim();
+            updateSummary(calculateTotalsJS(ITEMS, code));
+        }
+        function cancelCoupon() {
+            const oldCode = currentCouponCode;
+            updateSummary(calculateTotalsJS(ITEMS, ''));
+            promoMessage.textContent = `Mã ${oldCode} đã được hủy bỏ.`;
+            promoMessage.classList.remove('hidden');
+        }
+
         applyCouponBtn.addEventListener('click', applyCoupon);
         couponInput.addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') {
-                e.preventDefault(); 
-                applyCoupon();
-            }
+            if (e.key === 'Enter') { e.preventDefault(); applyCoupon(); }
         });
 
+        // Submit Form
         document.getElementById('proceed-to-checkout-form').onsubmit = function() {
             document.getElementById('cart_items_input').value = JSON.stringify(ITEMS);
             document.getElementById('promotion_code_input').value = currentCouponCode;
         };
         
+        // Init
         updateSummary(calculateTotalsJS(ITEMS, currentCouponCode));
     });
 </script>

@@ -31,15 +31,54 @@
         <main class="lg:col-span-2 space-y-6">
             <h2 class="text-2xl font-bold text-gray-900 border-b pb-2 mb-4">Thông tin giao hàng</h2>
 
-            <input type="text" name="full_name" value="{{ old('full_name') }}" placeholder="Họ và tên *" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500" required>
+            <div>
+                <label for="full_name" class="block mb-2 text-sm font-medium text-gray-900">Họ và tên <span class="text-red-500">*</span></label>
+                <input type="text" 
+                    name="full_name" 
+                    value="{{ old('full_name', Auth::user()->full_name ?? '') }}" 
+                    placeholder="Nguyễn Văn A" 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500" 
+                    required>
+            </div>
             
-            <input type="text" name="address" value="{{ old('address') }}" placeholder="Địa chỉ chi tiết (số nhà, đường, phường/xã) *" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500" required>
+            <div>
+                <label for="address" class="block mb-2 text-sm font-medium text-gray-900">Địa chỉ chi tiết <span class="text-red-500">*</span></label>
+                <input type="text" 
+                    name="address" 
+                    value="{{ old('address', Auth::user()->address ?? '') }}"
+                    placeholder="Số nhà, tên đường, phường/xã" 
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500" 
+                    required>
+            </div>
             
-            <input type="text" name="apartment_details" value="{{ old('apartment_details') }}" placeholder="Thông tin căn hộ, số tầng (tùy chọn)" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500">
-            
-            <input type="tel" name="phone_number" value="{{ old('phone_number') }}" placeholder="Số điện thoại *" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500" required>
-            
-            <input type="email" name="email" value="{{ old('email') }}" placeholder="Địa chỉ email *" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500" required>
+            <div>
+                <label for="apartment_details" class="block mb-2 text-sm font-medium text-gray-900">Thông tin căn hộ, số tầng (tùy chọn)</label>
+                <input type="text" 
+                    name="apartment_details" 
+                    value="{{ old('apartment_details') }}" 
+                    placeholder="Ví dụ: Tòa A, Tầng 5"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500">
+            </div>    
+
+            <div>
+                <label for="phone_number" class="block mb-2 text-sm font-medium text-gray-900">Số điện thoại <span class="text-red-500">*</span></label>
+                <input type="tel" 
+                    name="phone_number" 
+                    value="{{ old('phone_number', Auth::user()->phone ?? '') }}"
+                    placeholder="0909xxxxxx"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500" 
+                    required>
+            </div>
+
+            <div>
+                <label for="email" class="block mb-2 text-sm font-medium text-gray-900">Địa chỉ email <span class="text-red-500">*</span></label>
+                <input type="email" 
+                    name="email" 
+                    value="{{ old('email', Auth::user()->email ?? '') }}"
+                    placeholder="example@gmail.com"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 placeholder-gray-500" 
+                    required>
+            </div>
 
             <div class="flex items-center">
                 <input id="save-info" type="checkbox" name="save_info" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500" {{ old('save_info') ? 'checked' : '' }}>
@@ -125,7 +164,7 @@
                         <input type="radio" name="payment_method" value="momo" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500" {{ old('payment_method') === 'momo' ? 'checked' : '' }}>
                         <span class="ml-3 text-base font-medium text-gray-700">Ví MoMo</span>
                     </div>
-                    <img src="https://i.imgur.com/6v3N4w1.png" alt="MoMo" class="h-6 object-contain">
+                    <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340302/logo_momo_kgi4ul.png" alt="MoMo" class="h-6 object-contain">
                 </label>
 
                 {{-- COD --}}
@@ -143,7 +182,7 @@
                         <input type="radio" name="payment_method" value="vnpay" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500" {{ old('payment_method') === 'vnpay' ? 'checked' : '' }}>
                         <span class="ml-3 text-base font-medium text-gray-700">VNPay / ATM / Banking</span>
                     </div>
-                    <img src="https://i.imgur.com/w9cQf3h.png" alt="VNPay" class="h-6 object-contain">
+                    <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340307/logo_vnpay_ywpf1u.png" alt="VNPay" class="h-6 object-contain">
                 </label>
 
             </div>

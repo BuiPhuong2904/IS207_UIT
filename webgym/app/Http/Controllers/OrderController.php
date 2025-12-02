@@ -2,201 +2,174 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
-use App\Models\OrderDetail;
-use App\Models\Payment;
-use App\Models\PackageRegistration;
-use App\Models\MembershipPackage;
-use App\Models\Cart;
-use App\Models\CartItem;
-use App\Helpers\PromotionHelper;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
+
+// Models
+use App\Models\Order;
+use App\Models\OrderDetail;
+use App\Models\PackageRegistration;
+use App\Models\MembershipPackage;
+use App\Models\Payment;
+use App\Models\Cart;
+use App\Models\CartItem;
 
 class OrderController extends Controller
 {
-
-    public function index()
-    {
-        return view('admin.store');
-    }
-
-
     public function store(Request $request)
     {
+        // 1. Lấy dữ liệu
+        $cart_items = json_decode($request->input('cart_items'), true);
+        $user = Auth::user();
+        
+        // Validate
         $request->validate([
-            'full_name'      => 'required|string|max:255',
-            'phone_number'   => 'required|string|max:20',
+            'full_name'      => 'required|string',
+            'phone_number'   => 'required|string',
             'address'        => 'required|string',
-            'email'          => 'required|email',
             'payment_method' => 'required|in:cod,momo,vnpay',
-            'cart_items'     => 'required|json',
-            'total_amount'   => 'required|numeric|min:0',
-            'promotion_code' => 'nullable|string|max:30',
-            'apartment_details' => 'nullable|string',
         ]);
 
-        $cartItems = json_decode($request->cart_items, true);
-        if (empty($cartItems)) {
-            return back()->withErrors(['cart_items' => 'Giỏ hàng trống!'])->withInput();
-        }
+        if (empty($cart_items)) return redirect()->route('home')->with('error', 'Dữ liệu trống!');
 
-        // Tính lại tổng tiền (đã chuẩn như CheckoutDetailController)
-        $totals = $this->recalculateTotal($cartItems, $request->promotion_code);
-        $recalculatedTotal = $totals['total'];
-
-        // Chống cheat – nới lỏng 1 chút để tránh lỗi float 0.01đ
-        if (abs($recalculatedTotal - $request->total_amount) > 100) {
-            return back()
-                ->withErrors(['total_amount' => 'Số tiền không hợp lệ. Vui lòng tải lại trang!'])
-                ->withInput($request->except('total_amount'));
-        }
-
-        $orderCode = null;
-
+        DB::beginTransaction();
         try {
-            DB::transaction(function () use ($request, $cartItems, $totals, &$orderCode) {
-                // 1. Tạo Order
+            $orderId = null;
+            $registrationId = null; 
+            $trackingCode = null; 
+            
+            $totalAmount = $request->input('total_amount');
+            $paymentCode = 'PAY-' . strtoupper(Str::random(10));
+
+            // --- PHÂN LOẠI ITEM TRONG GIỎ ---
+            $hasMembership = collect($cart_items)->contains('type', 'membership');
+            $hasProduct    = collect($cart_items)->contains('type', 'product');
+
+            // 1. XỬ LÝ GÓI TẬP (Lưu vào package_registration)
+            if ($hasMembership) {
+                // Lấy item gói tập ra 
+                $packageItem = collect($cart_items)->firstWhere('type', 'membership');
+                $package = MembershipPackage::findOrFail($packageItem['package_id']);
+
+                // Tính thời hạn
+                $months = (int) filter_var($packageItem['duration'] ?? '1', FILTER_SANITIZE_NUMBER_INT);
+                if($months <= 0) $months = 1;
+
+                $registration = PackageRegistration::create([
+                    'user_id'    => $user->id,
+                    'package_id' => $package->package_id,
+                    'start_date' => Carbon::now(),
+                    'end_date'   => Carbon::now()->addMonths($months),
+                    'status'     => 'pending', // Chờ thanh toán
+                ]);
+
+                $registrationId = $registration->registration_id;
+                
+                // Nếu chỉ mua gói tập -> Tracking code là mã đăng ký
+                if (!$hasProduct) {
+                    $trackingCode = 'REG-' . $registrationId;
+                }
+            } 
+
+            // 2. XỬ LÝ SẢN PHẨM (Lưu vào orders)
+            if ($hasProduct) {
+                // Gom địa chỉ
+                $full_address = $request->address . ($request->apartment_details ? ', '.$request->apartment_details : '');
+                
                 $order = Order::create([
-                    'user_id'          => Auth::id(),
-                    'order_date'       => now(),
-                    'order_code'       => 'ORD-' . strtoupper(uniqid()),
-                    'total_amount'     => $totals['total'],
+                    'user_id'          => $user->id,
+                    'order_code'       => 'ORD-' . strtoupper(Str::random(8)),
+                    'order_date'       => Carbon::now(),
+                    'total_amount'     => $hasMembership ? 0 : $totalAmount, 
+                    'total_amount'     => $totalAmount, 
                     'status'           => 'pending',
-                    'shipping_address' => $request->address . ($request->apartment_details ? ', ' . $request->apartment_details : ''),
-                    'discount_value'   => $totals['item_discount'] + $totals['promotion_discount'],
-                    'promotion_code'   => $request->promotion_code ?? null,
+                    'shipping_address' => $full_address,
+                    'promotion_code'   => $request->input('promotion_code'),
+                    // 'discount_value' => ...
                 ]);
 
-                $orderCode = $order->order_code;
-                $lastRegistrationId = null;
+                $orderId = $order->order_id;
+                $trackingCode = $order->order_code; 
 
-                // 2. Tạo OrderDetail (sản phẩm vật lý)
-                foreach ($cartItems as $item) {
-                    if (empty($item['type']) || $item['type'] !== 'membership') {
+                // Lưu chi tiết đơn hàng
+                foreach ($cart_items as $item) {
+                    if (($item['type'] ?? '') === 'product') {
                         OrderDetail::create([
-                            'order_id'       => $order->order_id,
-                            'variant_id'     => $item['variant_id'],           // ← đúng key frontend gửi
-                            'quantity'       => $item['quantity'] ?? 1,
-                            'unit_price'     => (float)$item['unit_price'],
-                            'discount_value' => (float)($item['discount_value'] ?? 0),
-                            'final_price'    => (float)($item['final_price'] ?? $item['unit_price']),
+                            'order_id'       => $orderId,
+                            'variant_id'     => $item['variant_id'],
+                            'quantity'       => $item['quantity'],
+                            'unit_price'     => $item['unit_price'],
+                            'discount_value' => $item['discount_value'] ?? 0,
+                            'final_price'    => $item['final_price'],
                         ]);
                     }
                 }
 
-                // 3. Tạo PackageRegistration (gói tập)
-                foreach ($cartItems as $item) {
-                    if (!empty($item['type']) && $item['type'] === 'membership') {
-                        $package = MembershipPackage::findOrFail($item['package_id']);
+                // Xóa giỏ hàng sau khi tạo đơn thành công
+                $this->clearUserCart($user->id);
+            }
 
-                        $startDate = Carbon::now();
-                        $endDate = $package->duration_months == 0
-                            ? $startDate->copy()->endOfDay()
-                            : $startDate->copy()->addMonths($package->duration_months);
+            // 3. TẠO THANH TOÁN (Payment)
+            // Xác định loại thanh toán
+            $paymentType = 'order';
+            if ($hasMembership && !$hasProduct) $paymentType = 'membership_registration';
+            if ($hasMembership && $hasProduct)  $paymentType = 'combined';
 
-                        $reg = PackageRegistration::create([
-                            'user_id'     => Auth::id(),
-                            'package_id'  => $package->package_id,
-                            'start_date'  => $startDate,
-                            'end_date'    => $endDate,
-                            'status'      => 'active',
-                        ]);
-
-                        $lastRegistrationId = $reg->registration_id;
-                    }
-                }
-
-                // 4. Tạo Payment (COD)
-                Payment::create([
-                    'user_id'                 => Auth::id(),
-                    'payment_type'            => 'order',
-                    'payment_code'            => $order->order_code,
-                    'amount'                  => $order->total_amount,
-                    'method'                  => 'cod',
-                    'payment_date'            => null,
-                    'status'                  => 'pending',
-                    'order_id'                => $order->order_id,
-                    'package_registration_id'=> $lastRegistrationId,
-                ]);
-
-                // 5. Xóa giỏ hàng
-                $cart = Cart::where('user_id', Auth::id())->first();
-                if ($cart) {
-                    CartItem::where('cart_id', $cart->cart_id)->delete();
-                }
-            });
-
-            return redirect()
-                ->route('order.thankyou', $orderCode)
-                ->with('success', 'Đặt hàng thành công!');
-
-        } catch (\Exception $e) {
-            Log::error('Checkout failed: ' . $e->getMessage(), [
-                'user_id' => Auth::id(),
-                'request' => $request->all(),
+            Payment::create([
+                'user_id'                 => $user->id,
+                'payment_code'            => $paymentCode,
+                'payment_type'            => $paymentType,
+                'amount'                  => $totalAmount,
+                'method'                  => $request->payment_method,
+                'payment_date'            => Carbon::now(), 
+                'status'                  => 'pending',
+                
+                // Khóa ngoại (Nullable trong DB)
+                'order_id'                => $orderId,          
+                'package_registration_id' => $registrationId,   
             ]);
 
-            return back()
-                ->withErrors(['error' => 'Có lỗi xảy ra. Vui lòng thử lại.'])
-                ->withInput();
+            DB::commit(); // Lưu tất cả
+
+            // Chuyển hướng
+            return redirect()->route('order.thankyou', ['order_code' => $trackingCode]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Lỗi: ' . $e->getMessage());
         }
     }
 
-    // Trang cảm ơn
-    public function thankYou($orderCode)
+    // Trang cảm ơn - Hiển thị dựa trên mã
+    public function thankYou($order_code)
     {
-        $order = Order::with(['details.product', 'payment'])
-            ->where('order_code', $orderCode)
-            ->where('user_id', Auth::id())
-            ->firstOrFail();
+        $data = ['order_code' => $order_code];
 
-        // Lấy gói tập vừa mua (trong 15 phút gần nhất)
-        $registrations = PackageRegistration::where('user_id', Auth::id())
-            ->where('created_at', '>=', now()->subMinutes(15))
-            ->with('package')
-            ->latest()
-            ->get();
+        // Nếu là đơn hàng sản phẩm
+        if (str_starts_with($order_code, 'ORD-')) {
+            $data['order'] = Order::with('details.product')
+                ->where('order_code', $order_code)->first();
+            $data['type'] = 'product';
+        } 
+        // Nếu là đăng ký gói tập
+        elseif (str_starts_with($order_code, 'REG-')) {
+            $regId = str_replace('REG-', '', $order_code);
+            $data['registration'] = PackageRegistration::with('package')
+                ->where('registration_id', $regId)->first();
+            $data['type'] = 'membership';
+        }
 
-        return view('user.thankyou', compact('order', 'registrations'));
+        return view('user.thankyou', $data);
     }
 
-    // Hàm tính lại tổng tiền (dùng PromotionHelper)
-    private function recalculateTotal(array $cartItems, ?string $promotionCode): array
+    private function clearUserCart($userId)
     {
-        $subtotal = 0;
-        $itemDiscountTotal = 0;
-
-        foreach ($cartItems as $item) {
-            $price    = (float)($item['unit_price'] ?? 0);
-            $discount = (float)($item['discount_value'] ?? 0);
-            $qty      = (int)($item['quantity'] ?? 1);
-
-            $subtotal         += $price * $qty;
-            $itemDiscountTotal += $discount * $qty;
+        $cart = Cart::where('user_id', $userId)->where('status', 'active')->first();
+        if ($cart) {
+            CartItem::where('cart_id', $cart->cart_id)->delete();
         }
-
-        $promotionDiscount = 0;
-        if (!empty($promotionCode)) {
-            $result = PromotionHelper::validateAndApply($promotionCode, $cartItems, $subtotal); // ← dùng subtotal gốc
-            if ($result['success']) {
-                $promotionDiscount = (float)$result['discount'];
-            }
-        }
-
-        $shippingFee = 30000;
-        $finalTotal  = $subtotal - $itemDiscountTotal - $promotionDiscount + $shippingFee;
-        $finalTotal  = round($finalTotal, 0);
-
-        return [
-            'subtotal'            => $subtotal,
-            'item_discount'       => $itemDiscountTotal,
-            'promotion_discount'  => $promotionDiscount,
-            'shipping_fee'        => $shippingFee,
-            'total'               => (int)$finalTotal,
-        ];
     }
 }
