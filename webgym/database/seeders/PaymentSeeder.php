@@ -49,7 +49,7 @@ class PaymentSeeder extends Seeder
                 'payment_code' => 'PAY-REG-20250930-002',
                 'payment_type' => 'membership',
                 'amount' => 1199000.00, // Gói 2 (Quý)
-                'method' => 'Chuyển khoản',
+                'method' => 'Momo',
                 'payment_date' => $today_reg->copy()->subMonths(1)->subDays(15),
                 'status' => 'completed',
                 'order_id' => null,
@@ -88,7 +88,7 @@ class PaymentSeeder extends Seeder
                 'payment_code' => 'PAY-REG-20250925-005',
                 'payment_type' => 'membership',
                 'amount' => 1199000.00, // Gói 2 (Quý)
-                'method' => 'Thẻ tín dụng',
+                'method' => 'Momo',
                 'payment_date' => $today_reg->copy()->subDays(50),
                 'status' => 'completed',
                 'order_id' => null,
@@ -101,7 +101,7 @@ class PaymentSeeder extends Seeder
                 'payment_code' => 'PAY-REG-20250514-006',
                 'payment_type' => 'membership',
                 'amount' => 4599000.00, // Gói 3 (Năm)
-                'method' => 'Chuyển khoản',
+                'method' => 'VNPay',
                 'payment_date' => $today_reg->copy()->subMonths(6),
                 'status' => 'completed',
                 'order_id' => null,
@@ -153,7 +153,7 @@ class PaymentSeeder extends Seeder
                 'payment_code' => 'PAY-REG-20250914-010',
                 'payment_type' => 'membership',
                 'amount' => 1199000.00, // Gói 2 (Quý)
-                'method' => 'Thẻ tín dụng',
+                'method' => 'Momo',
                 'payment_date' => $today_reg->copy()->subMonths(2),
                 'status' => 'completed',
                 'order_id' => null,
@@ -179,7 +179,7 @@ class PaymentSeeder extends Seeder
                 'payment_code' => 'PAY-REG-20250814-012',
                 'payment_type' => 'membership',
                 'amount' => 1599000.00, // Gói 4 (Hết hạn)
-                'method' => 'Chuyển khoản',
+                'method' => 'Momo',
                 'payment_date' => $today_reg->copy()->subMonths(3),
                 'status' => 'completed',
                 'order_id' => null,
@@ -208,7 +208,7 @@ class PaymentSeeder extends Seeder
                 'payment_code' => 'PAY-ORD-20251114-002',
                 'payment_type' => 'order',
                 'amount' => 2200000.00, // Order 2
-                'method' => 'Thẻ tín dụng',
+                'method' => 'VNPay',
                 'payment_date' => $today_order->copy()->subDay(),
                 'status' => 'completed',
                 'order_id' => 2,
@@ -260,7 +260,7 @@ class PaymentSeeder extends Seeder
                 'payment_code' => 'PAY-ORD-20251113-006',
                 'payment_type' => 'order',
                 'amount' => 1420000.00, // Order 6
-                'method' => 'Chuyển khoản',
+                'method' => 'Momo',
                 'payment_date' => $today_order->copy()->subDays(2),
                 'status' => 'completed',
                 'order_id' => 6,
@@ -286,7 +286,7 @@ class PaymentSeeder extends Seeder
                 'payment_code' => 'PAY-ORD-20251115-008',
                 'payment_type' => 'order',
                 'amount' => 1020000.00, // Order 8
-                'method' => 'Thẻ tín dụng',
+                'method' => 'VNPay',
                 'payment_date' => $today_order->copy()->subHour(),
                 'status' => 'pending', // Đơn hàng đang pending
                 'order_id' => 8,
@@ -338,7 +338,7 @@ class PaymentSeeder extends Seeder
                 'payment_code' => 'PAY-ORD-20251111-012',
                 'payment_type' => 'order',
                 'amount' => 1450000.00, // Order 12
-                'method' => 'Thẻ tín dụng',
+                'method' => 'Momo',
                 'payment_date' => $today_order->copy()->subDays(4),
                 'status' => 'completed', // Đơn đã 'completed'
                 'order_id' => 12,
