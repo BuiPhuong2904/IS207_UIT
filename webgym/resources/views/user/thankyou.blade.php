@@ -25,7 +25,7 @@
             <h3 class="text-xl font-bold mb-4">Sản phẩm đã đặt</h3>
             @foreach($order->details as $detail)
             <div class="flex justify-between py-2 border-b last:border-0">
-                <span>{{ $detail->product?->product?->name ?? 'Sản phẩm' }} × {{ $detail->quantity }}</span>
+                <span>{{ $detail->product?->product?->product_name ?? 'Sản phẩm' }} × {{ $detail->quantity }}</span>
                 <span>{{ number_format($detail->final_price * $detail->quantity) }}đ</span>
             </div>
             @endforeach

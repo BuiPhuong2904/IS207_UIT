@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderHistoryController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ChatbotController;
@@ -101,6 +102,11 @@ Route::middleware('auth')->group(function () {
     // Thêm dòng này vào trong Route::middleware('auth')->group(...)
     Route::get('/order/success/{order_code}', [OrderController::class, 'thankYou'])
         ->name('order.thankyou');
+
+    // Đã có sẵn route order.store và order.thankyou
+    Route::get('/payment/vnpay/return', [PaymentController::class, 'vnpayReturn'])
+        ->name('payment.vnpay.return');
+
 });
 
 
