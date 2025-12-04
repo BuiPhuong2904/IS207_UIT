@@ -67,9 +67,9 @@ Route::get('/api/related-products', [UserStoreController::class, 'loadMoreRelate
 Route::get('/package', [UserPackageController::class, 'index'])->name('package');
 
 // Blog 
-Route::view('/blog/1', 'blog.blog_1')->name('blog1');
-Route::view('/blog/2', 'blog.blog_2')->name('blog2');
-Route::view('/blog/3', 'blog.blog_3')->name('blog3');
+Route::view('/blog/1', 'blogs.blog_1')->name('blog1');
+Route::view('/blog/2', 'blogs.blog_2')->name('blog2');
+Route::view('/blog/3', 'blogs.blog_3')->name('blog3');
 
 // User Profile Routes (requires authentication)
 Route::middleware('auth')->group(function () {
