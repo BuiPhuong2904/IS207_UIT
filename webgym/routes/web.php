@@ -89,3 +89,5 @@ Route::middleware('auth')->group(function () {
     Route::view('/lich-su-muon-tra', 'user.rental_history')->name('rental_history');
 
 });
+
+Route::view('/invoice', 'user.invoice')->name('invoice');
