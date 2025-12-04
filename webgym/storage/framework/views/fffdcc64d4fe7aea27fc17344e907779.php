@@ -1,19 +1,19 @@
 <!-- Header Section -->
 <header class="fixed top-0 left-0 w-full bg-[#F5F7FA] shadow-sm z-50">
     <div class="flex items-center justify-between px-6 md:px-20 py-3">
-        <a href="{{ url('/') }}" class="flex items-center text-2xl font-bold text-[#0D47A1] gap-2 font-montserrat">
+        <a href="<?php echo e(url('/')); ?>" class="flex items-center text-2xl font-bold text-[#0D47A1] gap-2 font-montserrat">
             <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340096/logo_jhd6zr.png" 
                  alt="Logo" class="w-10 h-10">
             GRYND
         </a>
         <!-- Navigation Links -->
         <nav class="hidden md:flex items-center gap-6 text-sm">
-            <a href="{{ route('about') }}" class="hover:text-blue-700">Về GRYND</a>
-            <a href="{{ route('package') }}" class="hover:text-blue-700">Gói Tập</a>
-            <a href="{{ route('class') }}" class="hover:text-blue-700">Lớp Học</a>
-            <a href="{{ route('product') }}" class="hover:text-blue-700">Cửa Hàng</a>
+            <a href="<?php echo e(route('about')); ?>" class="hover:text-blue-700">Về GRYND</a>
+            <a href="<?php echo e(route('package')); ?>" class="hover:text-blue-700">Gói Tập</a>
+            <a href="<?php echo e(route('class')); ?>" class="hover:text-blue-700">Lớp Học</a>
+            <a href="<?php echo e(route('product')); ?>" class="hover:text-blue-700">Cửa Hàng</a>
             <a href="#" class="hover:text-blue-700">Blog</a>
-            <a href="{{ route('contact') }}" class="hover:text-blue-700">Liên Hệ</a>
+            <a href="<?php echo e(route('contact')); ?>" class="hover:text-blue-700">Liên Hệ</a>
         </nav>
         <!-- Tìm kiếm và nút đăng nhập, đăng ký -->
         <div class="hidden md:flex items-center gap-4">
@@ -29,15 +29,15 @@
                             focus:ring-2 focus:ring-blue-500 w-30 lg:w-42 transition-all duration-300 placeholder:text-sm">
             </div>
                 <!-- Trường hợp chưa đăng nhập -->
-                @guest
-                <a href="{{ route('login') }}" class="border border-gray-300 text-gray-700 px-3 py-1.5 rounded text-sm
+                <?php if(auth()->guard()->guest()): ?>
+                <a href="<?php echo e(route('login')); ?>" class="border border-gray-300 text-gray-700 px-3 py-1.5 rounded text-sm
                     hover:border-blue-500 hover:text-blue-500 active:bg-blue-50 transition-colors">Đăng nhập</a>
 
-                <a href="{{ route('register') }}" class="bg-[#1976D2] text-white px-3 py-1.5 rounded text-sm hover:bg-blue-700
+                <a href="<?php echo e(route('register')); ?>" class="bg-[#1976D2] text-white px-3 py-1.5 rounded text-sm hover:bg-blue-700
                     active:bg-blue-800 hover:scale-105 transition-all duration-200 ease-in-out">Đăng ký</a>
-                @endguest
+                <?php endif; ?>
             <!-- Trường hợp đã đăng nhập -->
-            @auth
+            <?php if(auth()->guard()->check()): ?>
                 <button class="relative w-10 h-10 flex items-center justify-center bg-gray-100 rounded-full shadow-sm hover:bg-gray-200 focus:outline-none transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -58,7 +58,7 @@
                 <div x-data="{ open: false }" class="relative">
                     <button @click="open = !open" class="flex text-sm bg-gray-100 rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                         <img class="h-10 w-10 rounded-full object-cover" 
-                                src="{{ Auth::user()->image_url ?? 'https://res.cloudinary.com/dna9qbejm/image/upload/v1762341321/ava_ntqezy.jpg' }}" 
+                                src="<?php echo e(Auth::user()->image_url ?? 'https://res.cloudinary.com/dna9qbejm/image/upload/v1762341321/ava_ntqezy.jpg'); ?>" 
                                 alt="User Avatar">
                     </button>
 
@@ -72,25 +72,25 @@
                          x-transition:leave-end="transform opacity-0 scale-95"
                          class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 origin-top-right"
                          style="display: none;"> <div class="px-4 py-2 border-b">
-                            <span class="block text-sm font-medium text-gray-900">{{ Auth::user()->full_name }}</span>
-                            <span class="block text-sm text-gray-500 truncate">{{ Auth::user()->email }}</span>
+                            <span class="block text-sm font-medium text-gray-900"><?php echo e(Auth::user()->full_name); ?></span>
+                            <span class="block text-sm text-gray-500 truncate"><?php echo e(Auth::user()->email); ?></span>
                         </div>
                         
-                        <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Hồ sơ</a>
+                        <a href="<?php echo e(route('profile')); ?>" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Hồ sơ</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Lớp học đã đăng ký</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Lịch sử đơn hàng</a>
                         <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Lịch sử mượn/trả</a>
 
                         <!-- Đăng xuất -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
+                        <form method="POST" action="<?php echo e(route('logout')); ?>">
+                            <?php echo csrf_field(); ?>
                             <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-100">
                                 Đăng xuất
                             </button>
                         </form>
                     </div>
                 </div>
-            @endauth
+            <?php endif; ?>
         </div>
 
         <!-- Mobile menu button -->
@@ -99,12 +99,12 @@
     <!-- Mobile Menu -->
     <nav id="mobile-menu" class="hidden absolute top-full left-0 w-full flex-col items-start
             bg-white px-6 py-4 space-y-3 shadow-md md:hidden transform origin-top transition-all duration-700 ease-in-out">
-        <a href="{{ route('about') }}" class="hover:text-blue-700">Về GRYND</a>
+        <a href="<?php echo e(route('about')); ?>" class="hover:text-blue-700">Về GRYND</a>
         <a href="#" class="hover:text-blue-700">Gói Tập</a>
         <a href="#" class="hover:text-blue-700">Lớp Học</a>
         <a href="#" class="hover:text-blue-700">Cửa Hàng</a>
         <a href="#" class="hover:text-blue-700">Blog</a>
-        <a href="{{ route('contact') }}" class="hover:text-blue-700">Liên Hệ</a>
+        <a href="<?php echo e(route('contact')); ?>" class="hover:text-blue-700">Liên Hệ</a>
 
         <div class="w-full border-t border-gray-200 pt-3">
             <input type="text" placeholder="Tìm kiếm..."
@@ -112,34 +112,34 @@
         </div>
 
             <div class="w-full border-t border-gray-200 pt-3 space-y-2">
-            @guest
-                <a href="{{ route('login') }}" class="w-full border border-gray-300 px-3 py-1.5 rounded text-sm">Đăng nhập</a>
-                <a href="{{ route('register') }}" class="w-full bg-blue-700 text-white px-3 py-1.5 rounded text-sm">Đăng ký</a>
-            @endguest
+            <?php if(auth()->guard()->guest()): ?>
+                <a href="<?php echo e(route('login')); ?>" class="w-full border border-gray-300 px-3 py-1.5 rounded text-sm">Đăng nhập</a>
+                <a href="<?php echo e(route('register')); ?>" class="w-full bg-blue-700 text-white px-3 py-1.5 rounded text-sm">Đăng ký</a>
+            <?php endif; ?>
 
-            @auth
+            <?php if(auth()->guard()->check()): ?>
                 <div class="flex items-center gap-3 mb-3">
                     <img class="h-10 w-10 rounded-full object-cover" 
-                            src="{{ Auth::user()->image_url ?? 'https://res.cloudinary.com/dna9qbejm/image/upload/v1762341321/ava_ntqezy.jpg' }}" 
+                            src="<?php echo e(Auth::user()->image_url ?? 'https://res.cloudinary.com/dna9qbejm/image/upload/v1762341321/ava_ntqezy.jpg'); ?>" 
                             alt="User Avatar">
                     <div>
-                        <div class="font-medium text-base text-gray-800">{{ Auth::user()->full_name }}</div>
-                        <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+                        <div class="font-medium text-base text-gray-800"><?php echo e(Auth::user()->full_name); ?></div>
+                        <div class="font-medium text-sm text-gray-500"><?php echo e(Auth::user()->email); ?></div>
                     </div>
                 </div>
-                <a href="{{ route('profile') }}" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Hồ sơ</a>
+                <a href="<?php echo e(route('profile')); ?>" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Hồ sơ</a>
                 <a href="#" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Gói tập đã mua</a>
                 <a href="#" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Lớp học đã đăng ký</a>
                 <a href="#" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Lịch sử đơn hàng</a>
                 <a href="#" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">Lịch sử mượn/trả</a>   
                 
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
+                <form method="POST" action="<?php echo e(route('logout')); ?>">
+                    <?php echo csrf_field(); ?>
                     <button type="submit" class="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50">
                         Đăng xuất
                     </button>
                 </form>
-            @endauth
+            <?php endif; ?>
         </div>
     </nav>
-</header>
+</header><?php /**PATH D:\UIT\Phat_trien_ung_dung_web\DoAnWeb\webgym\resources\views/user/layouts/header.blade.php ENDPATH**/ ?>
