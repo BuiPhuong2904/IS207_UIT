@@ -23,14 +23,14 @@ use Illuminate\Support\Facades\Auth;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/chatbot/message', [ChatbotController::class, 'chat'])->name('chatbot.message');
 
-Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
-Route::post('/register', [RegisterController::class, 'register'])->name('register.post');
+Route::get('/register', [AuthController::class, 'register'])->name('register');
+Route::post('/register', [AuthController::class, 'postRegister'])->name('register.post');
 
 // Login view route (used by header links)
-Route::get('/login', function () { return view('auth.login'); })->name('login');
+Route::get('/login', [AuthController::class, 'login'])->name('login');
 
 // Handle login form submit
-Route::post('/login', [LoginController::class, 'login'])->name('login.post');
+Route::post('/login', [AuthController::class, 'postLogin'])->name('login.post');
 
 // Logout route
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

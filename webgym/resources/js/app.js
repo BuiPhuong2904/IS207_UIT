@@ -1,5 +1,5 @@
-import 'flowbite';
+    import 'flowbite';
 
-import './bootstrap';
+    import './bootstrap';
 
-import './home.js';
+    import './home.js';

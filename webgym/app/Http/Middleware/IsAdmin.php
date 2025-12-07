@@ -17,11 +17,11 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Check if user is authenticated and has admin role
-        if (!Auth::check() || Auth::user()->role !== 'admin') {
-            abort(403, 'Bạn không có quyền truy cập.');
+        if (Auth::check() && !Auth::user()->isAdmin()) {
+            return $next($request);
         }
 
-        return $next($request);
+        //Handle unauthorized access
+        abort(403, 'Bạn không có quyền truy cập.');
     }
 }

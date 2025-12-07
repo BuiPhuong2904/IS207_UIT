@@ -1,25 +1,25 @@
-{{-- resources/views/auth/register.blade.php --}}
-@extends('layouts.app')
 
-@section('content')
-@if (session('success'))
+
+
+<?php $__env->startSection('content'); ?>
+<?php if(session('success')): ?>
     <div class="max-w-4xl mx-auto mt-6">
         <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
             <strong class="font-bold">Thành công!</strong>
-            <span class="block sm:inline">{{ session('success') }}</span>
+            <span class="block sm:inline"><?php echo e(session('success')); ?></span>
             <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
                 <svg class="fill-current h-6 w-6 text-green-500" role="button" onclick="this.parentElement.parentElement.style.display='none';" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><title>Close</title><path d="M14.348 5.652a1 1 0 00-1.414 0L10 8.586 7.066 5.652a1 1 0 10-1.414 1.414L8.586 10l-2.934 2.934a1 1 0 101.414 1.414L10 11.414l2.934 2.934a1 1 0 001.414-1.414L11.414 10l2.934-2.934a1 1 0 000-1.414z"/></svg>
             </span>
         </div>
     </div>
-@endif
+<?php endif; ?>
 <div class="w-full min-h-screen bg-white py-10">
     <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
 
         <!-- LEFT IMAGE -->
         <div class="hidden lg:block">
             <div class="rounded-xl overflow-hidden shadow-lg">
-                <img src="{{ asset('images/login/welcome.png') }}" 
+                <img src="<?php echo e(asset('images/login/welcome.png')); ?>" 
                      class="w-full h-[500px] object-cover"
                      alt="Welcome Banner">
             </div>
@@ -44,30 +44,30 @@
             <div class="text-center text-gray-500 text-sm mb-4">hoặc dùng email để đăng ký</div>
 
             <!-- ERRORS -->
-            @if ($errors->any())
+            <?php if($errors->any()): ?>
                 <div class="bg-red-100 text-red-700 px-4 py-2 rounded mb-4 text-sm">
                     <ul class="list-disc list-inside">
-                        @foreach ($errors->all() as $err)
-                            <li>{{ $err }}</li>
-                        @endforeach
+                        <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $err): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                            <li><?php echo e($err); ?></li>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </ul>
                 </div>
-            @endif
+            <?php endif; ?>
 
             <!-- FORM -->
-            <form action="{{ route('register.post') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
-                @csrf
+            <form action="<?php echo e(route('register.post')); ?>" method="POST" enctype="multipart/form-data" class="space-y-4">
+                <?php echo csrf_field(); ?>
 
                 <div>
                     <label class="block text-gray-700 font-medium mb-1">Username</label>
-                    <input name="full_name" value="{{ old('full_name') }}"
+                    <input name="full_name" value="<?php echo e(old('full_name')); ?>"
                         class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-300 focus:outline-none"
                         placeholder="johnndev" required>
                 </div>
 
                 <div>
                     <label class="block text-gray-700 font-medium mb-1">Email</label>
-                    <input type="email" name="email" value="{{ old('email') }}"
+                    <input type="email" name="email" value="<?php echo e(old('email')); ?>"
                         class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-300 focus:outline-none"
                         placeholder="johndoe@example.com" required>
                 </div>
@@ -106,7 +106,7 @@
 
                 <div class="text-center text-sm text-gray-600">
                     Đã có tài khoản? 
-                    <a href="{{ route('login') }}" class="text-blue-600 hover:underline font-medium">Đăng nhập</a>
+                    <a href="<?php echo e(route('login')); ?>" class="text-blue-600 hover:underline font-medium">Đăng nhập</a>
                 </div>
             </form>
         </div>
@@ -122,4 +122,6 @@ document.getElementById('togglePassword')?.addEventListener('click', function ()
     this.textContent = isPass ? 'Ẩn' : 'Hiện';
 });
 </script>
-@endsection
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('layouts.app', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?><?php /**PATH D:\UIT\Phat_trien_ung_dung_web\DoAnWeb\webgym\resources\views/auth/register.blade.php ENDPATH**/ ?>

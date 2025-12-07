@@ -5,23 +5,34 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 // use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, Notifiable;
 
-    protected $table = 'user';
+    const ROLE_ADMIN = 'admin';
+    const ROLE_USER = 'user';
+
+    protected $table = 'users';
     protected $primaryKey = 'id';
     protected $fillable = [
         'full_name', 'email', 'password', 'role', 'phone',
         'birth_date', 'gender', 'address','image_url', 'status'
     ];
 
+    protected $hidden = [
+        'password','remember_token'
+    ];
+
     public function trainer()
     {
         return $this->hasOne(Trainer::class, 'user_id');
+    }
+
+    public function isAdmin() {
+        return $this->role === self::ROLE_ADMIN;
     }
 
     public function packageRegistrations()

@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('full_name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('role')->nullable();
+            $table->enum('role', ['user', 'admin'])->default('user');
             $table->string('phone')->nullable();
             $table->date('birth_date')->nullable();
             $table->string('gender')->nullable();
@@ -24,6 +24,9 @@ return new class extends Migration
             $table->string('image_url')->nullable();
             $table->string('status')->default('active');
             $table->timestamps();
+
+            $table->rememberToken();
+           // $table->timestamp('email_verified_at')->nullable();
 
         });
     }
