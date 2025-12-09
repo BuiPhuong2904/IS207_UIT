@@ -1,10 +1,13 @@
 <?php
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Auth\SendResetRequest;
+use App\Http\Requests\Auth\ResetPasswordRequest;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Request;
 use App\Models\User;
 
 class ForgotPasswordController extends Controller
@@ -14,42 +17,45 @@ class ForgotPasswordController extends Controller
         return view('auth.forget-password');
     }
 
-    public function send(Request $request)
+    public function send(SendResetRequest $request)
     {
-        $request->validate(['email' => 'required|email']);
+        $email = $request->input('email');
 
-        $status = Password::sendResetLink($request->only('email'));
+        $status = Password::sendResetLink(['email' => $email]);
 
-        return $status === Password::RESET_LINK_SENT
-            ? back()->with('status', __($status))
-            : back()->withErrors(['email' => __($status)]);
+        if ($status === Password::RESET_LINK_SENT) {
+            return back()->with('status', __('Liên kết đặt lại mật khẩu đã được gửi tới :email.', ['email' => $email]));
+        }
+
+        return back()->withErrors(['email' => __($status)]);
     }
 
-    public function showResetForm($token)
+    public function showResetForm(string $token)
     {
         $email = request()->query('email');
 
-        return view('auth.reset-password', ['token' => $token, 'email' => $email]);
+        return view('auth.reset-password', [
+            'token' => $token,
+            'email' => $email,
+        ]);
     }
 
-    public function reset(Request $request)
+    public function reset(ResetPasswordRequest $request)
     {
-        $request->validate([
-            'token' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|confirmed|min:8',
-        ]);
+        $data = $request->only('email', 'password', 'password_confirmation', 'token');
 
         $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function (User $user, $password) {
+            $data,
+            function (User $user, string $password) {
                 $user->password = Hash::make($password);
                 $user->save();
             }
         );
 
-        return $status === Password::PASSWORD_RESET
-            ? redirect()->route('login')->with('status', __($status))
-            : back()->withErrors(['email' => [__($status)]]);
+        if ($status === Password::PASSWORD_RESET) {
+            return redirect()->route('login')->with('status', __('Đặt lại mật khẩu thành công. Vui lòng đăng nhập bằng mật khẩu mới.'));
+        }
+
+        return back()->withErrors(['email' => __($status)]);
     }
 }
