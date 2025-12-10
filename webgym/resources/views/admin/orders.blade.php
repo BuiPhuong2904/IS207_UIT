@@ -120,24 +120,107 @@
     <div class="flex justify-between items-center mb-6">
         <h1 class="font-montserrat text-2xl text-black font-semibold">Đơn hàng</h1>
         
-        <div class="flex items-center space-x-4 font-open-sans">
+        <div class="flex items-center space-x-4 font-open-sans z-20">
             
-            {{-- Filter Status Dropdown --}}
-            <div class="relative" id="status-filter-container">
-                <button onclick="toggleStatusDropdown()" class="flex items-center text-gray-500 cursor-pointer hover:text-gray-900 focus:outline-none">
-                    <span id="current-status-label" class="mr-1 text-sm font-medium">Trạng thái: Tất cả</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            {{-- Nút Mở Bộ Lọc --}}
+            <div class="relative" id="filter-container">
+                <button onclick="toggleFilterPanel()" class="flex items-center bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 px-4 py-2 rounded-lg shadow-sm transition-all focus:outline-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-500" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M3 3a1 1 0 011-1h12a1 1 0 011 1v3a1 1 0 01-.293.707L12 11.414V15a1 1 0 01-.293.707l-2 2A1 1 0 018 17v-5.586L3.293 6.707A1 1 0 013 6V3z" clip-rule="evenodd" />
+                    </svg>
+                    <span class="font-medium text-sm">Lọc</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                     </svg>
                 </button>
 
-                {{-- Dropdown Menu --}}
-                <div id="status-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10 py-1">
-                    <div onclick="filterOrders('all', 'Tất cả')" class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-gray-700">Tất cả</div>
-                    <div onclick="filterOrders('pending', 'Chờ xác nhận')" class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-[#B78103]">Chờ xác nhận</div>
-                    <div onclick="filterOrders('processing', 'Đang vận chuyển')" class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-[#1976D2]">Đang vận chuyển</div>
-                    <div onclick="filterOrders('completed', 'Hoàn tất')" class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-[#1FA669]">Hoàn tất</div>
-                    <div onclick="filterOrders('cancelled', 'Đã hủy')" class="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm text-[#F64E60]">Đã hủy</div>
+                {{-- FILTER PANEL (DROPDOWN) --}}
+                <div id="filter-panel" class="hidden absolute right-0 mt-3 w-[450px] bg-white border border-gray-200 rounded-xl shadow-xl p-5 z-50">
+                    
+                    {{-- 1. Khoảng thời gian --}}
+                    <div class="mb-5">
+                        <h3 class="font-semibold text-gray-800 mb-3 text-sm">Khoảng thời gian</h3>
+                        <div class="flex space-x-3 mb-3">
+                            <div class="flex-1">
+                                <label class="block text-xs text-gray-500 mb-1">Từ ngày:</label>
+                                <input type="date" id="filter-date-from" class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div class="flex-1">
+                                <label class="block text-xs text-gray-500 mb-1">Đến ngày:</label>
+                                <input type="date" id="filter-date-to" class="w-full border border-gray-300 rounded-md px-3 py-1.5 text-sm focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="quick_date" value="today" onchange="setQuickDate('today')" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-600">Hôm nay</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="quick_date" value="yesterday" onchange="setQuickDate('yesterday')" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-600">Hôm qua</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="quick_date" value="7days" onchange="setQuickDate('7days')" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-600">7 ngày trước</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    {{-- 2. Thành tiền --}}
+                    <div class="mb-5 border-t pt-4 border-gray-100">
+                        <h3 class="font-semibold text-gray-800 mb-3 text-sm">Thành tiền</h3>
+                        <div class="flex space-x-3 mb-3">
+                            <input type="number" id="filter-price-from" placeholder="Từ (VND)" class="w-1/2 border border-gray-300 rounded-md px-3 py-1.5 text-sm">
+                            <input type="number" id="filter-price-to" placeholder="Đến (VND)" class="w-1/2 border border-gray-300 rounded-md px-3 py-1.5 text-sm">
+                        </div>
+                        <div class="space-y-2">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="quick_price" value="under500" onchange="setQuickPrice(0, 500000)" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-600">Dưới 500.000</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="quick_price" value="500to1000" onchange="setQuickPrice(500000, 1000000)" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-600">Từ 500.000 đến 1.000.000</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="quick_price" value="above1000" onchange="setQuickPrice(1000000, 999999999)" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-600">Trên 1.000.000</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    {{-- 3. Trạng thái --}}
+                    <div class="mb-5 border-t pt-4 border-gray-100">
+                        <h3 class="font-semibold text-gray-800 mb-3 text-sm">Trạng thái</h3>
+                        <div class="grid grid-cols-2 gap-2">
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="filter_status" value="all" checked class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-600">Tất cả</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="filter_status" value="completed" class="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500">
+                                <span class="ml-2 text-sm text-gray-600">Hoàn tất</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="filter_status" value="pending" class="w-4 h-4 text-yellow-600 border-gray-300 focus:ring-yellow-500">
+                                <span class="ml-2 text-sm text-gray-600">Chờ xác nhận</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="filter_status" value="processing" class="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500">
+                                <span class="ml-2 text-sm text-gray-600">Đang vận chuyển</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer">
+                                <input type="radio" name="filter_status" value="cancelled" class="w-4 h-4 text-red-600 border-gray-300 focus:ring-red-500">
+                                <span class="ml-2 text-sm text-gray-600">Đã hủy</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    {{-- Footer Buttons --}}
+                    <div class="flex justify-end pt-4 space-x-3">
+                        <button onclick="resetFilters()" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors">Đặt lại</button>
+                        <button onclick="applyFilters()" class="px-6 py-2 text-sm bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 shadow-md transition-colors">Áp dụng</button>
+                    </div>
                 </div>
             </div>
 
@@ -263,7 +346,7 @@
             document.getElementById('modal-phone').value = order.phone || '';
             document.getElementById('modal-address').value = order.address;
 
-            // --- Fill Bảng sản phẩm (Render HTML chuẩn 4 cột mới) ---
+            // --- Fill Bảng sản phẩm  ---
             const tbody = document.getElementById('modal-product-list');
             tbody.innerHTML = ''; // Xóa dữ liệu cũ
 
@@ -294,32 +377,152 @@
         }
     }
 
-    // 4. Dropdown Filter (Giữ nguyên logic cũ)
+    function toggleFilterPanel() {
+        const panel = document.getElementById('filter-panel');
+        if (panel) {
+            panel.classList.toggle('hidden');
+        }
+    }
+
+    // 4. Dropdown Filter
     function toggleStatusDropdown() {
         document.getElementById('status-dropdown').classList.toggle('hidden');
     }
 
+    // Đóng Filter khi click ra ngoài
     document.addEventListener('click', function(event) {
-        const container = document.getElementById('status-filter-container');
-        const dropdown = document.getElementById('status-dropdown');
+        const container = document.getElementById('filter-container');
+        const panel = document.getElementById('filter-panel');
         if (container && !container.contains(event.target)) {
-            dropdown.classList.add('hidden');
+            panel.classList.add('hidden');
         }
     });
 
-    function filterOrders(status, label) {
-        document.getElementById('current-status-label').innerText = 'Trạng thái: ' + label;
-        document.getElementById('status-dropdown').classList.add('hidden');
+    // Helper: Định dạng ngày YYYY-MM-DD
+    function formatDateString(date) {
+        const d = new Date(date);
+        let month = '' + (d.getMonth() + 1);
+        let day = '' + d.getDate();
+        const year = d.getFullYear();
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+        return [year, month, day].join('-');
+    }
 
+    // Set nhanh ngày (Hôm nay, Hôm qua...)
+    function setQuickDate(type) {
+        const today = new Date(); // Giả định là ngày hiện tại thực tế
+        // dùng ngày thực tế của máy người dùng.
+        
+        let fromDate, toDate;
+        
+        if (type === 'today') {
+            fromDate = toDate = formatDateString(today);
+        } else if (type === 'yesterday') {
+            const y = new Date(today);
+            y.setDate(y.getDate() - 1);
+            fromDate = toDate = formatDateString(y);
+        } else if (type === '7days') {
+            toDate = formatDateString(today);
+            const d = new Date(today);
+            d.setDate(d.getDate() - 7);
+            fromDate = formatDateString(d);
+        }
+
+        document.getElementById('filter-date-from').value = fromDate;
+        document.getElementById('filter-date-to').value = toDate;
+    }
+
+    // Set nhanh giá tiền
+    function setQuickPrice(min, max) {
+        document.getElementById('filter-price-from').value = min;
+        document.getElementById('filter-price-to').value = max;
+    }
+
+    // Reset bộ lọc
+    function resetFilters() {
+        document.getElementById('filter-date-from').value = '';
+        document.getElementById('filter-date-to').value = '';
+        document.getElementById('filter-price-from').value = '';
+        document.getElementById('filter-price-to').value = '';
+        
+        // Reset Radio Status về "Tất cả"
+        const statusRadios = document.getElementsByName('filter_status');
+        for(let r of statusRadios) {
+            if(r.value === 'all') r.checked = true;
+            else r.checked = false;
+        }
+        
+        // Reset Radio Quick Date/Price
+        const dateRadios = document.getElementsByName('quick_date');
+        for(let r of dateRadios) r.checked = false;
+        
+        const priceRadios = document.getElementsByName('quick_price');
+        for(let r of priceRadios) r.checked = false;
+
+        applyFilters(); // Apply lại để hiện tất cả
+    }
+
+    // Logic chính: Áp dụng Lọc
+    function applyFilters() {
+        // 1. Lấy giá trị từ inputs
+        const dateFromStr = document.getElementById('filter-date-from').value;
+        const dateToStr = document.getElementById('filter-date-to').value;
+        const priceFrom = parseInt(document.getElementById('filter-price-from').value) || 0;
+        const priceTo = parseInt(document.getElementById('filter-price-to').value) || 99999999999;
+        
+        let status = 'all';
+        const statusRadios = document.getElementsByName('filter_status');
+        for (let radio of statusRadios) {
+            if (radio.checked) {
+                status = radio.value;
+                break;
+            }
+        }
+
+        // 2. Duyệt qua các dòng trong bảng để ẩn/hiện
         const rows = document.querySelectorAll('.order-row');
+        
         rows.forEach(row => {
-            const rowStatus = row.getAttribute('data-status');
-            if (status === 'all' || rowStatus === status) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
+            const codeText = row.querySelector('td:first-child').innerText.trim().replace('#', '');
+            
+            // Tìm object tương ứng trong mock data js
+            const order = ordersData.find(o => o.order_code.endsWith(codeText));
+
+            if (order) {
+                let isVisible = true;
+
+                // --- Kiểm tra Trạng thái ---
+                if (status !== 'all' && order.status !== status) {
+                    isVisible = false;
+                }
+
+                // --- Kiểm tra Giá ---
+                if (order.total < priceFrom || order.total > priceTo) {
+                    isVisible = false;
+                }
+
+                // --- Kiểm tra Ngày ---
+                if (dateFromStr && dateToStr) {
+                    const orderDateStr = order.date.split(' ')[0]; 
+                    if (orderDateStr < dateFromStr || orderDateStr > dateToStr) {
+                        isVisible = false;
+                    }
+                }
+
+                // Hiển thị hoặc Ẩn
+                row.style.display = isVisible ? '' : 'none';
+                
+                // Ẩn cả dòng spacer ngay sau nó (nếu có) để giao diện đẹp
+                const nextRow = row.nextElementSibling;
+                if(nextRow && nextRow.classList.contains('spacer-row')) {
+                    nextRow.style.display = isVisible ? '' : 'none';
+                }
             }
         });
+
+        // Đóng panel sau khi lọc
+        document.getElementById('filter-panel').classList.add('hidden');
     }
 </script>
 
