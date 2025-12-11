@@ -289,7 +289,7 @@
                 backgroundColor: colors.lightBlue, // Màu cột nhạt
                 hoverBackgroundColor: colors.primary, // Hover đậm lên
                 borderRadius: 4,
-                barThickness: 20,
+                barThickness: 55,
             }]
         },
         options: {
@@ -299,7 +299,7 @@
             scales: {
                 y: {
                     beginAtZero: true,
-
+                    // display: false
                 },
                 x: { 
                     grid: { display: false, drawBorder: false },
