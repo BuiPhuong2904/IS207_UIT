@@ -12,7 +12,7 @@
             <a href="{{ route('package') }}" class="hover:text-blue-700">Gói Tập</a>
             <a href="{{ route('class') }}" class="hover:text-blue-700">Lớp Học</a>
             <a href="{{ route('product') }}" class="hover:text-blue-700">Cửa Hàng</a>
-            <a href="#" class="hover:text-blue-700">Blog</a>
+            <a href="{{ route('blog') }}" class="hover:text-blue-700">Blog</a>
             <a href="{{ route('contact') }}" class="hover:text-blue-700">Liên Hệ</a>
         </nav>
         <!-- Tìm kiếm và nút đăng nhập, đăng ký -->

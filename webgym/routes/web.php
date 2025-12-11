@@ -91,3 +91,4 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::view('/invoice', 'user.invoice')->name('invoice');
+Route::view('/blog', 'user.blog')->name('blog');
