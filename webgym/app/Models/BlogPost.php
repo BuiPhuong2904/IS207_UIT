@@ -11,11 +11,16 @@ class BlogPost extends Model
 
     protected $table = 'blog_post';
     protected $primaryKey = 'post_id';
+    public $timestamps = false;
     protected $fillable = [
         'title', 'slug', 'summary', 'content',
         'author_id', 'is_published', 'published_at',
         'tags', 'image_url'
     ];
 
-    // public $timestamps = false;
+
+    public function author()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'author_id');
+    }
 }
