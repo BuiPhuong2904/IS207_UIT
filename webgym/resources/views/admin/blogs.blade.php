@@ -34,23 +34,23 @@
     {{-- TABLE CONTENT --}}
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse table-auto">
-            <thead class="font-montserrat text-[#999] text-xs font-medium uppercase">
-            <tr>
-                <th class="py-4 px-4 w-[10%]">ID</th>
-                <th class="py-4 px-4 w-[15%]">Tiêu đề</th>
-                <th class="py-4 px-4 w-[20%]">Tóm tắt</th>
-                <th class="py-4 px-4 w-[10%]">Danh mục</th>
-                <th class="py-4 px-4 w-[15%]">Tác giả</th>
-                <th class="py-4 px-4 w-[5%] text-center">Thứ tự</th>
-                <th class="py-4 px-4 w-[10%]">Ngày đăng</th>
-                <th class="py-4 px-4 w-[15%] text-right">Trạng thái</th>
-            </tr>
-            </thead>
+        <thead class="font-montserrat text-[#999] text-xs font-medium uppercase">
+        <tr>
+            <th class="py-4 px-4 w-[7%]">ID</th>
+            <th class="py-4 px-4 w-[25%] min-w-[200px]">Tiêu đề</th> 
+            <th class="py-4 px-4 w-[18%]">Tóm tắt</th>
+            <th class="py-4 px-4 w-[10%]">Danh mục</th>
+            <th class="py-4 px-4 w-[10%]">Tác giả</th>
+            <th class="py-4 px-4 w-[5%] text-center">Thứ tự</th>
+            <th class="py-4 px-4 w-[10%]">Ngày đăng</th>
+            <th class="py-4 px-4 w-[15%] text-right">Trạng thái</th>
+        </tr>
+        </thead>
             <tbody id="blog-list-body" class="text-sm text-gray-700">
             @foreach ($blogs as $item)
             @php
                 $isOdd = $loop->odd;
-                $rowBg = $isOdd ? 'bg-[#1976D2]/10' : 'bg-white';
+                $rowBg = $isOdd ? 'bg-[#1976D2]/20' : 'bg-white';
 
                 // Xử lý ngày đăng
                 $publishDate = 'Chưa đăng';

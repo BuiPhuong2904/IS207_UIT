@@ -200,20 +200,15 @@
 
                     <!-- Action Buttons -->
                     <div class="flex flex-col sm:flex-row gap-4 mt-8">
-                        <button id="btn-add-to-cart"
-                                class="flex-1 flex items-center justify-center gap-3 px-8 py-4 bg-[#9d1c30] text-white font-bold text-lg rounded-2xl shadow-lg hover:bg-[#7a1625] transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        <button id="btn-add-to-cart" class="group flex-1 py-3 px-4 border border-[#A5032C] text-[#A5032C] bg-white font-bold rounded-[8px] hover:bg-red-50 transition-all flex items-center justify-center gap-2 text-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                             </svg>
                             <span>Thêm vào giỏ hàng</span>
                         </button>
 
-                        <button id="btn-buy-now"
-                                class="flex-1 flex items-center justify-center gap-3 px-8 py-4 bg-[#590807] text-white font-bold text-lg rounded-2xl shadow-lg hover:bg-[#3e0505] transition-all disabled:opacity-50 disabled:cursor-not-allowed">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                            </svg>
-                            <span>Mua ngay</span>
+                        <button id="btn-buy-now" class="flex-1 py-3 px-4 bg-[#A5032C] text-white font-bold rounded-[8px] hover:bg-[#850A1E] transition-all shadow-md hover:shadow-lg text-sm">
+                            Mua ngay
                         </button>
                     </div>
 
