@@ -14,11 +14,12 @@ return new class extends Migration
         Schema::dropIfExists('cart_item');
 
         Schema::create('cart_item', function (Blueprint $table) {
-            // Khóa chính ghép: cart_id + item_id + item_type → giống hệt order_detail
-            $table->primary(['cart_id', 'item_id', 'item_type']);
+            // Khóa chính 
+            $table->primary(['cart_id', 'variant_id']);
 
             $table->unsignedBigInteger('cart_id');
-            $table->morphs('item');                    // tạo item_id + item_type
+            $table->unsignedBigInteger('variant_id');
+
             $table->unsignedInteger('quantity')->default(1);
             $table->decimal('unit_price', 12, 2);
 

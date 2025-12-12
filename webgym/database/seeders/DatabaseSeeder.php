@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
             PromotionSeeder::class,
             TrainerSeeder::class,
 
-            // -- BlogPostSeeder::class,
+            BlogSeeder::class,
             RentalItemSeeder::class,
             ProductSeeder::class,
             ProductVariantSeeder::class,

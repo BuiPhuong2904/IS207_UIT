@@ -63,15 +63,15 @@
 
                     @if($package->is_featured)
                         {{-- Nút VÀNG cho gói HOT --}}
-                        <button class="font-semibold px-6 py-2 rounded-full text-[#0D47A1]
-                                       transition-all duration-300 shadow-md hover:shadow-lg
-                                       hover:scale-105 active:scale-95"
+                        <button onclick="addPackageToCart({{ $package->package_id }})" 
+                                class="font-semibold px-6 py-2 rounded-full text-[#0D47A1] transition-all duration-300 shadow-md hover:shadow-lg hover:scale-105 active:scale-95"
                                 style="background: linear-gradient(90deg, #FFDD00, #F7B731);">
                             Đăng ký ngay
                         </button>
                     @else
                         {{-- Nút XANH cho gói thường --}}
-                        <button class="bg-[#1976D2] text-white font-semibold px-5 py-2 rounded-full hover:bg-[#0D47A1] transition">
+                        <button onclick="addPackageToCart({{ $package->package_id }})" 
+                                class="bg-[#1976D2] text-white font-semibold px-5 py-2 rounded-full hover:bg-[#0D47A1] transition">
                             Đăng ký ngay
                         </button>
                     @endif
@@ -82,4 +82,20 @@
     </div>
 </section>
 
+<script>
+    function addPackageToCart(packageId) {
+        // Kiểm tra đăng nhập
+        const isLoggedIn = {{ Auth::check() ? 'true' : 'false' }};
+        const loginUrl = '{{ route("login") }}';
+        
+        if (!isLoggedIn) {
+            alert('Vui lòng đăng nhập để đăng ký gói tập!');
+            window.location.href = loginUrl + '?return_url=' + encodeURIComponent(window.location.href);
+            return;
+        }
+
+        const checkoutUrl = '{{ route("checkout") }}';
+        window.location.href = checkoutUrl + '?package_id=' + packageId;
+    }
+</script>
 @endsection
