@@ -63,8 +63,9 @@ Route::middleware(['auth', 'admin.role'])->prefix('admin')->name('admin.')->grou
     // 7. Customer 
     Route::resource('customers', CustomerController::class);
 
-
+    // 8. Orders
     Route::resource('orders', OrderController::class);
+    
     Route::resource('promotions', PromotionController::class);
     Route::resource('rentals', RentalController::class);
     Route::resource('payments', PaymentController::class);

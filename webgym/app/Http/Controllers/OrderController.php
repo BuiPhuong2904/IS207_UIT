@@ -19,6 +19,66 @@ use App\Models\CartItem;
 
 class OrderController extends Controller
 {
+    public function index(Request $request)
+    {
+        // 1. Khởi tạo 
+        $query = Order::with(['user', 'details.product.product']);
+
+        // 2. Lọc theo Ngày (date_from, date_to)
+        if ($request->filled('date_from')) {
+            $query->whereDate('order_date', '>=', $request->date_from);
+        }
+        if ($request->filled('date_to')) {
+            $query->whereDate('order_date', '<=', $request->date_to);
+        }
+
+        // 3. Lọc theo Giá (price_from, price_to)
+        if ($request->filled('price_from')) {
+            $query->where('total_amount', '>=', $request->price_from);
+        }
+        if ($request->filled('price_to')) {
+            $query->where('total_amount', '<=', $request->price_to);
+        }
+
+        // 4. Lọc theo Trạng thái (status)
+        if ($request->filled('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+
+        // 5. Sắp xếp và Phân trang
+        // ->appends($request->all()) giúp giữ nguyên bộ lọc khi bấm sang trang 2, 3
+        $orders = $query->orderBy('order_date', 'desc')
+                        ->paginate(10)
+                        ->appends($request->all());
+
+        return view('admin.orders', compact('orders'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        // 1. Tìm đơn hàng
+        $order = Order::where('order_code', $id)->first();
+
+        if (!$order) {
+            return redirect()->back()->with('error', 'Không tìm thấy đơn hàng!');
+        }
+
+        // 2. Validate dữ liệu gửi lên
+        $request->validate([
+            'status' => 'required|in:pending,processing,completed,cancelled',
+            'address' => 'nullable|string',
+        ]);
+
+        // 3. Cập nhật
+        $order->status = $request->input('status');
+        $order->shipping_address = $request->input('address');
+
+        $order->save();
+
+        // 4. Trả về thông báo
+        return redirect()->back()->with('success', 'Cập nhật đơn hàng thành công!');
+    }
+
     public function store(Request $request)
     {
         // 1. Lấy dữ liệu
