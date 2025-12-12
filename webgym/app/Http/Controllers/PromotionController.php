@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\PromotionHelper;
 use App\Models\Promotion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class PromotionController extends Controller
 {
@@ -114,4 +116,25 @@ class PromotionController extends Controller
             'message' => 'Xóa khuyến mãi thành công!'
         ]);
     }
+
+    public function apply(Request $request)
+    {
+        $request->validate([
+            'promotion_code' => 'nullable|string|max:30',
+            'cart_items'     => 'required|json',
+        ]);
+
+        $cartItems = json_decode($request->cart_items, true);
+        $subtotal  = collect($cartItems)->sum(fn($i) => ($i['unit_price'] ?? 0) * ($i['quantity'] ?? 1));
+
+        $result = PromotionHelper::validateAndApply(
+            $request->promotion_code,
+            $cartItems,
+            $subtotal,
+            Auth::id()
+        );
+
+        return response()->json($result);
+    }
+
 }

@@ -26,14 +26,14 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'full_name'      => 'required|string|max:255',
-            'phone_number'   => 'required|string|max:20',
-            'address'        => 'required|string',
-            'email'          => 'required|email',
-            'payment_method' => 'required|in:cod,momo,vnpay',
-            'cart_items'     => 'required|json',
-            'total_amount'   => 'required|numeric|min:0',
-            'promotion_code' => 'nullable|string|max:30',
+            'full_name'         => 'required|string|max:255',
+            'phone_number'      => 'required|string|max:20',
+            'address'           => 'required|string',
+            'email'             => 'required|email',
+            'payment_method'    => 'required|in:cod,vnpay,momo',
+            'cart_items'        => 'required|json',
+            'total_amount'      => 'required|numeric|min:0',
+            'promotion_code'    => 'nullable|string|max:30',
             'apartment_details' => 'nullable|string',
         ]);
 
@@ -42,126 +42,154 @@ class OrderController extends Controller
             return back()->withErrors(['cart_items' => 'Giỏ hàng trống!'])->withInput();
         }
 
-        // Tính lại tổng tiền
-        $totals = $this->recalculateTotal($cartItems, $request->promotion_code);
-        $recalculatedTotal = $totals['total'];
+        // Tính lại subtotal
+        $subtotal = collect($cartItems)->sum(fn($i) => ($i['unit_price'] ?? 0) * ($i['quantity'] ?? 1));
 
-        if (abs($recalculatedTotal - $request->total_amount) > 100) {
+        // Xác thực lại mã giảm giá (bắt buộc, chống cheat)
+        $promotionDiscount = 0;
+        $validPromotionCode = null;
+
+        if ($request->filled('promotion_code')) {
+            $result = PromotionHelper::validateAndApply(
+                $request->promotion_code,
+                $cartItems,
+                $subtotal,
+                Auth::id()
+            );
+
+            if (!$result['success']) {
+                return back()
+                    ->withErrors(['promotion_code' => $result['message']])
+                    ->withInput();
+            }
+
+            $promotionDiscount = $result['discount'];
+            $validPromotionCode = $result['promotion_code'];
+        }
+
+        // Tính tổng cuối cùng
+        $itemDiscount = collect($cartItems)->sum(fn($i) => ($i['discount_value'] ?? 0) * ($i['quantity'] ?? 1));
+        $finalTotal = $subtotal - $itemDiscount - $promotionDiscount + 30000;
+
+        // Chống cheat tiền
+        if (abs($finalTotal - $request->total_amount) > 100) {
             return back()
                 ->withErrors(['total_amount' => 'Số tiền không hợp lệ. Vui lòng tải lại trang!'])
-                ->withInput($request->except('total_amount'));
+                ->withInput();
         }
 
         $orderCode = null;
 
         try {
-            DB::transaction(function () use ($request, $cartItems, $totals, &$orderCode) {
-                // 1. Tạo Order
+            DB::transaction(function () use (
+                $request, $cartItems, $subtotal, $itemDiscount,
+                $promotionDiscount, $validPromotionCode, $finalTotal, &$orderCode
+            ) {
+                // Tạo mã đơn đẹp, không trùng: ORD20251212000123
+                $todayPrefix = 'ORD' . date('Ymd');
+                $lastOrder = Order::where('order_code', 'like', $todayPrefix . '%')
+                    ->orderBy('order_id', 'desc')
+                    ->first();
+
+                $nextNumber = $lastOrder
+                    ? ((int)substr($lastOrder->order_code, -6)) + 1
+                    : 1;
+
+                $orderCode = $todayPrefix . str_pad($nextNumber, 6, '0', STR_PAD_LEFT);
+
+                // Tạo đơn hàng – chỉ dùng đúng các cột có trong model
                 $order = Order::create([
-                    'user_id'          => Auth::id(),
-                    'order_date'       => now(),
-                    'order_code'       => 'ORD-' . strtoupper(uniqid()),
-                    'total_amount'     => $totals['total'],
-                    'status'           => 'pending',
-                    'shipping_address' => $request->address . ($request->apartment_details ? ', ' . $request->apartment_details : ''),
-                    'discount_value'   => $totals['item_discount'] + $totals['promotion_discount'],
-                    'promotion_code'   => $request->promotion_code ?? null,
+                    'user_id'           => Auth::id(),
+                    'order_date'        => now(),
+                    'order_code'        => $orderCode,
+                    'total_amount'      => $finalTotal,
+                    'status'            => 'pending',
+                    'shipping_address'  => $request->address .
+                        ($request->apartment_details ? ', ' . $request->apartment_details : ''),
+                    'discount_value'    => $itemDiscount + $promotionDiscount,
+                    'promotion_code'    => $validPromotionCode,
                 ]);
 
-                $orderCode = $order->order_code;
-                $lastRegistrationId = null;
-
-                // 2. Tạo OrderDetail (sản phẩm vật lý)
+                // Tạo chi tiết đơn hàng (sản phẩm vật lý)
                 foreach ($cartItems as $item) {
                     if (empty($item['type']) || $item['type'] !== 'membership') {
                         OrderDetail::create([
                             'order_id'       => $order->order_id,
-                            'variant_id'     => $item['variant_id'],
+                            'variant_id'     => $item['variant_id'] ?? null,
                             'quantity'       => $item['quantity'] ?? 1,
-                            'unit_price'     => (float)$item['unit_price'],
-                            'discount_value' => (float)($item['discount_value'] ?? 0),
-                            'final_price'    => (float)($item['final_price'] ?? $item['unit_price']),
+                            'unit_price'     => $item['unit_price'],
+                            'discount_value' => $item['discount_value'] ?? 0,
                         ]);
                     }
                 }
 
-                // 3. Tạo PackageRegistration (gói tập)
+                // Tạo đăng ký gói tập
                 foreach ($cartItems as $item) {
                     if (!empty($item['type']) && $item['type'] === 'membership') {
                         $package = MembershipPackage::findOrFail($item['package_id']);
 
                         $startDate = Carbon::now();
-                        $endDate = $package->duration_months == 0
-                            ? $startDate->copy()->endOfDay()
-                            : $startDate->copy()->addMonths($package->duration_months);
+                        $endDate = $package->duration_months > 0
+                            ? $startDate->copy()->addMonths($package->duration_months)
+                            : $startDate->copy();
 
-                        $reg = PackageRegistration::create([
+                        PackageRegistration::create([
                             'user_id'     => Auth::id(),
                             'package_id'  => $package->package_id,
+                            'order_id'    => $order->order_id,     // liên kết với đơn hàng
                             'start_date'  => $startDate,
                             'end_date'    => $endDate,
                             'status'      => 'active',
                         ]);
-
-                        $lastRegistrationId = $reg->registration_id;
                     }
                 }
 
-                // 4. Tạo Payment - method động
+                // Tạo bản ghi thanh toán
                 Payment::create([
-                    'user_id'                 => Auth::id(),
-                    'payment_type'            => 'order',
-                    'payment_code'            => $order->order_code, // ← quan trọng: dùng làm TxnRef
-                    'amount'                  => $order->total_amount,
-                    'method'                  => $request->payment_method, // cod | vnpay | momo
-                    'payment_date'            => null,
-                    'status'                  => 'pending',
-                    'order_id'                => $order->order_id,
-                    'package_registration_id'=> $lastRegistrationId,
+                    'user_id'      => Auth::id(),
+                    'order_id'     => $order->order_id,
+                    'payment_code' => $orderCode,
+                    'amount'       => $finalTotal,
+                    'method'       => $request->payment_method,
+                    'status'       => 'pending',
                 ]);
 
-                // 5. Xóa giỏ hàng
+                // XÓA GIỎ HÀNG SAU KHI THÀNH CÔNG
                 $cart = Cart::where('user_id', Auth::id())->first();
                 if ($cart) {
                     CartItem::where('cart_id', $cart->cart_id)->delete();
+                    $cart->delete();
                 }
             });
 
-            // Sau khi tạo đơn thành công → xử lý theo phương thức thanh toán
+            // XỬ LÝ SAU KHI TẠO ĐƠN THÀNH CÔNG
             if ($request->payment_method === 'cod') {
-                // Cập nhật trạng thái đơn hàng và payment giống hệt VNPAY thành công
-                $order   = Order::where('order_code', $orderCode)->firstOrFail();
-                $payment = Payment::where('payment_code', $orderCode)->firstOrFail();
-
-                $order->update([
-                    'status' => 'processing'   // hoặc 'confirmed' tùy flow của bạn
-                ]);
-
-                $payment->update([
-                    'status'       => 'processing',   // COD coi như đã thanh toán ngay
-                    'method'       => 'cod',
+                Order::where('order_code', $orderCode)->update(['status' => 'processing']);
+                Payment::where('payment_code', $orderCode)->update([
+                    'status'       => 'completed',
                     'payment_date' => now(),
                 ]);
 
                 return redirect()
                     ->route('order.thankyou', $orderCode)
-                    ->with('success', 'Đặt hàng thành công! Chúng tôi sẽ liên hệ giao hàng sớm nhất .');
-            } elseif ($request->payment_method === 'vnpay') {
-                $vnpayUrl = $this->createVnpayUrl($orderCode, $totals['total'], $request->ip());
-                return redirect()->away($vnpayUrl);   // ← redirect thẳng sang VNPAY
+                    ->with('success', 'Đặt hàng thành công! Chúng tôi sẽ liên hệ sớm.');
             }
 
-            // momo để sau nếu cần
-            return back()->withErrors(['error' => 'Phương thức thanh toán chưa hỗ trợ.']);
+            if ($request->payment_method === 'vnpay') {
+                $vnpayUrl = $this->createVnpayUrl($orderCode, $finalTotal, $request->ip());
+                return redirect()->away($vnpayUrl);
+            }
+
+            return back()->with('error', 'Phương thức thanh toán chưa hỗ trợ.');
 
         } catch (\Exception $e) {
             Log::error('Checkout failed: ' . $e->getMessage(), [
                 'user_id' => Auth::id(),
-                'request' => $request->all(),
+                'request' => $request->all()
             ]);
 
             return back()
-                ->withErrors(['error' => 'Có lỗi xảy ra. Vui lòng thử lại.'])
+                ->withErrors(['error' => 'Đặt hàng thất bại. Vui lòng thử lại.'])
                 ->withInput();
         }
     }

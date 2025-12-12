@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Promotion extends Model
 {
@@ -22,5 +23,26 @@ class Promotion extends Model
     public function targets()
     {
         return $this->hasMany(PromotionTarget::class, 'promotion_id');
+    }
+
+    public function getUsedCountAttribute()
+    {
+        return \DB::table('order')
+            ->where('promotion_code', $this->code)
+            ->whereIn('status', ['processing', 'completed', 'shipped', 'done'])
+            ->count();
+    }
+
+    public function scopeActive($query)
+    {
+        $now = Carbon::now();
+
+        return $query->where('is_active', true)
+            ->where(function ($q) use ($now) {
+                $q->whereNull('start_date')->orWhere('start_date', '<=', $now);
+            })
+            ->where(function ($q) use ($now) {
+                $q->whereNull('end_date')->orWhere('end_date', '>=', $now);
+            });
     }
 }

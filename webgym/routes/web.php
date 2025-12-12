@@ -3,6 +3,7 @@
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderHistoryController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PromotionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ChatbotController;
@@ -101,6 +102,9 @@ Route::middleware('auth')->group(function () {
     // Thêm dòng này vào trong Route::middleware('auth')->group(...)
     Route::get('/order/success/{order_code}', [OrderController::class, 'thankYou'])
         ->name('order.thankyou');
+
+    Route::post('/api/apply-promotion', [PromotionController::class, 'apply'])
+        ->name('api.apply-promotion');
 
     // Đã có sẵn route order.store và order.thankyou
     Route::get('/payment/vnpay/return', [PaymentController::class, 'vnpayReturn'])
