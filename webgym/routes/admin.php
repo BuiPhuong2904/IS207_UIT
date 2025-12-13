@@ -10,7 +10,7 @@ use App\Http\Controllers\StoreController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\RentalController;
-use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PaymentAdminController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\BranchController;
 use App\Http\Controllers\ClassScheduleController;
@@ -23,7 +23,7 @@ use App\Http\Controllers\BorrowReturnController;
 use App\Http\Controllers\PackageRegistrationController;
 
 // Admin Routes
-// Middleware 
+// Middleware
 Route::middleware(['auth', 'admin.role'])->prefix('admin')->name('admin.')->group(function () {
 
     // 1. Dashboard
@@ -52,7 +52,7 @@ Route::middleware(['auth', 'admin.role'])->prefix('admin')->name('admin.')->grou
     });
 
     // 4. Class Schedule (Lịch lớp tập)
-    Route::resource('class_schedule', ClassScheduleController::class); 
+    Route::resource('class_schedule', ClassScheduleController::class);
 
     // 5. Class List (Danh sách lớp tập)
     Route::resource('class_list', ClassListController::class);
@@ -60,7 +60,7 @@ Route::middleware(['auth', 'admin.role'])->prefix('admin')->name('admin.')->grou
     // 6. Trainer (Quản lý huấn luyện viên)
     Route::resource('trainers', TrainerController::class);
 
-    // 7. Customer 
+    // 7. Customer
     Route::resource('customers', CustomerController::class);
 
     // 8. Orders
@@ -68,10 +68,14 @@ Route::middleware(['auth', 'admin.role'])->prefix('admin')->name('admin.')->grou
     
     Route::resource('promotions', PromotionController::class);
     Route::resource('rentals', RentalController::class);
-    Route::resource('payments', PaymentController::class);
+    Route::resource('payments', PaymentAdminController::class);
+
     Route::resource('blogs', BlogController::class);
+    Route::get('/blogs', [App\Http\Controllers\BlogController::class, 'index'])->name('blogs.index');
+    Route::resource('/blogs', App\Http\Controllers\BlogController::class)->except(['index', 'create', 'edit']);
+
     Route::resource('branches', BranchController::class);
-    
+
     Route::get('borrow_return', [BorrowReturnController::class, 'index'])->name('borrow_return.index');
 
     // Route test CSRF (xóa khi production)
