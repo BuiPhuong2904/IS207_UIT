@@ -66,17 +66,19 @@
                         <div class="ml-4">
                             <h3 class="text-lg font-bold text-gray-900">{{ Auth::user()->full_name ?? 'Tên người dùng' }}</h3>
                             <p class="text-gray-600 text-sm">{{ Auth::user()->email ?? 'email@example.com' }}</p>
+                            <br>
+                            <button type="button" class="w-full sm:w-auto bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 font-medium text-sm flex items-center justify-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
+                                Tải ảnh lên
+                            </button>
                         </div>
-                    </div>
-                    <button type="button" class="w-full sm:w-auto bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 font-medium text-sm flex items-center justify-center">
-                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
-                        Tải ảnh lên
-                    </button>
+                    </div>       
                 </div>
 
 
                 <div class="bg-white shadow-sm rounded-lg p-6 mb-6">
                     <h2 class="text-xl font-bold text-gray-900 mb-6">Thông tin cá nhân</h2>
+                    <hr><br>
 
                     @if(session('success'))
                         <div class="bg-green-50 text-green-700 px-4 py-3 rounded mb-6 border-l-4 border-green-500">{{ session('success') }}</div>
@@ -127,6 +129,7 @@
 
                 <div class="bg-white shadow-sm rounded-lg p-6">
                     <h3 class="text-xl font-bold text-gray-900 mb-6">Thay đổi mật khẩu</h3>
+                    <hr><br>
                     <form action="{{ route('profile.change-password') }}" method="POST" class="space-y-6">
                         @csrf
                         <div>

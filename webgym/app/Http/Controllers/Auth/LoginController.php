@@ -34,4 +34,18 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
         return redirect()->route('home');
     }
+
+    public function showLoginForm(Request $request) {
+        // Log session trước khi xóa để biết key nào tồn tại
+        Log::info('ShowLoginForm - session before forget', session()->all());
+
+        // đảm bảo xóa các key lỗi
+        $request->session()->forget(['google_error', 'error', 'error_message']);
+
+        // Log lại sau khi forget để kiểm chứng
+        Log::info('ShowLoginForm - session after forget', session()->all());
+
+        return view('auth.login');
+        }
+
 }

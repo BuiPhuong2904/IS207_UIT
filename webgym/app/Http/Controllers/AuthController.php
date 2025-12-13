@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log; 
 
 class AuthController extends Controller
 {
@@ -48,15 +49,31 @@ class AuthController extends Controller
     }
 
     public function postLogin(LoginRequest $request)
-    {
-        $credentials = $request->only('email', 'password');
-        $remember = (bool) $request->boolean('remember');
+{
+    $credentials = $request->only('email', 'password');
+    $remember = (bool) $request->boolean('remember');
+    if (Auth::attempt($credentials, $remember)) {
+        // tránh session fixation
+        $request->session()->regenerate();
 
-        if (Auth::attempt($credentials, $remember)) {
-            $request->session()->regenerate();
-            return redirect()->intended(route('home'));
+        $user = Auth::user();
+
+        Log::info('User logged in', [
+            'id' => $user->id,
+            'email' => $user->email,
+            'role' => $user->role,
+        ]);
+
+        // Kiểm tra admin: ưu tiên method isAdmin() nếu có
+        $isAdmin = method_exists($user, 'isAdmin') ? $user->isAdmin() : (strtolower((string) $user->role) === 'admin');
+
+        if ($isAdmin) {
+            return redirect()->intended(route('admin.dashboard'));
         }
 
-        return back()->withInput($request->only('email'))->with('error', 'Thông tin đăng nhập không đúng.');
+        return redirect()->intended(route('home')); // hoặc route('home') nếu muốn
     }
+
+    return back()->withInput($request->only('email'))->with('error', 'Thông tin đăng nhập không đúng.');
+}
 }
