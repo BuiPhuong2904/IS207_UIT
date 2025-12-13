@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('status')->nullable();
             $table->text('note')->nullable();
 
+            $table->timestamps();
+
             $table->foreign('user_id')->references('id')->on('user')->onDelete('set null');
             $table->foreign('item_id')->references('item_id')->on('rental_item')->onDelete('set null');
         });

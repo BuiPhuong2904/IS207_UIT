@@ -19,7 +19,7 @@ class RentalTransactionSeeder extends Seeder
         DB::table('rental_transaction')->truncate();
 
         // Đặt ngày 
-        $today = Carbon::parse('2025-11-17');
+        $today = Carbon::parse('2025-12-14');
 
         // Tạo giao dịch
         DB::table('rental_transaction')->insert([

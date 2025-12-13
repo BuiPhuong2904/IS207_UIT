@@ -78,8 +78,11 @@ Route::middleware(['auth', 'admin.role'])->prefix('admin')->name('admin.')->grou
     // 12. Branches
     Route::resource('branches', BranchController::class);
 
+    // 13. Rentals
     Route::resource('rentals', RentalController::class);
-    Route::get('borrow_return', [BorrowReturnController::class, 'index'])->name('borrow_return.index');
+
+    // 14. Borrow & Return
+    Route::resource('borrow_return', BorrowReturnController::class);
 
     // Route test CSRF (xóa khi production)
     Route::get('/csrf-token', function () {
