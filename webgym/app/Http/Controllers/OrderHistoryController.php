@@ -11,30 +11,34 @@ class OrderHistoryController
     public function index(Request $request)
     {
         $validStatuses = [
+            'all',
             'pending',
-            'ready_for_pickup',
             'processing',
             'completed',
             'cancelled'
         ];
 
-        $status = $request->query('status', 'pending');
+        $status = $request->query('status', 'all');
+
         if (!in_array($status, $validStatuses)) {
-            $status = 'pending';
+            $status = 'all';
         }
 
-        $orders = Order::with(['details.product'])
-            ->where('user_id', Auth::id())
-            ->where('status', $status)
-            ->latest('order_date')
-            ->get();
+        $query = Order::with(['details.product'])
+            ->where('user_id', Auth::id());
+        
+        if ($status !== 'all') {
+            $query->where('status', $status);
+        }
+
+        $orders = $query->latest('order_date')->get();
 
         $statusLabels = [
+            'all' => 'Tất cả',
             'pending' => 'Chờ xác nhận',
-            'ready_for_pickup'     => 'Chờ lấy hàng',
-            'processing'             => 'Đang giao',
-            'completed'            => 'Đã giao',
-            'cancelled'            => 'Đã hủy',
+            'processing' => 'Đang giao',
+            'completed' => 'Đã hoàn thành',
+            'cancelled' => 'Đã hủy',
         ];
 
         return view('user.order_history', compact('orders', 'status', 'statusLabels'));

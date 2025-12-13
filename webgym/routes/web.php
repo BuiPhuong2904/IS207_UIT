@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderHistoryController;
+use App\Http\Controllers\RentalHistoryController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PromotionController;
 use Illuminate\Support\Facades\Route;
@@ -94,7 +95,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/lop-hoc-da-dang-ky', [UserClassController::class, 'myClasses'])->name('my_classes');
 
     Route::get('/lich-su-don-hang',[OrderHistoryController::class,'index'])->name('order_history');
-    Route::view('/lich-su-muon-tra', 'user.rental_history')->name('rental_history');
+    Route::get('/lich-su-muon-tra', [RentalHistoryController::class, 'index'])->name('rental_history');
 
     // Checkout
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');

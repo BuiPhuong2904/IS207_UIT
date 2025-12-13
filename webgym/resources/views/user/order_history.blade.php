@@ -17,8 +17,7 @@
                class="py-2 px-1 flex-1 transition duration-150 rounded-full whitespace-nowrap
                     @if (request('status', 'pending_confirmation') == $slug)
                         text-blue-600 bg-blue-100 
-                    @else
-                        text-gray-500 hover:bg-gray-50
+                    @else hover:bg-gray-50
                     @endif">
                 {{ $name }}
             </a>
@@ -121,7 +120,7 @@
                     <div class="flex gap-3">
                         
                         {{-- TRƯỜNG HỢP 1: ĐÃ GIAO (completed) --}}
-                        @if (request('status') == 'completed')
+                        @if ($order->status == 'completed')
                             <a href="{{ route('product') }}" 
                                class="px-10 py-2 text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition duration-150 flex items-center justify-center whitespace-nowrap">
                                 Mua lại
