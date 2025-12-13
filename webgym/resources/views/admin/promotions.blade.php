@@ -10,7 +10,7 @@
     
     {{-- HEADER & BUTTONS --}}
     <div class="flex justify-between items-center mb-6">
-        <h1 class="font-montserrat text-2xl text-black font-semibold uppercase">Quản lý khuyến mãi</h1>
+        <h1 class="font-montserrat text-2xl text-black font-semibold">Quản lý khuyến mãi</h1>
         
         <div class="flex items-center space-x-4">
             

@@ -24,8 +24,8 @@ class PaymentSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         // Lấy ngày từ các seeder khác
-        $today_reg = Carbon::parse('2025-11-14');
-        $today_order = Carbon::parse('2025-11-17 09:30:00');
+        $today_reg = Carbon::parse('2025-12-11 09:30:00');
+        $today_order = Carbon::parse('2025-12-12 09:30:00');
 
         DB::table('payment')->insert([
             

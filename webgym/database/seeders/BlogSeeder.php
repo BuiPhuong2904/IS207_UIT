@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class BlogSeeder extends Seeder
 {
@@ -17,101 +17,201 @@ class BlogSeeder extends Seeder
         // 1. Xóa sạch dữ liệu cũ
         DB::table('blog_post')->truncate();
 
-        // 2. Tạo dữ liệu mẫu
-        DB::table('blog_post')->insert([
-            // --- BÀI VIẾT CỦA ADMIN (Thông báo, Khuyến mãi) ---
+        // 2. Tạo dữ liệu mẫu 
+        $posts = [
+            // NHÓM 1: KHUYẾN MÃI (Tag: khuyen-mai)
             [
-                'title' => 'Thông báo lịch nghỉ Tết Nguyên Đán 2025',
-                'slug' => Str::slug('Thông báo lịch nghỉ Tết Nguyên Đán 2025'),
-                'summary' => 'Kính gửi quý hội viên, phòng tập xin thông báo lịch nghỉ tết và thời gian hoạt động trở lại.',
-                'content' => '<p>Phòng tập sẽ bắt đầu nghỉ tết từ ngày 28/01/2025 đến hết ngày 05/02/2025. Chúc quý hội viên một năm mới An Khang Thịnh Vượng.</p>',
-                'author_id' => 1, // Admin Nguyễn Văn An
+                'title' => 'Giáng Sinh An Lành - Tặng Thẻ Tập 1 Tháng',
+                'summary' => 'Món quà sức khỏe ý nghĩa dành tặng bạn và người thân mùa Noel này.',
+                'content' => '<p>Đăng ký gói tập từ 6 tháng trở lên trong dịp Giáng sinh (20/12 - 25/12) để nhận ngay voucher tập thử 1 tháng miễn phí cho bạn bè...</p>',
+                'author_id' => 1,
                 'is_published' => true,
-                'published_at' => now()->subDays(10),
-                'tags' => 'thong-bao, lich-nghi',
-                'image_url' => null,
+                'published_at' => Carbon::create(2025, 12, 12), 
+                'tags' => 'khuyen-mai', 
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1765634784/noel_rnildf.jpg',
             ],
             [
-                'title' => 'Chương trình khuyến mãi: Chào hè rực rỡ - Giảm 30%',
-                'slug' => Str::slug('Chương trình khuyến mãi: Chào hè rực rỡ - Giảm 30%'),
-                'summary' => 'Ưu đãi đặc biệt dành cho các gói tập 1 năm đăng ký trong tháng này.',
-                'content' => '<p>Đăng ký ngay hôm nay để nhận ưu đãi giảm giá 30% và tặng kèm túi thể thao cao cấp.</p>',
-                'author_id' => 2, // Admin Trần Thị Bích
+                'title' => 'Siêu Sale Cuối Năm: Giảm 50% Gói PT 1-1',
+                'summary' => 'Cơ hội duy nhất trong năm để sở hữu HLV cá nhân với mức giá không tưởng.',
+                'content' => '<p>Chương trình Year End Sale bùng nổ! Giảm ngay 50% cho 50 khách hàng đầu tiên đăng ký gói PT 30 buổi...</p>',
+                'author_id' => 2,
                 'is_published' => true,
-                'published_at' => now()->subDays(2),
-                'tags' => 'khuyen-mai, uu-dai',
-                'image_url' => null,
+                'published_at' => Carbon::create(2025, 12, 15),
+                'tags' => 'khuyen-mai', 
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1765635185/sale_rosyxq.jpg',
+            ],
+            [
+                'title' => 'Check-in Liền Tay - Nhận Ngay Quà Tặng',
+                'summary' => 'Chụp ảnh check-in tại cây thông Noel GRYND để nhận bình nước thể thao cao cấp.',
+                'content' => '<p>Chỉ cần chụp ảnh check-in và đăng lên Facebook kèm hashtag #GRYND_Xmas, bạn sẽ nhận được một bình nước...</p>',
+                'author_id' => 1,
+                'is_published' => true,
+                'published_at' => Carbon::create(2025, 12, 18),
+                'tags' => 'khuyen-mai',
+                'image_url' => 'https://images.unsplash.com/photo-1519834785169-98be25ec3f84?q=80&w=800&auto=format&fit=crop',
+            ],
+            [
+                'title' => 'Flash Sale 12.12: Săn Deal Gói Tập Chỉ Từ 199k',
+                'summary' => 'Duy nhất ngày 12/12, mở bán 100 gói tập trải nghiệm 2 tuần giá cực sốc.',
+                'content' => '<p>Cơ hội trải nghiệm phòng tập 5 sao với giá bình dân. Đặt lịch hẹn ngay hôm nay để giữ chỗ...</p>',
+                'author_id' => 2,
+                'is_published' => true,
+                'published_at' => Carbon::create(2025, 12, 10),
+                'tags' => 'khuyen-mai',
+                'image_url' => 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?q=80&w=800&auto=format&fit=crop',
+            ],
+            [
+                'title' => 'Ưu Đãi Nhóm: Tập Càng Đông - Giá Càng Rẻ',
+                'summary' => 'Rủ hội bạn thân đi tập để nhận ưu đãi giảm thêm 15% cho tổng hóa đơn.',
+                'content' => '<p>Đăng ký nhóm từ 3 người trở lên sẽ được giảm trực tiếp 15% và tặng thêm 1 tuần tập miễn phí...</p>',
+                'author_id' => 1,
+                'is_published' => false,
+                'published_at' => Carbon::create(2025, 12, 22),
+                'tags' => 'khuyen-mai',
+                'image_url' => 'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?q=80&w=800&auto=format&fit=crop',
             ],
 
-            // --- BÀI VIẾT CỦA TRAINER (Kiến thức tập luyện, Dinh dưỡng) ---
+            // NHÓM 2: KIẾN THỨC TẬP LUYỆN (Tag: kien-thuc)
             [
-                'title' => '5 bài tập Cardio đốt mỡ thừa hiệu quả tại nhà',
-                'slug' => Str::slug('5 bài tập Cardio đốt mỡ thừa hiệu quả tại nhà'),
-                'summary' => 'Hướng dẫn chi tiết các bài tập Cardio đơn giản nhưng mang lại hiệu quả cao giúp bạn lấy lại vóc dáng.',
-                'content' => '<p>Chi tiết về bài tập Jumping Jack, Burpees, Mountain Climbers...</p>',
-                'author_id' => 4, // Trainer Lê Minh Châu
+                'title' => 'Bí kíp giữ dáng mùa tiệc tùng cuối năm',
+                'summary' => 'Làm sao để tận hưởng các bữa tiệc Tất niên mà không lo tăng cân mất kiểm soát?',
+                'content' => '<p>Mẹo nhỏ: Uống nước trước khi ăn, ưu tiên đạm và rau xanh, hạn chế đồ uống có cồn...</p>',
+                'author_id' => 4,
                 'is_published' => true,
-                'published_at' => now()->subDays(5),
-                'tags' => 'cardio, giam-can, tap-tai-nha',
-                'image_url' => null,
+                'published_at' => Carbon::create(2025, 12, 5),
+                'tags' => 'kien-thuc', 
+                'image_url' => 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?q=80&w=800&auto=format&fit=crop',
             ],
             [
-                'title' => 'Chế độ ăn Eat Clean cho người mới bắt đầu',
-                'slug' => Str::slug('Chế độ ăn Eat Clean cho người mới bắt đầu'),
-                'summary' => 'Tìm hiểu về nguyên tắc ăn Eat Clean và thực đơn mẫu trong 7 ngày.',
-                'content' => '<p>Eat Clean không phải là ăn kiêng khắt khe mà là lựa chọn thực phẩm sạch, chế biến đơn giản...</p>',
-                'author_id' => 5, // Trainer Phạm Văn Dũng
+                'title' => 'Top 5 bài tập Cardio đốt mỡ cấp tốc đón Tết',
+                'summary' => 'Lấy lại vóc dáng thon gọn chỉ trong 4 tuần với lịch tập Cardio cường độ cao.',
+                'content' => '<p>Hướng dẫn chi tiết lịch tập HIIT 20 phút mỗi ngày giúp đốt cháy calo hiệu quả ngay tại nhà...</p>',
+                'author_id' => 5,
                 'is_published' => true,
-                'published_at' => now()->subDays(15),
-                'tags' => 'dinh-duong, eat-clean, healthy',
-                'image_url' => null,
+                'published_at' => Carbon::create(2025, 12, 1),
+                'tags' => 'kien-thuc',
+                'image_url' => 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=800&auto=format&fit=crop',
             ],
             [
-                'title' => 'Lợi ích của việc tập Yoga vào buổi sáng',
-                'slug' => Str::slug('Lợi ích của việc tập Yoga vào buổi sáng'),
-                'summary' => 'Tại sao bạn nên dành 30 phút mỗi sáng để tập Yoga? Cùng tìm hiểu nhé.',
-                'content' => '<p>Tập Yoga buổi sáng giúp đánh thức cơ thể, cải thiện hô hấp và tăng cường sự tập trung...</p>',
-                'author_id' => 7, // Trainer Nguyễn Thị Giang
+                'title' => 'Tại sao nên tập Gym vào mùa đông?',
+                'summary' => 'Đừng để thời tiết lạnh làm bạn lười biếng. Mùa đông chính là thời điểm vàng để đốt mỡ.',
+                'content' => '<p>Khi trời lạnh, cơ thể cần tiêu tốn nhiều năng lượng hơn để giữ ấm, từ đó giúp quá trình đốt calo diễn ra mạnh mẽ hơn...</p>',
+                'author_id' => 6,
                 'is_published' => true,
-                'published_at' => now()->subDays(20),
-                'tags' => 'yoga, suc-khoe, thu-gian',
-                'image_url' => null,
+                'published_at' => Carbon::create(2025, 12, 8),
+                'tags' => 'kien-thuc',
+                'image_url' => 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?q=80&w=800&auto=format&fit=crop',
             ],
             [
-                'title' => 'Sai lầm thường gặp khi tập Squat',
-                'slug' => Str::slug('Sai lầm thường gặp khi tập Squat'),
-                'summary' => 'Squat là vua của các bài tập chân, nhưng tập sai có thể gây chấn thương nghiêm trọng.',
-                'content' => '<p>Các lỗi phổ biến: đầu gối quá mũi chân, lưng không thẳng, không gồng core...</p>',
-                'author_id' => 6, // Trainer Ngô Văn Đông
+                'title' => 'Thực Đơn Eat Clean 7 Ngày Cho Dân Văn Phòng',
+                'summary' => 'Gợi ý thực đơn chuẩn bị nhanh, gọn, đủ chất cho người bận rộn muốn giảm cân.',
+                'content' => '<p>Thứ 2: Ức gà nướng + Khoai lang. Thứ 3: Salad cá ngừ + Trứng luộc. Thứ 4: Bún gạo lứt...</p>',
+                'author_id' => 5,
                 'is_published' => true,
-                'published_at' => now()->subDays(3),
-                'tags' => 'gym, kien-thuc, squat',
-                'image_url' => null,
+                'published_at' => Carbon::create(2025, 12, 14),
+                'tags' => 'kien-thuc',
+                'image_url' => 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?q=80&w=800&auto=format&fit=crop',
             ],
-            
-            // --- BÀI VIẾT NHÁP (Chưa publish) ---
             [
-                'title' => 'Hướng dẫn sử dụng máy chạy bộ đúng cách (Bản nháp)',
-                'slug' => Str::slug('Hướng dẫn sử dụng máy chạy bộ đúng cách'),
-                'summary' => 'Bài viết đang soạn thảo...',
-                'content' => null,
-                'author_id' => 4, // Trainer Lê Minh Châu
+                'title' => 'Uống Whey Protein Thời Điểm Nào Là Tốt Nhất?',
+                'summary' => 'Tối ưu hóa việc phát triển cơ bắp bằng cách nạp protein đúng thời điểm vàng.',
+                'content' => '<p>Sáng sớm sau khi ngủ dậy và ngay sau khi tập luyện là 2 thời điểm cơ thể cần nạp protein nhanh nhất...</p>',
+                'author_id' => 6,
                 'is_published' => false,
-                'published_at' => null,
-                'tags' => 'thiet-bi, huong-dan',
-                'image_url' => null,
+                'published_at' => Carbon::create(2025, 12, 29),
+                'tags' => 'kien-thuc',
+                'image_url' => 'https://images.unsplash.com/photo-1593095948071-474c5cc2989d?q=80&w=800&auto=format&fit=crop',
             ],
-             [
-                'title' => 'Thực phẩm bổ sung: Nên hay không? (Chờ duyệt)',
-                'slug' => Str::slug('Thực phẩm bổ sung: Nên hay không?'),
-                'summary' => 'Phân tích ưu nhược điểm của Whey Protein, BCAA...',
-                'content' => '<p>Nội dung chi tiết đang được cập nhật...</p>',
-                'author_id' => 8, // Trainer Trương Minh Khanh
-                'is_published' => false,
-                'published_at' => null,
-                'tags' => 'supplements, dinh-duong',
-                'image_url' => null,
+
+            // NHÓM 3: THÔNG BÁO (Tag: thong-bao)
+            [
+                'title' => 'Lịch hoạt động Tết Dương Lịch 2026',
+                'summary' => 'Thông báo về thời gian mở cửa phòng tập trong dịp nghỉ lễ sắp tới.',
+                'content' => '<p>Phòng tập vẫn mở cửa bình thường vào ngày 01/01/2026 nhưng khung giờ sẽ thay đổi: 8:00 - 18:00...</p>',
+                'author_id' => 1,
+                'is_published' => true,
+                'published_at' => Carbon::create(2025, 12, 19),
+                'tags' => 'thong-bao',
+                'image_url' => 'https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=800&auto=format&fit=crop',
             ],
-        ]);
+            [
+                'title' => 'Bảo Trì Hệ Thống Phòng Xông Hơi',
+                'summary' => 'Thông báo tạm ngưng dịch vụ Sauna để nâng cấp thiết bị.',
+                'content' => '<p>Khu vực xông hơi ướt (Steam) sẽ tạm đóng cửa bảo trì vào ngày 10/12. Khu vực xông khô vẫn hoạt động bình thường...</p>',
+                'author_id' => 1,
+                'is_published' => true,
+                'published_at' => Carbon::create(2025, 12, 5),
+                'tags' => 'thong-bao',
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1765636584/spa_hfchpi.jpg',
+            ],
+            [
+                'title' => 'Workshop: Yoga & Thiền Định Cuối Tuần',
+                'summary' => 'Mời hội viên tham gia buổi workshop miễn phí về kỹ thuật thở và thiền định.',
+                'content' => '<p>Buổi workshop sẽ diễn ra vào sáng Chủ Nhật tuần này với sự hướng dẫn của Master Yoga Ấn Độ...</p>',
+                'author_id' => 2,
+                'is_published' => true,
+                'published_at' => Carbon::create(2025, 12, 15),
+                'tags' => 'thong-bao',
+                'image_url' => 'https://images.unsplash.com/photo-1599447421405-075710001bc2?q=80&w=800&auto=format&fit=crop',
+            ],
+            [
+                'title' => 'Cập Nhật Nội Quy Phòng Tập Mới Nhất 2026',
+                'summary' => 'Một số thay đổi nhỏ trong quy định check-in và sử dụng khăn tập.',
+                'content' => '<p>Kể từ ngày 01/01/2026, hội viên vui lòng mang theo thẻ từ hoặc quét mã QR trên ứng dụng để vào cửa...</p>',
+                'author_id' => 1,
+                'is_published' => true,
+                'published_at' => Carbon::create(2025, 12, 1),
+                'tags' => 'thong-bao',
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1762340414/home_nulk3t.jpg',
+            ],
+
+            // NHÓM 4: CÂU CHUYỆN KHÁCH HÀNG (Tag: story)
+            [
+                'title' => 'Hành trình giảm 15kg trong 3 tháng của chị Lan',
+                'summary' => 'Câu chuyện đầy cảm hứng về sự kiên trì và nỗ lực thay đổi bản thân.',
+                'content' => '<p>Từng tự ti về ngoại hình sau sinh, chị Lan đã tìm lại sự tự tin nhờ sự đồng hành của đội ngũ PT tại GRYND...</p>',
+                'author_id' => 7,
+                'is_published' => true,
+                'published_at' => Carbon::create(2025, 12, 9),
+                'tags' => 'story',
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1762341274/blog_2_uugz6s.jpg',
+            ],
+            [
+                'title' => 'Từ Chàng Trai Gầy Gò Đến Body 6 Múi Săn Chắc',
+                'summary' => 'Minh Tuấn và hành trình tăng 10kg cơ nạc đầy ngoạn mục.',
+                'content' => '<p>Không ai tin Tuấn có thể thay đổi nhanh đến vậy chỉ sau 6 tháng kiên trì tập luyện và ăn uống khoa học...</p>',
+                'author_id' => 4,
+                'is_published' => true,
+                'published_at' => Carbon::create(2025, 12, 16),
+                'tags' => 'story',
+                'image_url' => 'https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?q=80&w=800&auto=format&fit=crop',
+            ],
+            [
+                'title' => 'Yoga Đã Giúp Tôi Chữa Lành Cơn Đau Lưng Như Thế Nào?',
+                'summary' => 'Chia sẻ của bác Hùng (55 tuổi) về hiệu quả tuyệt vời của Yoga trị liệu.',
+                'content' => '<p>Sau nhiều năm chịu đựng cơn đau lưng mãn tính, bác Hùng đã tìm thấy niềm vui sống nhờ các bài tập Yoga nhẹ nhàng...</p>',
+                'author_id' => 5,
+                'is_published' => true,
+                'published_at' => Carbon::create(2025, 12, 12),
+                'tags' => 'story',
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1762341272/blog_1_shlvij.jpg',
+            ],
+            [
+                'title' => 'Cặp Đôi Cùng Tiến: Giảm Cân Để Kịp Ngày Cưới',
+                'summary' => 'Thanh và Tùng đã cùng nhau giảm tổng cộng 20kg để có bộ ảnh cưới lung linh nhất.',
+                'content' => '<p>Tình yêu chính là động lực lớn nhất giúp cả hai vượt qua những buổi tập Cardio mệt nhoài...</p>',
+                'author_id' => 6,
+                'is_published' => true,
+                'published_at' => Carbon::create(2025, 12, 16),
+                'tags' => 'story',
+                'image_url' => 'https://images.unsplash.com/photo-1621460245131-b0622792d439?q=80&w=800&auto=format&fit=crop',
+            ],
+        ];
+
+        // Chèn dữ liệu vào bảng
+        foreach ($posts as $post) {
+            $post['slug'] = Str::slug($post['title']);
+            DB::table('blog_post')->insert($post);
+        }
     }
 }

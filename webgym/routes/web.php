@@ -17,6 +17,7 @@ use App\Http\Controllers\CheckoutDetailController;
 use App\Http\Controllers\UserPackageController;
 use App\Http\Controllers\UserClassController;
 use App\Http\Controllers\UserStoreController;
+use App\Http\Controllers\UserBlogController;
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
@@ -74,6 +75,9 @@ Route::view('/blog/1', 'blogs.blog_1')->name('blog1');
 Route::view('/blog/2', 'blogs.blog_2')->name('blog2');
 Route::view('/blog/3', 'blogs.blog_3')->name('blog3');
 
+Route::get('/blog', [UserBlogController::class, 'index'])->name('blog');
+Route::get('/blog/{slug}', [UserBlogController::class, 'show'])->name('blog.show');
+
 // User Profile Routes (requires authentication)
 Route::middleware('auth')->group(function () {
     // Route để xử lý hành động lưu đăng ký
@@ -94,23 +98,29 @@ Route::middleware('auth')->group(function () {
 
     // Checkout
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+
+    Route::post('/api/checkout/add', [CheckoutController::class, 'addToCart'])->name('api.checkout.add');
+    Route::post('/api/checkout/update', [CheckoutController::class, 'updateQuantity'])->name('api.checkout.update');
+    Route::post('/api/checkout/remove', [CheckoutController::class, 'removeFromCart'])->name('api.checkout.remove');
+
     Route::post('/checkout-detail', [CheckoutDetailController::class, 'index'])
         ->name('checkout-detail');
+
     Route::get('/checkout-detail', [CheckoutDetailController::class, 'index'])
         ->name('checkout-detail');
+
     Route::post('/order', [OrderController::class, 'store'])
         ->name('order.store');
+
     Route::get('/order/success/{order_code}', [OrderController::class, 'thankYou'])
         ->name('order.thankyou');
 
     Route::post('/api/apply-promotion', [PromotionController::class, 'apply'])
         ->name('api.apply-promotion');
 
-    // Đã có sẵn route order.store và order.thankyou
     Route::get('/payment/vnpay/return', [PaymentController::class, 'vnpayReturn'])
         ->name('payment.vnpay.return');
 
 });
 
 Route::view('/invoice', 'user.invoice')->name('invoice');
-Route::view('/blog', 'user.blog')->name('blog');

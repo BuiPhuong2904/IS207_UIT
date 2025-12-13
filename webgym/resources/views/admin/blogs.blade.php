@@ -1,67 +1,62 @@
-{{-- resources/views/admin/blogs.blade.php --}}
-
 @extends('layouts.ad_layout')
+
 @section('title', 'Quản lý Blog')
+
 @section('content')
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
 {{-- Import TinyMCE --}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.8.2/tinymce.min.js" referrerpolicy="origin"></script>
 
-<div class="bg-white rounded-2xl shadow-sm p-6 font-open-sans h-full">
+<div class="bg-white rounded-2xl shadow-sm p-6 font-open-sans">
     
     {{-- HEADER & BUTTONS --}}
     <div class="flex justify-between items-center mb-6">
-        <h1 class="font-montserrat text-2xl text-black font-semibold uppercase">BLOGS</h1>
+        <h1 class="font-montserrat text-2xl text-black font-semibold">Quản lý bài viết</h1>
         
         <div class="flex items-center space-x-4">
-            <div class="flex items-center text-black cursor-pointer hover:text-gray-900 bg-white border border-gray-200 px-3 py-1.5 rounded-lg shadow-sm">
+            {{-- Dropdown lọc --}}
+            <div class="flex items-center text-black cursor-pointer hover:text-gray-900">
                 <span class="mr-1 text-sm font-medium">Hôm nay</span>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
             </div>
 
-            <button onclick="openModal('addBlogModal')" class="bg-[#28A745] hover:bg-[#218838] text-white px-6 py-2 rounded-full flex items-center font-medium transition-colors shadow-sm cursor-pointer hover:shadow-md">
+            {{-- Nút Thêm --}}
+            <button onclick="openModal('addBlogModal')" class="bg-[#28A745] hover:bg-[#218838] text-white px-4 py-2 rounded-full flex items-center text-sm font-semibold transition-colors shadow-none">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg> 
-                Thêm
+                Thêm bài viết
             </button>
         </div>
     </div>
 
     {{-- TABLE CONTENT --}}
     <div class="overflow-x-auto">
-        <table class="w-full text-left border-collapse table-auto">
-        <thead class="font-montserrat text-[#999] text-xs font-medium uppercase">
-        <tr>
-            <th class="py-4 px-4 w-[7%]">ID</th>
-            <th class="py-4 px-4 w-[25%] min-w-[200px]">Tiêu đề</th> 
-            <th class="py-4 px-4 w-[18%]">Tóm tắt</th>
-            <th class="py-4 px-4 w-[10%]">Danh mục</th>
-            <th class="py-4 px-4 w-[10%]">Tác giả</th>
-            <th class="py-4 px-4 w-[5%] text-center">Thứ tự</th>
-            <th class="py-4 px-4 w-[10%]">Ngày đăng</th>
-            <th class="py-4 px-4 w-[15%] text-right">Trạng thái</th>
-        </tr>
-        </thead>
-            <tbody id="blog-list-body" class="text-sm text-gray-700">
+        <table class="w-full text-left border-collapse table-auto font-open-sans">
+            <thead class="font-montserrat text-[#1f1d1d] text-sm text-center">
+                <tr>
+                    <th class="py-4 px-4 w-[5%] truncate">ID</th>
+                    <th class="py-4 px-4 w-[25%] text-center truncate">Tiêu đề</th> 
+                    <th class="py-4 px-4 w-[15%] truncate">Danh mục</th>
+                    <th class="py-4 px-4 w-[15%] truncate">Tác giả</th>
+                    <th class="py-4 px-4 w-[15%] truncate">Ngày đăng</th>
+                    <th class="py-4 px-4 w-[15%] truncate">Trạng thái</th>
+                </tr>
+            </thead>
+            
+            <tbody id="blog-list-body" class="text-sm text-gray-700 text-center">
             @foreach ($blogs as $item)
             @php
                 $isOdd = $loop->odd;
                 $rowBg = $isOdd ? 'bg-[#1976D2]/20' : 'bg-white';
+                $roundLeft = $isOdd ? 'rounded-l-xl' : '';
+                $roundRight = $isOdd ? 'rounded-r-xl' : '';
 
                 // Xử lý ngày đăng
-                $publishDate = 'Chưa đăng';
-                if ($item->published_at) {
-                    $publishDate = \Carbon\Carbon::parse($item->published_at)->format('d/m/Y');
-                }
-
-                // Badge trạng thái
-                $statusBadge = $item->is_published
-                    ? '<span class="bg-[#28A745]/20 text-[#28A745] py-1 px-3 rounded-full text-xs font-bold">Đã xuất bản</span>'
-                    : '<span class="bg-gray-200 text-gray-600 py-1 px-3 rounded-full text-xs font-bold">Bản nháp</span>';
+                $publishDate = $item->published_at ? \Carbon\Carbon::parse($item->published_at)->format('d/m/Y') : '-';
 
                 // Lấy danh mục
                 $category = 'Chung';
@@ -69,25 +64,65 @@
                     $firstTag = explode(',', $item->tags)[0] ?? '';
                     $category = trim($firstTag) ?: 'Chung';
                 }
+                
+                // Xử lý ảnh (check link ngoài hoặc storage)
+                $imgSrc = $item->image_url 
+                    ? (\Illuminate\Support\Str::startsWith($item->image_url, 'http') ? $item->image_url : Storage::url($item->image_url)) 
+                    : asset('images/no-image.png');
             @endphp
 
-            <tr class="{{ $rowBg }} cursor-pointer transition-colors modal-trigger"
+            <tr class="{{ $rowBg }} cursor-pointer transition-colors group h-16"
                 onclick="openEditModal({{ $item->post_id }})">
-                <td class="py-4 px-4 align-middle rounded-l-lg">BL{{ str_pad($item->post_id, 4, '0', STR_PAD_LEFT) }}</td>
-                <td class="py-4 px-4 align-middle font-medium text-gray-800">{{ $item->title }}</td>
-                <td class="py-4 px-4 align-middle text-gray-600 truncate max-w-xs">{{ Str::limit($item->summary ?? '', 40) }}</td>
-                <td class="py-4 px-4 align-middle">{{ $category }}</td>
-                <td class="py-4 px-4 align-middle">{{ $item->author?->name ?? 'Admin' }}</td>
-                <td class="py-4 px-4 align-middle text-center">{{ $item->post_id }}</td>
-                <td class="py-4 px-4 align-middle">{{ $publishDate }}</td>
-                <td class="py-4 px-4 align-middle text-right rounded-r-lg">{!! $statusBadge !!}</td>
+                
+                <td class="py-3 px-4 align-middle {{ $roundLeft }} font-medium text-gray-500">
+                    #{{ $item->post_id }}
+                </td>
+
+                <td class="py-3 px-4 align-middle text-left">
+                    <p class="font-semibold text-gray-800 line-clamp-1 transition-colors">{{ $item->title }}</p>
+                    <p class="text-xs text-gray-500 line-clamp-1 mt-0.5">{{ Str::limit($item->summary ?? '', 50) }}</p>
+                </td>
+
+                <td class="py-3 px-4 align-middle">
+                    <span class="bg-gray-100 text-gray-600 py-1 px-3 rounded-full text-xs font-medium">
+                        {{ $category }}
+                    </span>
+                </td>
+
+                <td class="py-3 px-4 align-middle font-medium text-gray-700">
+                    {{ $item->author?->full_name ?? 'Admin' }}
+                </td>
+
+                <td class="py-3 px-4 align-middle text-gray-600">
+                    {{ $publishDate }}
+                </td>
+
+                <td class="py-3 px-4 align-middle {{ $roundRight }}">
+                    @if (!$item->is_published)
+                        {{-- 1. Chưa bật xuất bản --}}
+                        <span class="bg-gray-100 text-gray-500 py-1 px-3 rounded-full text-xs font-bold uppercase tracking-wide">
+                            Bản nháp
+                        </span>
+                    @elseif ($item->published_at && \Carbon\Carbon::parse($item->published_at)->isFuture())
+                        {{-- 2. Đã bật nhưng ngày > hiện tại --}}
+                        <span class="bg-[#0D6EFD]/10 text-[#0D6EFD]/70 py-1 px-3 rounded-full text-xs font-bold uppercase tracking-wide">
+                            Đã lên lịch
+                        </span>
+                    @else
+                        {{-- 3. Đã bật và ngày <= hiện tại --}}
+                        <span class="bg-[#28A745]/10 text-[#28A745]/90 py-1 px-3 rounded-full text-xs font-bold uppercase tracking-wide">
+                            Đã xuất bản
+                        </span>
+                    @endif
+                </td>
             </tr>
-            <tr class="h-1 bg-white"></tr>
+            {{-- Spacer row for odd rows visual effect --}}
+            <tr class="h-2"></tr>
             @endforeach
             </tbody>
         </table>
 
-        {{-- Phân trang: --}}
+        {{-- Phân trang --}}
         @if ($blogs->hasPages())
             <div class="mt-6 flex justify-center">
                 {{ $blogs->links() }}
@@ -96,9 +131,7 @@
     </div>
 </div>
 
-{{-- ==================================================================================== --}}
 {{-- MODAL 1: VIẾT BÀI MỚI --}}
-{{-- ==================================================================================== --}}
 <div id="addBlogModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center bg-black/40 font-open-sans backdrop-blur-sm">
     <div class="bg-white rounded-xl shadow-2xl w-full max-w-[90%] md:max-w-6xl h-[90vh] flex flex-col overflow-hidden">
         <div class="flex justify-between items-center px-8 py-5 border-b border-gray-100">
@@ -175,9 +208,7 @@
     </div>
 </div>
 
-{{-- ==================================================================================== --}}
 {{-- MODAL 2: SỬA BLOG --}}
-{{-- ==================================================================================== --}}
 <div id="editBlogModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center bg-black/40 font-open-sans backdrop-blur-sm">
     <div class="bg-white rounded-xl shadow-2xl w-full max-w-[90%] md:max-w-6xl h-[90vh] flex flex-col overflow-hidden">
         <div class="flex justify-between items-center px-8 py-5 border-b border-gray-100">

@@ -18,7 +18,7 @@ class PromotionController extends Controller
     // Trang danh sách khuyến mãi
     public function index()
     {
-        $promotions = Promotion::orderByDesc('promotion_id')->paginate(15);
+        $promotions = Promotion::orderBy('promotion_id', 'asc')->paginate(10);
         return view('admin.promotions', compact('promotions'));
     }
 

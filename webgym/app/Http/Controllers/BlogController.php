@@ -19,7 +19,7 @@ class BlogController extends Controller
     // Trang danh sách blog (giao diện admin)
     public function index()
     {
-        $blogs = BlogPost::with('author')->orderByDesc('post_id')->paginate(5);
+        $blogs = BlogPost::with('author')->orderBy('post_id', 'asc')->paginate(10);
         return view('admin.blogs', compact('blogs'));
     }
 
