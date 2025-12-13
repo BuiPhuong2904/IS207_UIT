@@ -2,33 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ProductVariant;
-use App\Models\Promotion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log; // Thêm Log để ghi lỗi
+
+// Models
 use App\Models\Cart;
 use App\Models\CartItem;
-use Illuminate\Support\Facades\Auth;
-
+use App\Models\ProductVariant;
 use App\Models\MembershipPackage;
+use App\Models\Promotion;
 
 class CheckoutController extends Controller
 {
     /**
      * Hiển thị trang Thanh toán (Checkout).
      */
-public function index(Request $request)
+    public function index(Request $request)
     {
         $userId = Auth::id(); 
 
-        // TRƯỜNG HỢP 1: THANH TOÁN NGAY GÓI TẬP
+        // TRƯỜNG HỢP 1: THANH TOÁN NGAY GÓI TẬP (MUA NGAY)
         if ($request->has('package_id')) {
             $package = MembershipPackage::findOrFail($request->package_id);
 
+            // Tạo item giả lập để hiển thị
             $cart_items = [[
                 'variant_id'     => null,
                 'package_id'     => $package->package_id,
                 'name'           => $package->package_name,
-                'type'           => 'membership', // Đánh dấu là gói tập
+                'type'           => 'membership', 
                 'size'           => null,
                 'color'          => null,
                 'duration'       => $package->duration_months . ' tháng',
@@ -41,10 +44,8 @@ public function index(Request $request)
                 'image_url'      => $package->image_url ?? asset('images/default_package.jpg'),
             ]];
 
-            // Lấy danh sách khuyến mãi 
             $promotions_data = $this->getPromotionsData();
 
-            // Trả về view 
             return view('user.checkout', compact('cart_items', 'promotions_data'));
         }
 
@@ -57,11 +58,9 @@ public function index(Request $request)
                 ['created_at' => now()]
             );
 
-        // Lấy cart_items và map dữ liệu
+        // Map dữ liệu
         $cart_items = $cart->items->map(function ($cartItem) {
             $variant = $cartItem->variant;
-
-            // Nếu variant bị xóa hoặc không tồn tại, bỏ qua
             if (!$variant) return null;
 
             $productName = $variant->product->product_name ?? 'Sản phẩm';
@@ -70,7 +69,7 @@ public function index(Request $request)
             $finalPrice = $unitPrice;
             $discountAmount = 0; 
 
-            // Logic tính giảm giá
+            // Logic tính giảm giá sản phẩm (nếu có)
             if ($variant->is_discounted && $variant->discount_price > 0 && $variant->discount_price < $unitPrice) {
                 $finalPrice = $variant->discount_price;
                 $discountAmount = $unitPrice - $finalPrice;
@@ -79,7 +78,7 @@ public function index(Request $request)
             return [
                 'variant_id'     => $cartItem->variant_id, 
                 'package_id'     => null,
-                'name'           => $productName . ' - ' . ($variant->color ?? ''),
+                'name'           => $productName, // Frontend tự ghép chuỗi nếu cần
                 'type'           => 'product',
                 'size'           => $variant->size ?? 'N/A',
                 'color'          => $variant->color ?? 'N/A',
@@ -99,35 +98,47 @@ public function index(Request $request)
         return view('user.checkout', compact('cart_items', 'promotions_data'));
     }
 
-    // Helper lấy khuyến mãi 
+    /**
+     * [FIX LOGIC] Helper lấy khuyến mãi: Chỉ lấy mã còn hạn và đang bật
+     */
     private function getPromotionsData() {
-        return Promotion::all()->keyBy('code')->map(function ($promo) {
-            return [
-                'discount_value' => $promo->discount_value,
-                'is_percent' => $promo->is_percent,
-                'min_order_amount' => $promo->min_order_amount,
-                'max_discount' => $promo->max_discount,
-                'title' => $promo->title,
-                'description' => $promo->description,
-            ];
-        })->toArray();
+        return Promotion::where('is_active', 1)
+            ->whereDate('start_date', '<=', now())
+            ->whereDate('end_date', '>=', now())
+            ->get()
+            ->keyBy('code')
+            ->map(function ($promo) {
+                return [
+                    'code'             => $promo->code, // Thêm code vào đây để JS đối chiếu
+                    'discount_value'   => $promo->discount_value,
+                    'is_percent'       => $promo->is_percent,
+                    'min_order_amount' => $promo->min_order_amount,
+                    'max_discount'     => $promo->max_discount,
+                    'title'            => $promo->title,
+                    'description'      => $promo->description,
+                ];
+            })->toArray();
     }
 
-    // Hàm lấy cart
+    // Hàm lấy cart nội bộ
     private function getCart($userId)
     {
         if (!$userId) abort(400, 'Thiếu user_id');
-
         return Cart::firstOrCreate([
             'user_id' => $userId,
             'status'  => 'active'
         ], ['created_at' => now()]);
     }
 
+    // ==========================================
+    // API METHODS (AJAX) - Đã thêm Try/Catch và Check Auth
+    // ==========================================
+
     // 1. API LẤY GIỎ HÀNG
     public function getCartItems(Request $request)
     {
-        $userId = $request->query('user_id') ?? $request->input('user_id');
+        // Chỉ lấy giỏ của người đang đăng nhập
+        $userId = Auth::id(); 
         $cart = $this->getCart($userId)->load('items.variant.product');
 
         $items = $cart->items->map(function ($cartItem) {
@@ -159,88 +170,113 @@ public function index(Request $request)
     // 2. API THÊM VÀO GIỎ 
     public function addToCart(Request $request)
     {
-        $request->validate([
-            'user_id'  => 'required|integer',
-            'id'       => 'required|integer',
-            'quantity' => 'nullable|integer|min:1|max:99',
-        ]);
-
-        $cart = $this->getCart($request->user_id);
-        
-        // Luôn tìm Variant
-        $variant = ProductVariant::findOrFail($request->id);
-        $quantity = $request->quantity ?? 1;
-
-        // Tìm xem sản phẩm đã có trong giỏ chưa (theo variant_id)
-        $cartItem = CartItem::where('cart_id', $cart->cart_id)
-            ->where('variant_id', $variant->variant_id)
-            ->first();
-
-        if ($cartItem) {
-            // Có rồi thì cộng dồn số lượng
-            $cartItem->quantity += $quantity;
-            $cartItem->unit_price = $variant->price; // Cập nhật giá mới nhất
-            $cartItem->save();
-        } else {
-            CartItem::create([
-                'cart_id'    => $cart->cart_id,
-                'variant_id' => $variant->variant_id,
-                'quantity'   => $quantity,
-                'unit_price' => $variant->price,
+        try {
+            $request->validate([
+                'user_id'  => 'required|integer',
+                'id'       => 'required|integer', // variant_id
+                'quantity' => 'nullable|integer|min:1|max:99',
             ]);
-        }
-        
-        // Trả về số lượng item trong giỏ để update header
-        $newCount = CartItem::where('cart_id', $cart->cart_id)->count();
 
-        return response()->json([
-            'success'    => true, 
-            'message'    => 'Đã thêm vào giỏ hàng',
-            'cart_count' => $newCount
-        ]);
+            // [BẢO MẬT] Check ID người dùng
+            if ($request->user_id != Auth::id()) {
+                return response()->json(['success' => false, 'message' => 'Không có quyền truy cập'], 403);
+            }
+
+            $cart = $this->getCart($request->user_id);
+            $variant = ProductVariant::findOrFail($request->id);
+            $quantity = $request->quantity ?? 1;
+
+            $cartItem = CartItem::where('cart_id', $cart->cart_id)
+                ->where('variant_id', $variant->variant_id)
+                ->first();
+
+            if ($cartItem) {
+                $cartItem->quantity += $quantity;
+                $cartItem->unit_price = $variant->price; 
+                $cartItem->save();
+            } else {
+                CartItem::create([
+                    'cart_id'    => $cart->cart_id,
+                    'variant_id' => $variant->variant_id,
+                    'quantity'   => $quantity,
+                    'unit_price' => $variant->price,
+                ]);
+            }
+            
+            $newCount = CartItem::where('cart_id', $cart->cart_id)->count();
+
+            return response()->json([
+                'success'    => true, 
+                'message'    => 'Đã thêm vào giỏ hàng',
+                'cart_count' => $newCount
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Lỗi thêm giỏ hàng: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Lỗi server'], 500);
+        }
     }
 
     // 3. API CẬP NHẬT SỐ LƯỢNG
     public function updateQuantity(Request $request)
     {
-        $request->validate([
-            'user_id'  => 'required|integer',
-            'item_id'  => 'required|integer', 
-            'quantity' => 'required|integer|min:1',
-        ]);
+        try {
+            $request->validate([
+                'user_id'  => 'required|integer',
+                'item_id'  => 'required|integer', 
+                'quantity' => 'required|integer|min:1',
+            ]);
 
-        $cart = $this->getCart($request->user_id);
+            // [BẢO MẬT]
+            if ($request->user_id != Auth::id()) {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            }
 
-        $cartItem = CartItem::where('cart_id', $cart->cart_id)
-            ->where('variant_id', $request->item_id) // Tìm theo variant_id
-            ->firstOrFail();
+            $cart = $this->getCart($request->user_id);
 
-        $cartItem->update(['quantity' => $request->quantity]);
+            $cartItem = CartItem::where('cart_id', $cart->cart_id)
+                ->where('variant_id', $request->item_id)
+                ->first();
 
-        return response()->json(['success' => true, 'message' => 'Cập nhật thành công']);
+            if ($cartItem) {
+                $cartItem->update(['quantity' => $request->quantity]);
+                return response()->json(['success' => true, 'message' => 'Cập nhật thành công']);
+            }
+
+            return response()->json(['success' => false, 'message' => 'Không tìm thấy sản phẩm'], 404);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Lỗi cập nhật'], 500);
+        }
     }
 
     // 4. API XÓA KHỎI GIỎ
     public function removeFromCart(Request $request)
     {
-        $request->validate([
-            'user_id' => 'required|integer',
-            'item_id' => 'required|integer',
-        ]);
+        try {
+            $request->validate([
+                'user_id' => 'required|integer',
+                'item_id' => 'required|integer',
+            ]);
 
-        $cart = $this->getCart($request->user_id);
+            // [BẢO MẬT]
+            if ($request->user_id != Auth::id()) {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+            }
 
-        $deleted = CartItem::where('cart_id', $cart->cart_id)
-            ->where('variant_id', $request->item_id) // Tìm theo variant_id
-            ->delete();
-        
-        // Đếm lại số lượng còn lại trong giỏ sau khi xóa
-        $newCount = CartItem::where('cart_id', $cart->cart_id)->count();
+            $cart = $this->getCart($request->user_id);
 
-        return response()->json([
-            'success' => $deleted > 0,
-            'message' => $deleted ? 'Đã xóa' : 'Không tìm thấy',
-            'cart_count' => $newCount // Trả về số này để JS cập nhật Header
-        ]);
+            $deleted = CartItem::where('cart_id', $cart->cart_id)
+                ->where('variant_id', $request->item_id)
+                ->delete();
+            
+            $newCount = CartItem::where('cart_id', $cart->cart_id)->count();
+
+            return response()->json([
+                'success'    => $deleted > 0,
+                'message'    => $deleted ? 'Đã xóa' : 'Không tìm thấy',
+                'cart_count' => $newCount
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Lỗi xóa sản phẩm'], 500);
+        }
     }
 }
