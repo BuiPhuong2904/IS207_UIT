@@ -84,7 +84,7 @@
                 </td>
 
                 <td class="py-3 px-4 align-middle">
-                    <span class="bg-gray-100 text-gray-600 py-1 px-3 rounded-full text-xs font-medium">
+                    <span class=" text-gray-700 py-1 px-3 align-middle font-medium">
                         {{ $category }}
                     </span>
                 </td>
@@ -132,7 +132,7 @@
 </div>
 
 {{-- MODAL 1: VIẾT BÀI MỚI --}}
-<div id="addBlogModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center bg-black/40 font-open-sans backdrop-blur-sm">
+<div id="addBlogModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center bg-black/40 font-open-sans">
     <div class="bg-white rounded-xl shadow-2xl w-full max-w-[90%] md:max-w-6xl h-[90vh] flex flex-col overflow-hidden">
         <div class="flex justify-between items-center px-8 py-5 border-b border-gray-100">
             <h2 class="text-xl font-bold text-[#1976D2] font-montserrat uppercase">VIẾT BÀI MỚI</h2>
@@ -209,7 +209,7 @@
 </div>
 
 {{-- MODAL 2: SỬA BLOG --}}
-<div id="editBlogModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center bg-black/40 font-open-sans backdrop-blur-sm">
+<div id="editBlogModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center bg-black/40 font-open-sans">
     <div class="bg-white rounded-xl shadow-2xl w-full max-w-[90%] md:max-w-6xl h-[90vh] flex flex-col overflow-hidden">
         <div class="flex justify-between items-center px-8 py-5 border-b border-gray-100">
             <h2 class="text-xl font-bold text-[#1976D2] font-montserrat uppercase">CHỈNH SỬA BÀI VIẾT</h2>

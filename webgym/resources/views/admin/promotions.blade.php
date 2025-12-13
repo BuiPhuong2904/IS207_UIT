@@ -127,7 +127,7 @@
 </div>
 
 {{-- ----------------- MODAL 1: THÊM KHUYẾN MÃI ----------------- --}}
-<div id="addPromotionModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center bg-black/40 backdrop-blur-sm font-open-sans">
+<div id="addPromotionModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center bg-black/40 font-open-sans">
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-4xl transform transition-all h-[90vh] overflow-y-auto custom-scrollbar flex flex-col">
         <h2 class="text-2xl font-bold text-center mb-6 text-[#1976D2] font-montserrat uppercase">
             THÊM KHUYẾN MÃI
@@ -220,7 +220,7 @@
 </div>
 
 {{-- ----------------- MODAL 2: CHI TIẾT / SỬA KHUYẾN MÃI ----------------- --}}
-<div id="managePromotionModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center bg-black/40 backdrop-blur-sm font-open-sans">
+<div id="managePromotionModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center bg-black/40 font-open-sans">
     <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-4xl transform transition-all h-[90vh] overflow-y-auto custom-scrollbar flex flex-col">
         
         <h2 class="text-2xl font-bold text-center mb-6 text-[#1976D2] font-montserrat uppercase">

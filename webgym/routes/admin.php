@@ -66,16 +66,19 @@ Route::middleware(['auth', 'admin.role'])->prefix('admin')->name('admin.')->grou
     // 8. Orders
     Route::resource('orders', OrderController::class);
     
+    // 9. Promotions
     Route::resource('promotions', PromotionController::class);
-    Route::resource('rentals', RentalController::class);
+
+    // 10. Payments
     Route::resource('payments', PaymentAdminController::class);
 
+    // 11. Blogs
     Route::resource('blogs', BlogController::class);
-    Route::get('/blogs', [App\Http\Controllers\BlogController::class, 'index'])->name('blogs.index');
-    Route::resource('/blogs', App\Http\Controllers\BlogController::class)->except(['index', 'create', 'edit']);
 
+    // 12. Branches
     Route::resource('branches', BranchController::class);
 
+    Route::resource('rentals', RentalController::class);
     Route::get('borrow_return', [BorrowReturnController::class, 'index'])->name('borrow_return.index');
 
     // Route test CSRF (xóa khi production)
