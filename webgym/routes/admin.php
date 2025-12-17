@@ -23,9 +23,7 @@ use App\Http\Controllers\BorrowReturnController;
 // Admin Routes
 // Các route dành cho quản trị viên, bảo vệ bằng middleware 'auth' và 'admin.role'
 
-Route::middleware('auth', 'admin.role', 'isAdmin')->prefix('admin')->name('admin.')->group(function () {
-
-    // Trang dashboard
+Route::middleware(['auth', 'admin.role'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('index');
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 

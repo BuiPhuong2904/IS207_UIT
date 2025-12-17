@@ -8,6 +8,7 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
 
 class SocialAuthController extends Controller
 {
@@ -21,7 +22,8 @@ class SocialAuthController extends Controller
     public function handleGoogleCallback()
     {
         try {
-            $googleUser = Socialite::driver('google')->stateless()->user();
+            // Use stateful flow so Socialite validates the OAuth state stored in session
+            $googleUser = Socialite::driver('google')->user();
 
             // Find existing user by email
             $user = User::where('email', $googleUser->getEmail())->first();
@@ -38,11 +40,19 @@ class SocialAuthController extends Controller
                 ]);
             }
 
-            // Login the user
+            // Login the user and log helpful info for debugging
             Auth::login($user, true);
+            Log::info('User logged in via Google', ['user_id' => $user->id, 'email' => $user->email, 'session_id' => session()->getId()]);
 
-            return redirect()->route('home');
+            // Use intended to respect any prior intended URL, fallback to named route 'home'
+            return redirect()->intended(route('home'));
         } catch (\Exception $e) {
+            Log::error('Google OAuth callback error: ' . $e->getMessage(), ['exception' => $e]);
+
+            if (config('app.debug')) {
+                return redirect()->route('login')->with('error', 'Google login failed: ' . $e->getMessage());
+            }
+
             return redirect()->route('login')->with('error', 'Không thể đăng nhập bằng Google. Vui lòng thử lại.');
         }
     }

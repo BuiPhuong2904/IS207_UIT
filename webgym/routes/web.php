@@ -63,13 +63,11 @@ Route::post('/reset-password', [ForgotPasswordController::class, 'reset'])->name
 
 // User Profile Routes (requires authentication)
 Route::middleware('auth')->group(function () {
-	Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
-	Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-	Route::post('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.change-password');
+	// Load additional route files
+	require __DIR__ . '/user.php';
 });
 
 // Admin Customer Management Routes (requires authentication and admin role)
 Route::middleware(['auth', 'isAdmin'])->prefix('admin')->name('admin.')->group(function () {
-	Route::resource('customers', \App\Http\Controllers\Admin\CustomerController::class);
+	require __DIR__.'/admin.php';
 });
-

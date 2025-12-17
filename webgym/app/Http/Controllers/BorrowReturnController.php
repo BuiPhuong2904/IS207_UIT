@@ -8,7 +8,7 @@ class BorrowReturnController extends Controller
 {
     public function index()
     {
-        return view('admin.borrow_return');
+        return view('user.rental-history');
     }
 
 }
