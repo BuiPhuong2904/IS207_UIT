@@ -2,53 +2,80 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="w-full min-h-screen bg-white py-10">
-    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+<div class="w-full min-h-screen bg-white flex items-center justify-center py-6">
+    
+    <div class="w-full max-w-[1800px] mx-auto px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
 
-        <!-- LEFT IMAGE -->
-        <div class="hidden lg:block">
-            <div class="rounded-xl overflow-hidden shadow-lg">
+        <div class="hidden lg:block lg:col-span-7">
+            <div class="overflow-hidden relative shadow-sm">
                 <img src="{{ asset('images/login/welcome.png') }}" 
-                     class="w-full h-[500px] object-cover"
+                     class="w-full h-[650px] object-cover"
                      alt="Welcome Banner">
             </div>
         </div>
 
-        <!-- RIGHT FORGET PASSWORD FORM -->
-        <div class="w-full px-6 lg:px-10">
-            <h2 class="text-3xl font-bold text-[#0D47A1] mb-2">Quên mật khẩu</h2>
-            <p class="text-gray-500 mb-6">Nhập email bạn đã đăng ký. Chúng tôi sẽ gửi mã xác minh gồm 6 số để đặt lại mật khẩu.</p>
+        <div class="w-full px-4 lg:px-12 lg:col-span-5">
+            <h2 class="text-4xl font-extrabold mb-4 text-center bg-gradient-to-r from-[#0D47A1] to-[#42A5F5] bg-clip-text text-transparent pb-2">
+                Quên mật khẩu
+            </h2>
+            
+            <p class="text-gray-500 mb-10 text-center text-sm px-4 leading-relaxed">
+                Nhập email bạn đã đăng ký.<br>
+                Chúng tôi sẽ gửi mã xác minh gồm 6 số để đặt lại mật khẩu.
+            </p>
 
             @if(session('error'))
-                <div class="bg-red-100 text-red-700 px-4 py-2 rounded mb-4 text-sm">{{ session('error') }}</div>
+                <div class="bg-red-100 text-red-700 px-4 py-2 rounded mb-6 text-center text-sm border border-red-200">
+                    {{ session('error') }}
+                </div>
             @endif
 
             @if(session('success'))
-                <div class="bg-green-100 text-green-700 px-4 py-2 rounded mb-4 text-sm">{{ session('success') }}</div>
+                <div class="bg-green-100 text-green-700 px-4 py-2 rounded mb-6 text-center text-sm border border-green-200">
+                    {{ session('success') }}
+                </div>
             @endif
 
-            <form action="{{ route('forget-password.send') }}" method="POST" class="space-y-4">
+            <form action="{{ route('forget-password.send') }}" method="POST" class="space-y-8">
                 @csrf
-
-                <div>
-                    <label class="block text-gray-700 font-medium mb-1">Email</label>
+                
+                <div class="group">
+                    <label class="block text-gray-500 text-sm mb-1">Email</label>
                     <input type="email" name="email" value="{{ old('email') }}"
-                        class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-[#1976D2] focus:outline-none"
-                        placeholder="johndoe@email.com" required>
+                        class="w-full border-0 border-b border-gray-300 px-0 py-2 focus:ring-0 focus:border-[#1976D2] transition-colors bg-transparent text-gray-800 placeholder-gray-400"
+                        placeholder="example@email.com" required>
                     @error('email')
-                        <p class="text-sm text-red-600 mt-1">{{ $message }}</p>
+                        <p class="text-xs text-red-600 mt-1">{{ $message }}</p>
                     @enderror
                 </div>
 
-                <button type="submit" class="w-full bg-gradient-to-r from-[#3484d4] to-[#42A5F5] text-white py-3 rounded-full font-semibold shadow-md transition">NHẬN MÃ NGAY</button>
+                <div class="pt-2 flex justify-center">
+                    <button type="submit" class="bg-[#1976D2] hover:bg-blue-600 text-white py-3 px-8 w-56 rounded-full font-bold shadow-lg shadow-blue-500/30 transition transform hover:-translate-y-0.5 cursor-pointer uppercase tracking-wider text-sm">
+                        Nhận mã ngay
+                    </button>
+                </div>
 
-                <div class="text-center text-sm text-gray-600">
-                    Bạn đã có tài khoản? <a href="{{ route('login') }}" class="text-[#1976D2] hover:underline font-medium">ĐĂNG NHẬP</a>
+                <div class="text-center text-sm text-gray-600 mt-4">
+                    Bạn đã nhớ mật khẩu? 
+                    <a href="{{ route('login') }}" class="text-[#1976D2] hover:underline font-medium">Đăng nhập</a>
                 </div>
             </form>
         </div>
     </div>
-    
 </div>
+
+<style>
+    /* Đồng bộ CSS input autofill từ trang Login */
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus, 
+    input:-webkit-autofill:active{
+        -webkit-box-shadow: 0 0 0 30px white inset !important;
+    }
+    input:focus {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+</style>
 
 @endsection

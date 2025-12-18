@@ -2,39 +2,34 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="w-full min-h-screen bg-white py-10">
-    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+<div class="w-full min-h-screen bg-white flex items-center justify-center py-6">
+    
+    <div class="w-full max-w-[1800px] mx-auto px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
 
-        <!-- LEFT IMAGE -->
-        <div class="hidden lg:block">
-            <div class="rounded-xl overflow-hidden shadow-lg">
+        <div class="hidden lg:block lg:col-span-7">
+            <div class="overflow-hidden relative shadow-sm">
                 <img src="{{ asset('images/login/welcome.png') }}" 
-                     class="w-full h-[500px] object-cover"
+                     class="w-full h-[650px] object-cover"
                      alt="Welcome Banner">
             </div>
         </div>
 
-        <!-- RIGHT REGISTER FORM -->
-        <div class="w-full px-6 lg:px-10">
-            <h2 class="text-3xl font-bold text-blue-600 mb-6">Đăng ký</h2>
+        <div class="w-full px-4 lg:px-12 lg:col-span-5">
+            <h2 class="text-4xl font-extrabold mb-8 text-center bg-gradient-to-r from-[#0D47A1] to-[#42A5F5] bg-clip-text text-transparent pb-2">Đăng ký</h2>
 
-            <!-- SOCIAL LOGIN -->
-            <div class="flex gap-3 mb-5">
-                <button class="w-full border border-gray-300 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 text-gray-700">
+            <div class="flex gap-4 mb-8 justify-center">
+                <a href="{{ route('auth.google') }}" class="px-5 py-2 rounded-full border border-gray-200 bg-gray-50 flex items-center justify-center gap-2 hover:bg-white hover:shadow-md transition text-sm text-gray-600">
                     <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5">
-                    <span>Đăng ký với Google</span>
-                </button>
-                <button class="w-full border border-gray-300 py-2 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 text-gray-700">
-                    <img src="https://www.svgrepo.com/show/512317/github-142.svg" class="w-5 h-5">
-                    <span>GitHub</span>
-                </button>
+                    <span>Sign up with Google</span>
+                </a>
+                <a href="#" class="px-5 py-2 rounded-full border border-gray-200 bg-gray-50 flex items-center justify-center gap-2 hover:bg-white hover:shadow-md transition text-sm text-gray-600">
+                    <img src="https://www.svgrepo.com/show/475647/facebook-color.svg" class="w-5 h-5" alt="Facebook Logo">
+                    <span>Sign up with Facebook</span>
+                </a>
             </div>
 
-            <div class="text-center text-gray-500 text-sm mb-4">hoặc dùng email để đăng ký</div>
-
-            <!-- ERRORS -->
             @if ($errors->any())
-                <div class="bg-red-100 text-red-700 px-4 py-2 rounded mb-4 text-sm">
+                <div class="bg-red-50 text-red-600 px-4 py-3 rounded-lg mb-6 text-sm border border-red-100">
                     <ul class="list-disc list-inside">
                         @foreach ($errors->all() as $err)
                             <li>{{ $err }}</li>
@@ -43,72 +38,77 @@
                 </div>
             @endif
 
-            <!-- FORM -->
-            <form action="{{ route('register.post') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+            <form action="{{ route('register.post') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
 
-                <div>
-                    <label class="block text-gray-700 font-medium mb-1">Username</label>
-                    <input name="full_name" value="{{ old('full_name') }}"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-300 focus:outline-none"
-                        placeholder="johnndev" required>
+                <div class="group">
+                    <label class="block text-gray-500 text-sm mb-1">Tên người dùng</label>
+                    <input type="text" name="full_name" value="{{ old('full_name') }}"
+                        class="w-full border-0 border-b border-gray-300 px-0 py-2 focus:ring-0 focus:border-[#1976D2] transition-colors bg-transparent text-gray-800 placeholder-gray-400"
+                        placeholder="Nguyễn Văn A" required>
                 </div>
 
-                <div>
-                    <label class="block text-gray-700 font-medium mb-1">Email</label>
+                <div class="group">
+                    <label class="block text-gray-500 text-sm mb-1">Email</label>
                     <input type="email" name="email" value="{{ old('email') }}"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-300 focus:outline-none"
-                        placeholder="johndoe@example.com" required>
+                        class="w-full border-0 border-b border-gray-300 px-0 py-2 focus:ring-0 focus:border-[#1976D2] transition-colors bg-transparent text-gray-800 placeholder-gray-400"
+                        placeholder="example@email.com" required>
                 </div>
 
-                <div>
-                    <label class="block text-gray-700 font-medium mb-1">Password</label>
+                <div class="group">
+                    <label class="block text-gray-500 text-sm mb-1">Mật khẩu</label>
                     <div class="relative">
                         <input id="password" type="password" name="password"
-                            class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-300 focus:outline-none"
+                            class="w-full border-0 border-b border-gray-300 px-0 py-2 focus:ring-0 focus:border-[#1976D2] transition-colors bg-transparent text-gray-800 placeholder-gray-400"
                             placeholder="********" required>
-                        <button type="button" id="togglePassword"
-                            class="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-500">
-                            Hiện
+                        <button type="button" id="togglePassword" class="absolute right-0 bottom-2 text-gray-400 hover:text-[#1976D2] transition">
+                            
                         </button>
                     </div>
                 </div>
 
-                <div>
-                    <label class="block text-gray-700 font-medium mb-1">Xác nhận mật khẩu</label>
+                <div class="group">
+                    <label class="block text-gray-500 text-sm mb-1">Xác nhận mật khẩu</label>
                     <input type="password" name="password_confirmation"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-300 focus:outline-none"
-                        required>
+                        class="w-full border-0 border-b border-gray-300 px-0 py-2 focus:ring-0 focus:border-[#1976D2] transition-colors bg-transparent text-gray-800 placeholder-gray-400"
+                        placeholder="********" required>
                 </div>
 
-                <div>
-                    <label class="block text-gray-700 font-medium mb-1">Ảnh đại diện (tùy chọn)</label>
-                    <input type="file" name="image"
-                        class="w-full border border-gray-300 rounded-lg px-3 py-2 bg-white file:mr-4 file:py-2 file:px-4 file:border-0 file:bg-blue-600 file:text-white file:rounded">
+                <div class="pt-4 flex justify-center">
+                    <button type="submit"
+                        class="bg-[#1976D2] hover:bg-blue-600 text-white py-3 px-12 rounded-full font-bold shadow-lg shadow-blue-500/30 transition transform hover:-translate-y-0.5 cursor-pointer uppercase tracking-wider text-sm w-full md:w-auto">
+                        Đăng ký
+                    </button>
                 </div>
 
-                <!-- SUBMIT BUTTON -->
-                <button type="submit"
-                    class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition">
-                    ĐĂNG KÝ
-                </button>
-
-                <div class="text-center text-sm text-gray-600">
+                <div class="text-center text-sm text-gray-600 mt-4">
                     Đã có tài khoản? 
-                    <a href="{{ route('login') }}" class="text-blue-600 hover:underline font-medium">Đăng nhập</a>
+                    <a href="{{ route('login') }}" class="text-[#1976D2] hover:underline font-medium">Đăng nhập</a>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<!-- JS: Toggle password -->
 <script>
-document.getElementById('togglePassword')?.addEventListener('click', function () {
-    const input = document.getElementById('password');
-    const isPass = input.type === 'password';
-    input.type = isPass ? 'text' : 'password';
-    this.textContent = isPass ? 'Ẩn' : 'Hiện';
-});
+    document.getElementById('togglePassword')?.addEventListener('click', function () {
+        const input = document.getElementById('password');
+        const isPass = input.type === 'password';
+        input.type = isPass ? 'text' : 'password';
+        this.textContent = isPass ? 'Ẩn' : 'Hiện';
+    });
 </script>
+
+<style>
+    input:-webkit-autofill,
+    input:-webkit-autofill:hover, 
+    input:-webkit-autofill:focus, 
+    input:-webkit-autofill:active{
+        -webkit-box-shadow: 0 0 0 30px white inset !important;
+    }
+    input:focus {
+        outline: none !important;
+        box-shadow: none !important;
+    }
+</style>
 @endsection
