@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log; // Thêm Log để ghi lỗi
+use Illuminate\Support\Facades\Log;
 
 // Models
 use App\Models\Cart;
@@ -12,6 +12,7 @@ use App\Models\CartItem;
 use App\Models\ProductVariant;
 use App\Models\MembershipPackage;
 use App\Models\Promotion;
+use App\Helpers\PromotionHelper; 
 
 class CheckoutController extends Controller
 {
@@ -21,12 +22,14 @@ class CheckoutController extends Controller
     public function index(Request $request)
     {
         $userId = Auth::id(); 
+        $cart_items = [];
+        $subtotal_amount = 0;
+
+        // --- BƯỚC 1: CHUẨN BỊ CART_ITEMS & SUBTOTAL ---
 
         // TRƯỜNG HỢP 1: THANH TOÁN NGAY GÓI TẬP (MUA NGAY)
         if ($request->has('package_id')) {
             $package = MembershipPackage::findOrFail($request->package_id);
-
-            // Tạo item giả lập để hiển thị
             $cart_items = [[
                 'variant_id'     => null,
                 'package_id'     => $package->package_id,
@@ -43,63 +46,113 @@ class CheckoutController extends Controller
                 'quantity'       => 1,
                 'image_url'      => $package->image_url ?? asset('images/default_package.jpg'),
             ]];
+            
+            $subtotal_amount = $package->price;
+        }
+        // TRƯỜNG HỢP 2: THANH TOÁN GIỎ HÀNG SẢN PHẨM
+        else {
+            $cart = Cart::with('items.variant.product')
+                ->where('user_id', $userId)
+                ->where('status', 'active')
+                ->firstOrCreate(
+                    ['user_id' => $userId, 'status' => 'active'],
+                    ['created_at' => now()]
+                );
 
-            $promotions_data = $this->getPromotionsData();
+            // Map dữ liệu
+            $cart_items = $cart->items->map(function ($cartItem) {
+                $variant = $cartItem->variant;
+                if (!$variant) return null;
 
-            return view('user.checkout', compact('cart_items', 'promotions_data'));
+                $productName = $variant->product->product_name ?? 'Sản phẩm';
+                $unitPrice = $cartItem->unit_price;
+                
+                $finalPrice = $unitPrice;
+                $discountAmount = 0; 
+
+                // Logic tính giảm giá sản phẩm (nếu có)
+                if ($variant->is_discounted && $variant->discount_price > 0 && $variant->discount_price < $unitPrice) {
+                    $finalPrice = $variant->discount_price;
+                    $discountAmount = $unitPrice - $finalPrice;
+                }
+
+                return [
+                    'variant_id'     => $cartItem->variant_id, 
+                    'package_id'     => null,
+                    'name'           => $productName, 
+                    'type'           => 'product',
+                    'size'           => $variant->size ?? 'N/A',
+                    'color'          => $variant->color ?? 'N/A',
+                    'duration'       => null,
+
+                    'final_price'    => $finalPrice,
+                    'unit_price'     => $unitPrice,
+                    'discount_value' => $discountAmount,
+
+                    'quantity'       => $cartItem->quantity,
+                    'image_url'      => $variant->image_url ?? asset('images/default.jpg'),
+                ];
+            })->filter()->values()->toArray();
+
+            // Tính tổng tiền hàng (chưa trừ giảm giá item)
+            $subtotal_amount = collect($cart_items)->sum(function ($item) {
+                return ($item['unit_price'] ?? 0) * ($item['quantity'] ?? 1);
+            });
         }
 
-        // TRƯỜNG HỢP 2: THANH TOÁN GIỎ HÀNG SẢN PHẨM
-        $cart = Cart::with('items.variant.product')
-            ->where('user_id', $userId)
-            ->where('status', 'active')
-            ->firstOrCreate(
-                ['user_id' => $userId, 'status' => 'active'],
-                ['created_at' => now()]
-            );
+        // --- BƯỚC 2: XỬ LÝ MÃ GIẢM GIÁ ---
+        
+        $promotion_code = strtoupper(trim($request->input('promotion_code', '')));
+        $promotion_discount = 0;
+        $applied_promo = null;
+        $promo_message = '';
 
-        // Map dữ liệu
-        $cart_items = $cart->items->map(function ($cartItem) {
-            $variant = $cartItem->variant;
-            if (!$variant) return null;
+        if ($promotion_code) {
+            if (class_exists('App\Helpers\PromotionHelper')) {
+                $result = PromotionHelper::validateAndApply(
+                    $promotion_code,
+                    $cart_items,
+                    $subtotal_amount,
+                    $userId
+                );
 
-            $productName = $variant->product->product_name ?? 'Sản phẩm';
-            $unitPrice = $cartItem->unit_price;
-            
-            $finalPrice = $unitPrice;
-            $discountAmount = 0; 
-
-            // Logic tính giảm giá sản phẩm (nếu có)
-            if ($variant->is_discounted && $variant->discount_price > 0 && $variant->discount_price < $unitPrice) {
-                $finalPrice = $variant->discount_price;
-                $discountAmount = $unitPrice - $finalPrice;
+                if ($result['success']) {
+                    $applied_promo = $result; // Chứa thông tin mã, số tiền giảm...
+                    $promotion_discount = $result['discount'];
+                    $promo_message = $result['message'];
+                } else {
+                    $promo_message = $result['message'];
+                }
             }
+        }
 
-            return [
-                'variant_id'     => $cartItem->variant_id, 
-                'package_id'     => null,
-                'name'           => $productName, // Frontend tự ghép chuỗi nếu cần
-                'type'           => 'product',
-                'size'           => $variant->size ?? 'N/A',
-                'color'          => $variant->color ?? 'N/A',
-                'duration'       => null,
-
-                'final_price'    => $finalPrice,
-                'unit_price'     => $unitPrice,
-                'discount_value' => $discountAmount,
-
-                'quantity'       => $cartItem->quantity,
-                'image_url'      => $variant->image_url ?? asset('images/default.jpg'),
-            ];
-        })->filter()->values()->toArray();
+        // --- BƯỚC 3: TÍNH TOÁN CUỐI CÙNG & TRẢ VỀ VIEW ---
 
         $promotions_data = $this->getPromotionsData();
 
-        return view('user.checkout', compact('cart_items', 'promotions_data'));
+        $item_discount_total = collect($cart_items)->sum(function ($item) {
+            return ($item['discount_value'] ?? 0) * ($item['quantity'] ?? 1);
+        });
+
+        $shipping_fee = 30000;
+        $total_amount = $subtotal_amount - $item_discount_total - $promotion_discount + $shipping_fee;
+
+        return view('user.checkout', compact(
+            'cart_items', 
+            'promotions_data',
+            'promotion_code',
+            'applied_promo',
+            'promotion_discount',
+            'promo_message',
+            'subtotal_amount',
+            'item_discount_total',
+            'shipping_fee',
+            'total_amount'
+        ));
     }
 
     /**
-     * [FIX LOGIC] Helper lấy khuyến mãi: Chỉ lấy mã còn hạn và đang bật
+     * Helper lấy khuyến mãi: Chỉ lấy mã còn hạn và đang bật
      */
     private function getPromotionsData() {
         return Promotion::where('is_active', 1)
@@ -109,7 +162,7 @@ class CheckoutController extends Controller
             ->keyBy('code')
             ->map(function ($promo) {
                 return [
-                    'code'             => $promo->code, // Thêm code vào đây để JS đối chiếu
+                    'code'             => $promo->code,
                     'discount_value'   => $promo->discount_value,
                     'is_percent'       => $promo->is_percent,
                     'min_order_amount' => $promo->min_order_amount,
@@ -131,7 +184,7 @@ class CheckoutController extends Controller
     }
 
     // ==========================================
-    // API METHODS (AJAX) - Đã thêm Try/Catch và Check Auth
+    // API METHODS (AJAX) git status
     // ==========================================
 
     // 1. API LẤY GIỎ HÀNG
