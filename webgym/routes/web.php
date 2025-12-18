@@ -5,6 +5,7 @@ use App\Http\Controllers\OrderHistoryController;
 use App\Http\Controllers\RentalHistoryController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PromotionController;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ChatbotController;
@@ -71,7 +72,7 @@ Route::get('/api/related-products', [UserStoreController::class, 'loadMoreRelate
 // Membership Pakage
 Route::get('/package', [UserPackageController::class, 'index'])->name('package');
 
-// Blog 
+// Blog
 Route::view('/blog/1', 'blogs.blog_1')->name('blog1');
 Route::view('/blog/2', 'blogs.blog_2')->name('blog2');
 Route::view('/blog/3', 'blogs.blog_3')->name('blog3');
@@ -123,5 +124,8 @@ Route::middleware('auth')->group(function () {
         ->name('payment.vnpay.return');
 
 });
-
+Route::post('/chat/reset', function (Request $request) {
+    $request->session()->forget('chat_history');
+    return response()->json(['status' => 'reset']);
+});
 Route::view('/invoice', 'user.invoice')->name('invoice');
