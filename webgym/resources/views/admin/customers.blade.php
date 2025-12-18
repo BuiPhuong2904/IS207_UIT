@@ -15,7 +15,7 @@
         <div class="flex items-center space-x-4 font-open-sans">
             {{-- Dropdown lọc --}}
             <div class="flex items-center text-black cursor-pointer hover:text-gray-900">
-                <span class="mr-1 text-sm font-medium">Hôm nay</span>
+                <span class="mr-1 text-sm font-medium">Trạng thái</span>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
@@ -261,9 +261,13 @@
                     <div class="flex items-center space-x-6">
                         <div class="flex items-center flex-1">
                             <label class="w-24 flex-shrink-0 text-sm font-semibold text-gray-700">Mật khẩu</label>
-                            <input type="password" id="manage-password" placeholder="Nhập nếu đổi pass" class="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none">
+                            <input type="password" 
+                                id="manage-password" 
+                                placeholder="********" 
+                                readonly
+                                class="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 outline-none bg-gray-100 cursor-not-allowed text-gray-500">
                         </div>
-                        {{-- THÊM SELECT TRẠNG THÁI VÀO ĐÂY --}}
+                        {{-- SELECT TRẠNG THÁI  --}}
                         <div class="flex items-center flex-1">
                             <label class="w-20 flex-shrink-0 text-sm font-semibold text-gray-700">Trạng thái</label>
                             <select id="manage-status" class="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none bg-white">

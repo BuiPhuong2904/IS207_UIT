@@ -16,7 +16,7 @@
             
             {{-- Dropdown lọc --}}
             <div class="flex items-center text-black cursor-pointer hover:text-gray-900 bg-gray-100 px-3 py-1.5 rounded-lg">
-                <span class="mr-1 text-sm font-medium">Hôm nay</span>
+                <span class="mr-1 text-sm font-medium">Trạng thái</span>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
@@ -196,18 +196,18 @@
                         <input type="date" name="end_date" class="flex-1 bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-700 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     </div>
 
-                    <div class="flex items-center">
+                    <!-- <div class="flex items-center">
                          <label class="w-32 flex-shrink-0 text-gray-800 text-sm font-medium">Trạng thái</label>
                          <select name="is_active" class="flex-1 bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-700 outline-none focus:ring-2 focus:ring-blue-500">
                              <option value="1">Hoạt động</option>
                              <option value="0">Dừng</option>
                          </select>
-                    </div>
+                    </div> -->
                 </div>
 
                 <div class="flex flex-col mt-4">
                     <label class="text-gray-800 text-sm font-medium mb-2">Mô tả</label>
-                    <textarea name="description" rows="4" class="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-700 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                    <textarea name="description" rows="3" class="w-full bg-white border border-gray-300 rounded-lg px-4 py-2 text-gray-700 outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
                 </div>
             </div>
             

@@ -2,24 +2,24 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="w-full min-h-screen bg-white flex items-center justify-center py-6">
+<div class="w-full h-auto bg-white flex items-start justify-center pt-10 pb-22">
     
     <div class="w-full max-w-[1800px] mx-auto px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
 
         <div class="hidden lg:block lg:col-span-7">
             <div class="overflow-hidden relative shadow-sm">
                 <img src="{{ asset('images/login/welcome.png') }}" 
-                     class="w-full h-[650px] object-cover"
+                     class="w-full h-[550px] object-cover"
                      alt="Welcome Banner">
             </div>
         </div>
 
         <div class="w-full px-4 lg:px-12 lg:col-span-5">
             <h2 class="text-4xl font-extrabold mb-4 text-center bg-gradient-to-r from-[#0D47A1] to-[#42A5F5] bg-clip-text text-transparent pb-2">
-                Quên mật khẩu
+                QUÊN MẬT KHẨU
             </h2>
             
-            <p class="text-gray-500 mb-10 text-center text-sm px-4 leading-relaxed">
+            <p class="text-gray-700 mb-10 text-center text-sm px-4 leading-relaxed">
                 Nhập email bạn đã đăng ký.<br>
                 Chúng tôi sẽ gửi mã xác minh gồm 6 số để đặt lại mật khẩu.
             </p>
@@ -40,7 +40,7 @@
                 @csrf
                 
                 <div class="group">
-                    <label class="block text-gray-500 text-sm mb-1">Email</label>
+                    <label class="block text-gray-700 text-sm mb-1 font-semibold">Email</label>
                     <input type="email" name="email" value="{{ old('email') }}"
                         class="w-full border-0 border-b border-gray-300 px-0 py-2 focus:ring-0 focus:border-[#1976D2] transition-colors bg-transparent text-gray-800 placeholder-gray-400"
                         placeholder="example@email.com" required>

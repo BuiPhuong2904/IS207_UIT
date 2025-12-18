@@ -150,17 +150,15 @@
                 <input type="hidden" name="promotion_code" id="promotion_code_input">
                 <input type="hidden" name="total_amount" id="total_amount_input">
 
-                <div class="mb-4">
+                <!-- <div class="mb-4">
                     <label class="block text-sm font-medium text-gray-700 mb-2">Phương thức thanh toán</label>
                     <select name="payment_method" class="w-full border border-gray-300 rounded-lg p-2.5">
                         <option value="cod">Thanh toán khi nhận hàng (COD)</option>
                         <option value="vnpay">VNPAY</option>
                         <option value="momo">MoMo</option>
                     </select>
-                </div>
+                </div> -->
                 
-                {{-- Các trường thông tin nhận hàng (ẩn hoặc lấy từ profile user) --}}
-                {{-- Bạn có thể thêm input hiển thị để user sửa địa chỉ nhận hàng ở đây --}}
                 <input type="hidden" name="full_name" value="{{ Auth::user()->full_name ?? '' }}">
                 <input type="hidden" name="email" value="{{ Auth::user()->email ?? '' }}">
                 <input type="hidden" name="phone_number" value="{{ Auth::user()->phone ?? '' }}">

@@ -39,56 +39,65 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // --- Định nghĩa tất cả các menu ---
-        // Menu gói tập
-        const goitapBtn = document.getElementById('goitap-btn');
-        const goitapMenu = document.getElementById('goitap-menu');
-        const goitapArrow = document.getElementById('arrow-goitap');
-
-        // 1. Menu Lịch Lớp
-        const lichlopBtn = document.getElementById('lichlop-btn');
-        const lichlopMenu = document.getElementById('lichlop-menu');
-        const lichlopArrow = document.getElementById('arrow-lichlop');
-
-        // 2. Menu Mượn Đồ
-        const muondoBtn = document.getElementById('muondo-btn');
-        const muondoMenu = document.getElementById('muondo-menu');
-        const muondoArrow = document.getElementById('arrow-muondo');
-
-        // 3. Menu Người Dùng
-        const nguoidungBtn = document.getElementById('nguoidung-btn');
-        const nguoidungMenu = document.getElementById('nguoidung-menu');
-        const nguoidungArrow = document.getElementById('arrow-nguoidung');
-
-        // --- Tạo một mảng chứa tất cả các menu ---
-        const allMenus = [
-            { btn: goitapBtn, menu: goitapMenu, arrow: goitapArrow },
-            { btn: lichlopBtn, menu: lichlopMenu, arrow: lichlopArrow },
-            { btn: muondoBtn, menu: muondoMenu, arrow: muondoArrow },
-            { btn: nguoidungBtn, menu: nguoidungMenu, arrow: nguoidungArrow }
+        // 1. CẤU HÌNH DANH SÁCH MENU
+        const menuConfig = [
+            { id: 'goitap',     btn: 'goitap-btn',    menu: 'goitap-menu',    arrow: 'arrow-goitap' },
+            { id: 'lichlop',    btn: 'lichlop-btn',   menu: 'lichlop-menu',   arrow: 'arrow-lichlop' },
+            { id: 'muondo',     btn: 'muondo-btn',    menu: 'muondo-menu',    arrow: 'arrow-muondo' },
+            { id: 'nguoidung',  btn: 'nguoidung-btn', menu: 'nguoidung-menu', arrow: 'arrow-nguoidung' }
         ];
 
-        // --- Thêm sự kiện click cho MỖI menu ---
-        allMenus.forEach(currentMenu => {
-            currentMenu.btn.addEventListener('click', (e) => {
-                // Ngăn sự kiện click lan ra ngoài
-                e.stopPropagation();
+        // 2. LỌC CÁC MENU TỒN TẠI
+        const activeMenus = menuConfig.map(config => {
+            const btnEl = document.getElementById(config.btn);
+            const menuEl = document.getElementById(config.menu);
+            const arrowEl = document.getElementById(config.arrow);
 
-                // 1. Đóng TẤT CẢ các menu khác
-                allMenus.forEach(otherMenu => {
-                    // Chỉ đóng nếu đó KHÔNG PHẢI là menu đang được click
-                    if (otherMenu !== currentMenu) {
-                        otherMenu.menu.classList.add('hidden');
-                        otherMenu.arrow.classList.remove('rotate-90');
+            if (btnEl && menuEl && arrowEl) {
+                return { btn: btnEl, menu: menuEl, arrow: arrowEl };
+            }
+            return null;
+        }).filter(item => item !== null); 
+
+        // 3. GÁN SỰ KIỆN CLICK CHO CÁC MENU HỢP LỆ
+        activeMenus.forEach(current => {
+            current.btn.addEventListener('click', (e) => {
+                e.stopPropagation(); 
+
+                // A. Đóng các menu khác 
+                activeMenus.forEach(other => {
+                    if (other !== current) {
+                        other.menu.classList.add('hidden');
+                        // Reset mũi tên menu khác về màu xám
+                        other.arrow.classList.remove('rotate-90', 'text-blue-700'); 
+                        other.arrow.classList.add('text-gray-400');
                     }
                 });
 
-                // 2. Toggle (đóng/mở) menu hiện tại
-                currentMenu.menu.classList.toggle('hidden');
-                currentMenu.arrow.classList.toggle('rotate-90');
+                // B. Toggle (Đóng/Mở) menu hiện tại
+                const isHidden = current.menu.classList.contains('hidden');
+                
+                if (isHidden) {
+                    current.menu.classList.remove('hidden');
+                    // Xoay mũi tên & đổi màu xanh
+                    current.arrow.classList.add('rotate-90', 'text-blue-700');
+                    current.arrow.classList.remove('text-gray-400');
+                } else {
+                    current.menu.classList.add('hidden');
+                    current.arrow.classList.remove('rotate-90', 'text-blue-700');
+                    current.arrow.classList.add('text-gray-400');
+                }
             });
         });
 
+        // 4. CLICK RA NGOÀI
+        document.addEventListener('click', () => {
+            activeMenus.forEach(item => {
+                item.menu.classList.add('hidden');
+                item.arrow.classList.remove('rotate-90', 'text-blue-700');
+                item.arrow.classList.add('text-gray-400');
+            });
+        });
     });
 </script>
 

@@ -19,6 +19,14 @@ class UserStoreController extends Controller
         $query = Product::with(['category', 'variants']) // Eager load
                         ->where('status', 'active');
 
+        // Tìm kiếm
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('product_name', 'like', '%' . $search . '%');
+            });
+        }
+        
         // Lọc theo Danh mục
         if ($request->filled('category') && $request->category != 'all') {
             $query->whereHas('category', function($q) use ($request) {

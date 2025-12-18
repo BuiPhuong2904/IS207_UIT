@@ -75,6 +75,7 @@ class ClassScheduleController extends Controller
             
             $student_lists[$formattedScheduleId] = $sch->registrations->map(function($reg) {
                 return [
+                    'id' => $reg->class_reg_id,
                     'name' => $reg->user->full_name ?? 'N/A',
                     'date' => $reg->created_at->format('d/m/Y'),
                     'status' => $reg->status 
@@ -173,6 +174,30 @@ class ClassScheduleController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Đã xóa lịch lớp thành công.'
+        ]);
+    }
+
+    public function toggleCheckIn(Request $request)
+    {
+        $registration = ClassRegistration::find($request->registration_id);
+
+        if (!$registration) {
+            return response()->json(['success' => false, 'message' => 'Không tìm thấy học viên!']);
+        }
+
+        // Nếu đang là 'attended' thì bỏ check về 'registered', ngược lại thì thành 'attended'
+        if ($registration->status == 'cancelled') {
+            return response()->json(['success' => false, 'message' => 'Học viên này đã hủy, không thể điểm danh!']);
+        }
+
+        $newStatus = ($registration->status == 'attended') ? 'registered' : 'attended';
+        
+        $registration->update(['status' => $newStatus]);
+
+        return response()->json([
+            'success' => true, 
+            'new_status' => $newStatus,
+            'message' => $newStatus == 'attended' ? 'Đã điểm danh!' : 'Đã hủy điểm danh!'
         ]);
     }
 }

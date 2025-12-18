@@ -319,19 +319,46 @@
                 const roundLeft = isOdd ? 'rounded-l-xl' : '';
                 const roundRight = isOdd ? 'rounded-r-xl' : '';
                 
-                let statusBadge = '';
-                switch (student.status) {
-                    case 'attended': statusBadge = `<span class="bg-[#28A745]/10 text-[#28A745]/70 py-1 px-3 rounded-full text-sm font-semibold">Đã tham gia</span>`; break;
-                    case 'registered': statusBadge = `<span class="bg-[#1976D2]/10 text-[#1976D2]/70 py-1 px-3 rounded-full text-sm font-semibold">Đã đăng ký</span>`; break;
-                    case 'cancelled': statusBadge = `<span class="bg-[#DC3545]/10 text-[#DC3545]/70 py-1 px-3 rounded-full text-sm font-semibold">Đã hủy</span>`; break;
-                    default: statusBadge = `<span class="bg-gray-200 text-gray-500 py-1 px-3 rounded-full text-xs font-bold">Không xác định</span>`;
+                // let statusBadge = '';
+                // switch (student.status) {
+                //     case 'attended': statusBadge = `<span class="bg-[#28A745]/10 text-[#28A745]/70 py-1 px-3 rounded-full text-sm font-semibold">Đã tham gia</span>`; break;
+                //     case 'registered': statusBadge = `<span class="bg-[#1976D2]/10 text-[#1976D2]/70 py-1 px-3 rounded-full text-sm font-semibold">Đã đăng ký</span>`; break;
+                //     case 'cancelled': statusBadge = `<span class="bg-[#DC3545]/10 text-[#DC3545]/70 py-1 px-3 rounded-full text-sm font-semibold">Đã hủy</span>`; break;
+                //     default: statusBadge = `<span class="bg-gray-200 text-gray-500 py-1 px-3 rounded-full text-xs font-bold">Không xác định</span>`;
+                // }
+
+                let actionHtml = '';
+
+                if (student.status === 'cancelled') {
+                    actionHtml = `<span class="bg-[#DC3545]/10 text-[#DC3545]/70 py-1 px-3 rounded-full text-sm font-semibold">Đã hủy</span>`;
+                } else {
+                    // Nếu là registered hoặc attended thì hiện nút Toggle
+                    const isChecked = (student.status === 'attended') ? 'checked' : '';
+                    
+                    // Giao diện nút Toggle
+                    actionHtml = `
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="checkbox" value="" class="sr-only peer" 
+                                onchange="handleCheckIn(${student.id}, this)" ${isChecked}>
+                            
+                            <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer 
+                                peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full 
+                                peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] 
+                                after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full 
+                                after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+                                
+                            <span class="ms-5 ${isChecked ? 'bg-[#28A745]/10 text-[#28A745]/70' : 'bg-[#1976D2]/10 text-[#1976D2]/70'} py-1 px-3 rounded-full text-sm font-semibold">
+                                ${isChecked ? 'Đã tham gia' : 'Đã đăng ký'}
+                            </span>
+                        </label>
+                    `;
                 }
 
                 const row = `
                     <tr class="${rowBg}">
                         <td class="py-4 px-4 text-center align-middle ${roundLeft}">${student.name}</td>
                         <td class="py-4 px-4 text-center align-middle">${student.date}</td>
-                        <td class="py-4 px-4 text-center align-middle ${roundRight}"> ${statusBadge} </td>
+                        <td class="py-4 px-4 text-center align-middle ${roundRight}"> ${actionHtml} </td>
                     </tr>
                     <tr class="h-2"></tr>
                 `;
@@ -384,6 +411,64 @@
             });
         }
     });
+
+    // --- HÀM XỬ LÝ GỌI API CHECK-IN ---
+    function handleCheckIn(registrationId, checkbox) {
+        console.log("Check-in ID:", registrationId); 
+
+        if (!registrationId) {
+            alert("Lỗi: Không lấy được ID học viên!");
+            checkbox.checked = !checkbox.checked;
+            return;
+        }
+        
+        const spanLabel = checkbox.parentElement.querySelector('span');
+        
+        checkbox.disabled = true;
+        
+        fetch('{{ route("admin.class.checkin") }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({ registration_id: registrationId })
+        })
+        .then(response => response.json())
+        .then(data => {
+            checkbox.disabled = false;
+            if (data.success) {
+                if (data.new_status === 'attended') {
+                    if(spanLabel) {
+                        spanLabel.className = 'ms-5 bg-[#28A745]/10 text-[#28A745]/70 py-1 px-3 rounded-full text-sm font-semibold';
+                        spanLabel.innerText = 'Đã tham gia';
+                    }
+                } else {
+                    if(spanLabel) {
+                        spanLabel.className = 'ms-5 bg-[#1976D2]/10 text-[#1976D2]/70 py-1 px-3 rounded-full text-sm font-semibold';
+                        spanLabel.innerText = 'Đã đăng ký';
+                    }
+                }
+
+                for (const schId in studentLists) {
+                    const foundStudent = studentLists[schId].find(s => s.id === registrationId);
+                    if (foundStudent) {
+                        foundStudent.status = data.new_status;
+                        break;
+                    }
+                }
+            } else {
+                alert(data.message);
+                checkbox.checked = !checkbox.checked; 
+            }
+        })
+        .catch(error => {
+            checkbox.disabled = false;
+            checkbox.checked = !checkbox.checked;
+            console.error('Error:', error);
+            alert('Lỗi kết nối server.');
+        });
+    }
 </script>
 
 @endsection

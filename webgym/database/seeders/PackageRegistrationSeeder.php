@@ -19,7 +19,7 @@ class PackageRegistrationSeeder extends Seeder
         DB::table('class_registration')->truncate();
         DB::table('package_registration')->truncate();
 
-        $today = Carbon::parse('2025-11-14');
+        $today = Carbon::parse('2025-12-12');
 
         // Tạo lượt đăng ký
         DB::table('package_registration')->insert([

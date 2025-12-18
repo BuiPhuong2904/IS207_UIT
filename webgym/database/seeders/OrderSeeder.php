@@ -27,7 +27,7 @@ class OrderSeeder extends Seeder
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         // Giả định hôm nay 
-        $today = Carbon::parse('2025-12-12 09:30:00');
+        $today = Carbon::parse('2025-12-15 09:30:00');
 
         // === ĐƠN HÀNG 1: ĐÃ HOÀN THÀNH (COMPLETED) ===
         // User 25 (Vũ Thị Ngọc) mua đồ tập Yoga

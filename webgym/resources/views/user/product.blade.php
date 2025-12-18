@@ -99,7 +99,6 @@
                 </ul>
             </div>
 
-
             <div class="pt-6 border-t border-gray-200 mb-6 font-open-sans">
                 <div class="flex items-center justify-between mb-4 cursor-pointer group">
                     <h4 class="text-base font-bold text-gray-700">Khoảng giá</h4>
@@ -213,8 +212,11 @@
     </div>
 </div>
 
-<!-- JavaScript Section -->
 <script>
+    // Lấy tham số search từ URL trình duyệt 
+    const urlParams = new URLSearchParams(window.location.search);
+    let currentSearch = urlParams.get('search') || '';
+
     // Đặt các biến trạng thái lọc và phân trang
     let currentPage = 1;
     let currentCategory = { slug: 'all', name: 'Tất cả sản phẩm' };    
@@ -229,8 +231,20 @@
 
     // Khởi tạo các sự kiện
     document.addEventListener('DOMContentLoaded', () => {
-        loadCategories(); // Tải danh mục lên sidebar
-        fetchProducts();  // Tải sản phẩm
+        // Hiển thị thông báo nếu đang tìm kiếm
+        if(currentSearch) {
+            document.getElementById('category-title').innerHTML = `Kết quả tìm kiếm: <span class="text-blue-600">"${currentSearch}"</span>`;
+            document.getElementById('breadcrumb-category').innerText = "Tìm kiếm";
+        }
+
+        loadCategories();
+        fetchProducts(); 
+
+        // XÓA NỘI DUNG THANH TÌM KIẾM 
+        const searchInputs = document.querySelectorAll('input[name="search"]');
+        searchInputs.forEach(input => {
+            input.value = ''; 
+        });
     });
 
     // Tải danh mục từ API
@@ -275,7 +289,18 @@
     async function fetchProducts() {
         const grid = document.getElementById('product-grid');
         const title = document.getElementById('category-title');
+        const breadcrumb = document.getElementById('breadcrumb-category');
         const pagination = document.getElementById('pagination');
+
+        if (currentSearch && currentSearch.trim() !== "") {
+            // Nếu đang có từ khóa tìm kiếm -> Hiển thị kết quả tìm kiếm
+            title.innerHTML = `Kết quả tìm kiếm: <span class="text-blue-600">"${currentSearch}"</span>`;
+            breadcrumb.innerText = "Tìm kiếm";
+        } else {
+            // Nếu không tìm kiếm -> Hiển thị tên danh mục hiện tại
+            title.innerText = currentCategory.name;
+            breadcrumb.innerText = currentCategory.name;
+        }
 
         // Hiển thị loading 
         grid.innerHTML = '<p class="col-span-full text-center py-10">Đang tải sản phẩm...</p>';
@@ -283,6 +308,8 @@
         try {
             // Xây dựng URL API với các tham số lọc
             let url = `${API_URL}?page=${currentPage}`;
+
+            if (currentSearch) url += `&search=${encodeURIComponent(currentSearch)}`;
             
             if (currentCategory.slug !== 'all') url += `&category=${currentCategory.slug}`;
             if (minPrice) url += `&min_price=${minPrice}`;
@@ -292,13 +319,12 @@
             // Gọi API
             const response = await fetch(url);
             const result = await response.json();
-            const products = result.products; // Mảng sản phẩm từ Controller
-            const meta = result.pagination;   // Thông tin phân trang
+            const products = result.products; 
+            const meta = result.pagination;  
 
-            // Render tiêu đề
-            title.innerText = currentCategory.name;
-
-            document.getElementById('breadcrumb-category').innerText = currentCategory.name;
+            // // Render tiêu đề
+            // title.innerText = currentCategory.name;
+            // document.getElementById('breadcrumb-category').innerText = currentCategory.name;
 
             // Render sản phẩm
             grid.innerHTML = '';
@@ -404,12 +430,15 @@
         maxPrice = "";
         currentPromotion = "all";
         currentCategory = { slug: 'all', name: 'Tất cả sản phẩm' };
+        currentSearch = "";
         currentPage = 1;
         
         document.getElementById('price-min').value = "";
         document.getElementById('price-max').value = "";
         errorMsg.classList.add('hidden');
         saleRadios.forEach(radio => radio.checked = false);
+
+        window.history.pushState({}, document.title, "{{ route('product') }}");
         
         fetchProducts();
     });

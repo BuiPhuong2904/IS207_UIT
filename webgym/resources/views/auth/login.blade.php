@@ -2,20 +2,20 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="w-full min-h-screen bg-white flex items-center justify-center py-6">
+<div class="w-full h-auto bg-white flex items-start justify-center pt-10 pb-22">
     
     <div class="w-full max-w-[1800px] mx-auto px-4 lg:px-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
 
         <div class="hidden lg:block lg:col-span-7">
             <div class="overflow-hidden relative shadow-sm">
                 <img src="{{ asset('images/login/welcome.png') }}" 
-                     class="w-full h-[650px] object-cover"
+                     class="w-full h-[550px] object-cover"
                      alt="Welcome Banner">
             </div>
         </div>
 
         <div class="w-full px-4 lg:px-12 lg:col-span-5">
-            <h2 class="text-4xl font-extrabold mb-10 text-center bg-gradient-to-r from-[#0D47A1] to-[#42A5F5] bg-clip-text text-transparent pb-2">Đăng nhập</h2>
+            <h2 class="text-4xl font-extrabold mb-10 text-center bg-gradient-to-r from-[#0D47A1] to-[#42A5F5] bg-clip-text text-transparent pb-2">ĐĂNG NHẬP</h2>
 
             <div class="flex gap-4 mb-8 justify-center">
                 <a href="{{ route('auth.google') }}" class="px-5 py-2 rounded-full border border-gray-200 bg-gray-50 flex items-center justify-center gap-2 hover:bg-white hover:shadow-md transition text-sm text-gray-600">
@@ -37,18 +37,18 @@
                 <input type="hidden" name="return_url" value="{{ request('return_url') }}">
                 
                 <div class="group">
-                    <label class="block text-gray-500 text-sm mb-1">Email</label>
+                    <label class="block text-gray-700 text-sm mb-1 font-semibold">Email</label>
                     <input type="email" name="email" value="{{ old('email') }}"
                         class="w-full border-0 border-b border-gray-300 px-0 py-2 focus:ring-0 focus:border-[#1976D2] transition-colors bg-transparent text-gray-800 placeholder-gray-400"
                         placeholder="example@email.com" required>
                 </div>
 
                 <div class="group">
-                    <label class="block text-gray-500 text-sm mb-1">Mật khẩu</label>
+                    <label class="block text-gray-700 text-sm mb-1 font-semibold">Mật khẩu</label>
                     <div class="relative">
                         <input id="password" type="password" name="password"
                             class="w-full border-0 border-b border-gray-300 px-0 py-2 focus:ring-0 focus:border-[#1976D2] transition-colors bg-transparent text-gray-800 placeholder-gray-400"
-                            placeholder="****************" required>
+                            placeholder="*******" required>
                         
                         <button type="button" id="togglePassword" class="absolute right-0 bottom-2 text-gray-400 hover:text-[#1976D2] transition">
                             
@@ -56,7 +56,7 @@
                     </div>
                     
                     <div class="flex justify-end mt-2">
-                        <a href="{{ route('forget-password') }}" class="text-xs text-gray-400 hover:text-[#1976D2] transition font-medium">
+                        <a href="{{ route('forget-password') }}" class="text-sm text-gray-400 hover:text-[#1976D2] transition font-medium">
                             Quên mật khẩu?
                         </a>
                     </div>

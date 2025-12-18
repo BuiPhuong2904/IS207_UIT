@@ -14,17 +14,26 @@ class IsAdmin
      * Handle an incoming request.
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  mixed ...$roles
      */
     public function handle(Request $request, Closure $next): Response
     {
         //  Định nghĩa các role được phép truy cập
-        $allowedRoles = ['admin', 'manager', 'trainer'];
+        if (!Auth::check()) {
+            return redirect()->route('login');
+        }
+
+        $userRole = Auth::user()->role;
+
+        if (empty($roles)) {
+            $roles = ['admin', 'manager', 'trainer'];
+        }
 
         // Kiểm tra xem role của user
-        if ( ! in_array(Auth::user()->role, $allowedRoles) ) {
-            abort(403,'Bạn không có quyền truy cập.');
-
+        if (in_array($userRole, $roles)) {
+            return $next($request);
         }
-        return $next($request);
+        
+        abort(403, 'Bạn không có quyền truy cập chức năng này.');
     }
 }

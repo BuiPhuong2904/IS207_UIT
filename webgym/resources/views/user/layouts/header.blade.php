@@ -1,5 +1,32 @@
 <!-- Header Section -->
 <header class="fixed top-0 left-0 w-full bg-[#F5F7FA] shadow-sm z-50">
+
+    {{-- XÁC ĐỊNH NGỮ CẢNH --}}
+    @php
+        // Mặc định: Tìm kiếm Sản phẩm 
+        $searchAction = route('product'); 
+        $searchPlaceholder = "Tìm kiếm ...";
+        $searchValue = request('search'); 
+
+        // Nếu đang ở Blog
+        if (request()->routeIs('blog*')) {
+            $searchAction = route('blog'); 
+            $searchPlaceholder = "Tìm bài viết, tin tức ...";
+        }
+        
+        // Nếu đang ở Lớp học
+        elseif (request()->routeIs('class*')) {
+            $searchAction = route('class');
+            $searchPlaceholder = "Tìm lớp học ...";
+        }
+
+        // Nếu đang ở Gói tập
+        elseif (request()->routeIs('package*')) {
+            $searchAction = route('package');
+            $searchPlaceholder = "Tìm gói tập ...";
+        }
+    @endphp
+
     <div class="flex items-center justify-between px-6 md:px-20 py-3">
         <a href="{{ url('/') }}" class="flex items-center text-2xl font-bold text-[#0D47A1] gap-2 font-montserrat">
             <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762340096/logo_jhd6zr.png"
@@ -17,16 +44,22 @@
         </nav>
         <!-- Tìm kiếm và nút đăng nhập, đăng ký -->
         <div class="hidden md:flex items-center gap-4">
+            {{-- THANH TÌM KIẾM --}}
             <div class="relative">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                    </svg>
-                </div>
+                <form action="{{ $searchAction }}" method="GET">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                        </svg>
+                    </div>
 
-                <input type="text" placeholder="Tìm kiếm..."
-                    class="border border-gray-300 rounded-lg px-3 py-1 pl-10 focus:outline-none
-                            focus:ring-2 focus:ring-blue-500 w-30 lg:w-42 transition-all duration-300 placeholder:text-sm">
+                    <input type="text" 
+                           name="search" 
+                           value="{{ $searchValue }}"
+                           placeholder="{{ $searchPlaceholder }}"
+                           class="border border-gray-300 rounded-lg px-3 py-1 pl-10 focus:outline-none
+                                  focus:ring-2 focus:ring-blue-500 w-[250px] transition-all duration-300 placeholder:text-sm">
+                </form>
             </div>
             <!-- Trường hợp chưa đăng nhập -->
             @guest
@@ -104,8 +137,9 @@
         <!-- Mobile menu button -->
         <button id="menu-btn" class="md:hidden text-3xl focus:outline-none">☰</button>
     </div>
+
     <!-- Mobile Menu -->
-    <nav id="mobile-menu" class="hidden absolute top-full left-0 w-full flex-col items-start
+    <!-- <nav id="mobile-menu" class="hidden absolute top-full left-0 w-full flex-col items-start
             bg-white px-6 py-4 space-y-3 shadow-md md:hidden transform origin-top transition-all duration-700 ease-in-out">
         <a href="{{ route('about') }}" class="hover:text-blue-700">Về GRYND</a>
         <a href="#" class="hover:text-blue-700">Gói Tập</a>
@@ -149,5 +183,5 @@
                 </form>
             @endauth
         </div>
-    </nav>
+    </nav> -->
 </header>

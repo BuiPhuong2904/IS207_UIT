@@ -6,38 +6,30 @@
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
 
-{{-- HEADER --}}
-<div class="flex justify-between items-center mb-6">
-    <div class="flex-1 max-w-md">
-        <div class="relative">
-            <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
-            </span>
-            <input type="text" id="searchInput" class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-2xl shadow-sm focus:outline-none focus:ring-1 focus:ring-black" placeholder="Tìm kiếm ...">
-        </div>
-    </div>
-    
-    <div class="flex items-center">
-        <div class="flex items-center space-x-3 text-sm text-gray-500 mr-4">
-            <span class="font-medium">Hôm nay</span>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-            </svg>
-        </div>
-        <button id="openAddProductModalBtn" class="flex items-center px-4 py-2 bg-green-500 text-white font-medium rounded-lg hover:bg-green-600 transition-colors shadow-md">
-            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-            </svg>
-            Thêm
-        </button>
-    </div>
-</div>
-
 {{-- PRODUCT TABLE --}}
 <div class="bg-white p-6 rounded-lg shadow-xl">
-    <h2 class="text-xl font-semibold text-gray-800 mb-4">Cửa hàng ONLINE</h2>
+
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="font-montserrat text-2xl text-black font-semibold">Cửa hàng ONLINE</h1>
+        
+        <div class="flex items-center space-x-4 font-open-sans">
+            <!-- Nút Dropdown Lọc -->
+            <div class="flex items-center text-black cursor-pointer hover:text-gray-900">
+                <span class="mr-1 text-sm font-medium">Trạng thái</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </div>
+
+            <!-- Nút Thêm -->
+            <button id="openAddProductModalBtn" class="bg-[#28A745] hover:bg-[#218838] text-white px-4 py-2 rounded-full flex items-center text-sm font-semibold transition-colors shadow-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                Thêm
+            </button>
+        </div>
+    </div>
 
     <div class="overflow-x-auto">
         <table class="min-w-full border-separate border-spacing-y-2">
@@ -569,7 +561,10 @@
 </style>
 
 <script>
-    const DEFAULT_IMAGE = 'https://via.placeholder.com/160x160?text=Image';
+    const DEFAULT_IMAGE = '';
+    // Lấy search từ URL khi load trang
+    const urlParams = new URLSearchParams(window.location.search);
+    let currentSearch = urlParams.get('search') || '';
 
     // --- CUSTOM MULTISELECT LOGIC ---
     function updateMultiselectDisplay(container) {
@@ -806,7 +801,19 @@
     async function refreshProductTable() {
         try {
             const page = new URLSearchParams(location.search).get('page') || 1;
-            const res = await fetch(`/admin/store?page=${page}`);
+
+            let url = `/admin/store?page=${page}`;
+            if (currentSearch) {
+                url += `&search=${encodeURIComponent(currentSearch)}`;
+            }
+
+            // const res = await fetch(`/admin/store?page=${page}`);
+            const res = await fetch(url, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
+
             const html = await res.text();
             const doc = new DOMParser().parseFromString(html, 'text/html');
             const newBody = doc.getElementById('product-list-body');
