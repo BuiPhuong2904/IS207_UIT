@@ -70,6 +70,9 @@ Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('index');
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+        // Route ajax lọc thống kê sản phẩm
+        Route::get('/admin/dashboard/filter-products', [App\Http\Controllers\DashboardController::class, 'filterTopProducts'])->name('admin.filter.products');
+
         // 2. Lịch & Lớp học
         Route::resource('class_schedule', ClassScheduleController::class);
         Route::post('class_schedule/check-in', [ClassScheduleController::class, 'toggleCheckIn'])->name('class.checkin');

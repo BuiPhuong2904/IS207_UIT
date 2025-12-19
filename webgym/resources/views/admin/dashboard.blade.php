@@ -4,37 +4,6 @@
 
 @section('content')
 
-@php
-    // --- DỮ LIỆU GIẢ LẬP (MOCK DATA) ---
-    // Cấu trúc: Category ID => [Tên, Danh sách SP, Doanh thu, Số lượng bán]
-    $mockProductStats = [
-        'cat_1' => [
-            'name' => 'Dụng cụ tập luyện',
-            'products' => ['Tạ Kettebell', 'Thảm tập Yoga', 'Bộ 2 tạ tay Vinyl', 'Dây kháng lực', 'Tạ tay lục giác', 'Dây nhảy không dây'],
-            'data' => [15600000, 12400000, 9800000, 8500000, 6200000, 4100000],
-            'quantities' => [150, 200, 85, 120, 60, 210]
-        ],
-        'cat_2' => [
-            'name' => 'Thực phẩm bổ sung',
-            'products' => ['Whey Gold Standard', 'Mass Gainer Serious', 'C4 Pre-Workout', 'Dầu cá Omega 3', 'Vitamin Opti-Men'],
-            'data' => [45000000, 32000000, 18500000, 12000000, 9500000],
-            'quantities' => [45, 30, 60, 100, 80]
-        ],
-        'cat_3' => [
-            'name' => 'Quần áo thể thao',
-            'products' => ['Giày Nike Metcon', 'Bộ đồ tập Tracksuit', 'Quần Legging Nữ', 'Áo Thun Gym Nam', 'Quần Short 2 Lớp'],
-            'data' => [28000000, 21500000, 15800000, 10200000, 8900000],
-            'quantities' => [12, 25, 40, 65, 55]
-        ],
-        'cat_4' => [
-            'name' => 'Phụ kiện thể thao',
-            'products' => ['Túi đựng đồ thể thao', 'Găng tay tập Gym', 'Đai lưng mềm', 'Bình nước La Pro', 'Khăn tập Microfiber'],
-            'data' => [9500000, 8200000, 6400000, 3500000, 2100000],
-            'quantities' => [35, 90, 45, 150, 200]
-        ]
-    ];
-@endphp
-
 <div class="p-1 min-h-screen font-open-sans">
     
     <div class="mb-8">
@@ -150,23 +119,23 @@
             
             <div class="flex gap-4 mt-4 md:mt-0">
                 {{-- Bộ lọc Danh mục --}}
-                <select id="categoryFilter" onchange="updateProductChart(this.value)" 
+                <select id="categoryFilter" onchange="updateProductChart('category')" 
                         class="text-sm border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
                     <option value="all" selected>Tất cả sản phẩm</option>
-                    @foreach($mockProductStats as $key => $cate)
+                    @foreach($productStats as $key => $cate)
                         <option value="{{ $key }}">{{ $cate['name'] }}</option>
                     @endforeach
                 </select>
 
                 {{-- Bộ lọc Ngày (Mặc định 30 ngày gần nhất) --}}
                 <div class="flex items-center gap-2">
-                    <input type="date" id="dateStart" onchange="updateProductChart()"
+                    <input type="date" id="dateStart" onchange="updateProductChart('date')"
                            value="{{ date('Y-m-d', strtotime('-30 days')) }}" 
                            class="text-sm border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
                     
                     <span class="text-gray-400 font-bold">-</span>
 
-                    <input type="date" id="dateEnd" onchange="updateProductChart()"
+                    <input type="date" id="dateEnd" onchange="updateProductChart('date')"
                            value="{{ date('Y-m-d') }}" 
                            class="text-sm border-gray-300 rounded-md shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200">
                 </div>
@@ -176,7 +145,7 @@
         <div class="relative h-80 w-full">
             <canvas id="topProductsChart"></canvas>
         </div>
-        <p class="text-xs text-gray-400 mt-4 italic text-center">* Số liệu doanh thu được tính tổng trong năm đã chọn</p>
+        <p class="text-xs text-gray-400 mt-4 italic text-center">* Số liệu doanh thu được tính tổng trong khoảng thời gian đã chọn</p>
     </div>
 
 </div>
@@ -350,79 +319,13 @@
     // --- 5. BIỂU ĐỒ TOP 10 SẢN PHẨM BÁN CHẠY NHẤT ---
     const ctxTopProducts = document.getElementById('topProductsChart').getContext('2d');
     
-    const rawProductData = @json($mockProductStats);
+    // Khởi tạo biến chứa dữ liệu toàn cục.
+    let globalProductData = @json($productStats ?? []); 
 
     const gradientProduct = ctxTopProducts.createLinearGradient(0, 0, 400, 0);
     gradientProduct.addColorStop(0, '#3B82F6');
     gradientProduct.addColorStop(1, '#93C5FD');
 
-    // === LẤY DỮ LIỆU THEO KEY (Xử lý cả 'all' và từng loại) ===
-    function getDataByKey(key) {
-        if (key === 'all') {
-            // Gộp tất cả danh mục lại
-            let allProducts = [];
-            let allData = [];
-            let allQuantities = [];
-            
-            Object.values(rawProductData).forEach(cat => {
-                allProducts = allProducts.concat(cat.products);
-                allData = allData.concat(cat.data);
-                allQuantities = allQuantities.concat(cat.quantities);
-            });
-
-            return { products: allProducts, data: allData, quantities: allQuantities };
-        } else {
-            return rawProductData[key];
-        }
-    }
-
-    // === 2. HÀM GIẢ LẬP LỌC THEO NGÀY  ===
-    function simulateDateData(data) {
-        const start = document.getElementById('dateStart').value;
-        const end = document.getElementById('dateEnd').value;
-
-        // Nếu ngày không hợp lệ, trả về dữ liệu gốc
-        if(!start || !end) return data;
-
-        console.log(`Đang lọc từ ${start} đến ${end}...`);
-
-        // Tạo bản sao dữ liệu để không làm hỏng dữ liệu gốc
-        let simulatedRevenue = data.data.map(val => val * (0.5 + Math.random() * 0.5)); // Random từ 50% - 100%
-        let simulatedQty = data.quantities.map(val => Math.floor(val * (0.5 + Math.random() * 0.5)));
-
-        return {
-            products: data.products,
-            data: simulatedRevenue,
-            quantities: simulatedQty
-        };
-    }
-
-    // === LỌC TOP 10 THEO SỐ LƯỢNG BÁN ===
-    function getTop10Data(sourceData) {
-        // 1. Gộp thành mảng đối tượng
-        let combinedArray = sourceData.products.map((name, index) => {
-            return {
-                name: name,
-                revenue: sourceData.data[index],
-                qty: sourceData.quantities[index]
-            };
-        });
-
-        // 2. Sắp xếp giảm dần theo Số lượng (qty)
-        combinedArray.sort((a, b) => b.qty - a.qty);
-
-        // 3. Cắt lấy 10 phần tử đầu tiên
-        let top10 = combinedArray.slice(0, 10);
-
-        // 4. Tách ngược lại
-        return {
-            products: top10.map(item => item.name),
-            data: top10.map(item => item.revenue),
-            quantities: top10.map(item => item.qty)
-        };
-    }
-
-    // --- KHỞI TẠO BIỂU ĐỒ ---
     let productChart = new Chart(ctxTopProducts, {
         type: 'bar',
         data: {
@@ -430,7 +333,7 @@
             datasets: [{
                 label: 'Doanh thu',
                 data: [],
-                quantities: [],
+                quantities: [], 
                 backgroundColor: gradientProduct,
                 borderRadius: 4,
                 barThickness: 18,
@@ -445,13 +348,6 @@
                 legend: { display: false },
                 tooltip: {
                     yAlign: 'center',
-                    xAlign: 'left', 
-                    bodyAlign: 'left',
-                    titleAlign: 'left',
-
-                    displayColors: false,
-                    backgroundColor: 'rgba(31, 41, 55, 0.95)',
-                    padding: 12,
                     callbacks: {
                         label: function(context) {
                             let revenue = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(context.raw);
@@ -464,37 +360,88 @@
             scales: {
                 x: {
                     beginAtZero: true,
-                    grid: { borderDash: [4, 4], color: '#f3f4f6' },
                     ticks: { callback: function(value) { return value / 1000000 + ' tr'; } }
-                },
-                y: { grid: { display: false } }
+                }
             }
         }
     });
 
-    // === HÀM CẬP NHẬT CHÍNH (Được gọi khi thay đổi Danh mục HOẶC Ngày) ===
-    function updateProductChart() {
-        // 1. Lấy giá trị từ bộ lọc danh mục
+    // === HÀM LỌC VÀ XỬ LÝ DỮ LIỆU TẠI CLIENT ===
+    function renderChartFromData() {
         const catKey = document.getElementById('categoryFilter').value;
-        
-        // 2. Lấy dữ liệu thô tương ứng
-        let currentData = getDataByKey(catKey);
+        let sourceData;
 
-        // 3. Giả lập lọc theo ngày (Random số liệu để thấy sự thay đổi)
-        currentData = simulateDateData(currentData);
+        if (catKey === 'all') {
+            let allProducts = [];
+            let allData = [];
+            let allQuantities = [];
+            
+            if (Object.keys(globalProductData).length === 0) {
+                 sourceData = { products: [], data: [], quantities: [] };
+            } else {
+                Object.values(globalProductData).forEach(cat => {
+                    allProducts = allProducts.concat(cat.products);
+                    allData = allData.concat(cat.data);
+                    allQuantities = allQuantities.concat(cat.quantities);
+                });
+                sourceData = { products: allProducts, data: allData, quantities: allQuantities };
+            }
+        } else {
+            sourceData = globalProductData[catKey] || { products: [], data: [], quantities: [] };
+        }
 
-        // 4. Lọc Top 10
-        const finalData = getTop10Data(currentData);
+        let combinedArray = sourceData.products.map((name, index) => {
+            return {
+                name: name,
+                revenue: sourceData.data[index],
+                qty: sourceData.quantities[index]
+            };
+        });
 
-        // 5. Cập nhật biểu đồ
-        productChart.data.labels = finalData.products;
-        productChart.data.datasets[0].data = finalData.data;
-        productChart.data.datasets[0].quantities = finalData.quantities;
+        // Sắp xếp theo số lượng bán
+        combinedArray.sort((a, b) => b.qty - a.qty);
+        let top10 = combinedArray.slice(0, 10);
+
+        productChart.data.labels = top10.map(item => item.name);
+        productChart.data.datasets[0].data = top10.map(item => item.revenue);
+        productChart.data.datasets[0].quantities = top10.map(item => item.qty);
         productChart.update();
     }
 
-    // Chạy lần đầu khi tải trang
-    updateProductChart();
+    // === HÀM GỌI API (AJAX) ===
+    function fetchProductData() {
+        const start = document.getElementById('dateStart').value;
+        const end = document.getElementById('dateEnd').value;
+
+        // Route AJAX lấy từ Backend
+        const url = `/admin/dashboard/filter-products?start_date=${start}&end_date=${end}`;
+        
+        document.getElementById('topProductsChart').style.opacity = 0.5;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                globalProductData = data;
+                renderChartFromData();
+                document.getElementById('topProductsChart').style.opacity = 1;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('topProductsChart').style.opacity = 1;
+            });
+    }
+
+    // === HÀM ĐIỀU PHỐI ===
+    function updateProductChart(triggerSource) {
+        if (triggerSource === 'date') {
+            fetchProductData();
+        } else {
+            renderChartFromData();
+        }
+    }
+
+    // Chạy lần đầu
+    renderChartFromData();
 </script>
 
 @endsection

@@ -17,22 +17,28 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Lấy năm hiện tại
         $currentYear = Carbon::now()->year;
         
-        // --- 1. CÁC THẺ THỐNG KÊ (CARDS) ---
-
-        // Tổng doanh thu: Dựa trên bảng Payment (cột amount)
-        $totalRevenue = Payment::whereYear('payment_date', $currentYear)
+        // Doanh thu từ Payment (Gói tập + Bán hàng)
+        $revenueFromPaymentTable = Payment::whereYear('payment_date', $currentYear)
             ->where('status', 'completed')
             ->sum('amount');
 
+        // Doanh thu từ Thuê đồ 
+        $revenueFromRentals = DB::table('rental_transaction')
+            ->join('rental_item', 'rental_transaction.item_id', '=', 'rental_item.item_id')
+            ->whereYear('rental_transaction.borrow_date', $currentYear)
+            ->where('rental_transaction.status', 'returned') 
+            ->sum(DB::raw('rental_transaction.quantity * rental_item.rental_fee'));
+            
+        // --- 1. CÁC THẺ THỐNG KÊ (CARDS) ---
+        // Tổng doanh thu: Dựa trên bảng Payment (cột amount)
+        $totalRevenue = $revenueFromPaymentTable + $revenueFromRentals;
+
         // Số lớp học đang mở (active)
-        // Bảng: class, Cột: is_active
         $totalClasses = GymClass::where('is_active', 1)->count();
 
         // Khách hàng mới trong năm nay
-        // Bảng: user, Cột: created_at. 
         $totalNewMembers = User::whereYear('created_at', $currentYear)
             ->whereNotIn('role', ['admin', 'trainer'])
             ->count();
@@ -40,9 +46,7 @@ class DashboardController extends Controller
         // Tổng đơn hàng (Bán lẻ)
         $totalOrders = Order::count();
 
-
         // --- 2. BIỂU ĐỒ DOANH THU 12 THÁNG (LINE CHART) ---
-        // Logic: Group by tháng dựa trên payment_date trong bảng payment
         $revenuePerMonth = Payment::select(
                 DB::raw('SUM(amount) as total'),
                 DB::raw('MONTH(payment_date) as month')
@@ -66,11 +70,10 @@ class DashboardController extends Controller
             'data'   => $revenueChartData
         ];
 
-
         // --- 3. CƠ CẤU DOANH THU (PIE CHART 1) ---
-        // Logic: 
-        // - Doanh thu Gói tập = Payment có package_registration_id khác null
-        // - Doanh thu Bán hàng = Payment có order_id khác null
+        // Doanh thu Gói tập = Payment có package_registration_id khác null
+        // Doanh thu Bán hàng = Payment có order_id khác null
+        // Doanh thu Thuê đồ = Từ bảng rental_transaction
         
         $revenueFromPackages = Payment::whereYear('payment_date', $currentYear)
             ->whereNotNull('package_registration_id')
@@ -82,13 +85,10 @@ class DashboardController extends Controller
             ->where('status', 'completed')
             ->sum('amount');
 
-        // Có thể có nguồn thu khác (ví dụ thuê đồ - rental_transaction) nếu bảng payment chưa link tới rental
-        // Tạm thời tính 2 nguồn chính:
         $structureData = [
-            'labels' => ['Gói tập (Membership)', 'Bán lẻ sản phẩm'],
-            'data'   => [$revenueFromPackages, $revenueFromProducts]
+            'labels' => ['Gói tập', 'Bán lẻ sản phẩm', 'Thuê dụng cụ'],
+            'data'   => [$revenueFromPackages, $revenueFromProducts, $revenueFromRentals]
         ];
-
 
         // --- 4. TỶ LỆ GÓI TẬP ĐƯỢC ĐĂNG KÝ (PIE CHART 2) ---
         // Logic: Join bảng package_registration với membership_package để lấy tên gói
@@ -114,7 +114,6 @@ class DashboardController extends Controller
             'data'   => $pkgData
         ];
 
-
         // --- 5. TĂNG TRƯỞNG KHÁCH HÀNG MỚI (BAR CHART) ---
         // Logic: Group user theo tháng tạo
         $usersPerMonth = User::select(
@@ -138,6 +137,46 @@ class DashboardController extends Controller
             'data'   => $newMemberChartData
         ];
 
+        // --- 6. THỐNG KÊ SẢN PHẨM BÁN CHẠY THEO DANH MỤC ---
+        
+        // Logic: order_detail -> product_variant -> product -> product_category
+        $rawProducts = DB::table('order_detail') 
+            ->join('order', 'order_detail.order_id', '=', 'order.order_id')
+            ->join('product_variant', 'order_detail.variant_id', '=', 'product_variant.variant_id')
+            ->join('product', 'product_variant.product_id', '=', 'product.product_id')
+            ->join('product_category', 'product.category_id', '=', 'product_category.category_id') 
+            ->select(
+                'product_category.category_id',
+                'product_category.category_name',
+                'product.product_name',
+                DB::raw('SUM(order_detail.quantity) as total_qty'),
+                // Tính doanh thu: quantity * unit_price
+                DB::raw('SUM(order_detail.quantity * order_detail.unit_price) as total_revenue') 
+            )
+            ->groupBy('product_category.category_id', 'product_category.category_name', 'product.product_name')
+            ->orderBy('total_qty', 'desc')
+            ->get();
+
+        // Format dữ liệu
+        $productStats = [];
+
+        foreach ($rawProducts as $item) {
+            $catId = $item->category_id;
+
+            if (!isset($productStats[$catId])) {
+                $productStats[$catId] = [
+                    'name' => $item->category_name,
+                    'products' => [],
+                    'data' => [], 
+                    'quantities' => [] 
+                ];
+            }
+
+            $productStats[$catId]['products'][] = $item->product_name;
+            $productStats[$catId]['data'][] = (int)$item->total_revenue;
+            $productStats[$catId]['quantities'][] = (int)$item->total_qty;
+        }
+
         return view('admin.dashboard', compact(
             'totalRevenue',
             'totalClasses',
@@ -146,7 +185,55 @@ class DashboardController extends Controller
             'revenueData',
             'structureData',
             'packageData',
-            'newMemberData'
+            'newMemberData',
+            'productStats'
         ));
+    }
+
+    public function filterTopProducts(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate   = $request->input('end_date');
+
+        if (!$startDate || !$endDate) {
+            $endDate = Carbon::now()->format('Y-m-d');
+            $startDate = Carbon::now()->subDays(30)->format('Y-m-d');
+        }
+
+        $rawProducts = DB::table('order_detail')
+            ->join('order', 'order_detail.order_id', '=', 'order.order_id')
+            ->join('product_variant', 'order_detail.variant_id', '=', 'product_variant.variant_id')
+            ->join('product', 'product_variant.product_id', '=', 'product.product_id')
+            ->join('product_category', 'product.category_id', '=', 'product_category.category_id') 
+            ->select(
+                'product_category.category_id',
+                'product_category.category_name',
+                'product.product_name',
+                DB::raw('SUM(order_detail.quantity) as total_qty'),
+                DB::raw('SUM(order_detail.quantity * order_detail.unit_price) as total_revenue') 
+            )
+            // Lọc theo ngày đặt hàng
+            ->whereBetween('order.order_date', [$startDate . ' 00:00:00', $endDate . ' 23:59:59'])
+            ->groupBy('product_category.category_id', 'product_category.category_name', 'product.product_name')
+            ->orderBy('total_qty', 'desc')
+            ->get();
+
+        $productStats = [];
+        foreach ($rawProducts as $item) {
+            $catId = $item->category_id;
+            if (!isset($productStats[$catId])) {
+                $productStats[$catId] = [
+                    'name' => $item->category_name,
+                    'products' => [],
+                    'data' => [],
+                    'quantities' => []
+                ];
+            }
+            $productStats[$catId]['products'][] = $item->product_name;
+            $productStats[$catId]['data'][] = (int)$item->total_revenue;
+            $productStats[$catId]['quantities'][] = (int)$item->total_qty;
+        }
+
+        return response()->json($productStats);
     }
 }
