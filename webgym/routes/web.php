@@ -27,6 +27,7 @@ use App\Http\Controllers\User\ProfileController;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 // Home
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -91,11 +92,14 @@ Route::middleware('auth')->group(function () {
 	Route::post('/profile/change-password', [ProfileController::class, 'changePassword'])->name('profile.change-password');
 
     // User Personal
-    Route::view('/ho-so', 'user.profile')->name('profile');
+    // Route::view('/ho-so', 'user.profile')->name('profile');
     Route::get('/goi-tap-da-mua', [UserPackageController::class, 'myPackages'])->name('my_packages');
     Route::get('/lop-hoc-da-dang-ky', [UserClassController::class, 'myClasses'])->name('my_classes');
 
     Route::get('/lich-su-don-hang',[OrderHistoryController::class,'index'])->name('order_history');
+
+    Route::post('/user/orders/cancel/{id}', [OrderHistoryController::class, 'cancelOrder'])->name('orders_cancel');
+
     Route::get('/lich-su-muon-tra', [RentalHistoryController::class, 'index'])->name('rental_history');
 
     // Checkout
@@ -128,4 +132,3 @@ Route::post('/chat/reset', function (Request $request) {
     $request->session()->forget('chat_history');
     return response()->json(['status' => 'reset']);
 });
-Route::view('/invoice', 'user.invoice')->name('invoice');

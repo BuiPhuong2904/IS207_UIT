@@ -43,4 +43,16 @@ class OrderHistoryController
 
         return view('user.order_history', compact('orders', 'status', 'statusLabels'));
     }
+
+    public function cancelOrder($id) {
+        $order = Order::where('order_id', $id)->where('user_id', Auth::id())->firstOrFail();
+
+        if ($order->status == 'pending') {
+            $order->status = 'cancelled';
+            $order->save();
+            return back()->with('success', 'Đã hủy đơn hàng thành công.');
+        }
+
+        return back()->with('error', 'Không thể hủy đơn hàng này.');
+    }
 }

@@ -14,7 +14,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
         {{-- Main Content Column --}}
-        <div class="md:col-span-12 lg:col-span-9 space-y-8">
+        <div class="md:col-span-12 space-y-8">
 
             {{-- SECTION 1: Avatar Card --}}
             <div class="bg-white rounded-2xl p-6 shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-gray-100 flex flex-col sm:flex-row items-center justify-between transition-shadow duration-300 hover:shadow-lg">

@@ -15,7 +15,7 @@
         @foreach ($statusLabels as $slug => $name)
             <a href="?status={{ $slug }}" 
                class="py-2 px-1 flex-1 transition duration-150 rounded-full whitespace-nowrap
-                    @if (request('status', 'pending_confirmation') == $slug)
+                    @if (request('status', 'all') == $slug)
                         text-blue-600 bg-blue-100 
                     @else hover:bg-gray-50
                     @endif">
@@ -73,7 +73,7 @@
                         
                         {{-- Thông tin --}}
                         <div class="flex-1">
-                            {{-- Tên sản phẩm (Hover: In đậm + Màu đen) --}}
+                            {{-- Tên sản phẩm --}}
                             <p class="text-sm font-medium text-gray-800 line-clamp-2">
                                 <a href="{{ $productUrl }}" target="_blank" 
                                    class="transition-all hover:text-black hover:font-bold">
@@ -130,13 +130,26 @@
                             </button>
 
                         {{-- TRƯỜNG HỢP 2: ĐÃ HỦY (cancelled) --}}
-                        @elseif (request('status') == 'cancelled')
+                        @elseif ($order->status == 'cancelled')
                             <a href="{{ route('product') }}" 
-                               class="px-10 py-2 text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition duration-150 flex items-center justify-center whitespace-nowrap">
+                               class="px-10 py-2 text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-100 transition duration-150 flex items-center justify-center whitespace-nowrap">
                                 Mua lại
                             </a>
+                        
+                        {{-- TRƯỜNG HỢP 3: CHỜ XÁC NHẬN (pending) --}}
+                        @elseif ($order->status == 'pending')
+                            <form action="{{ route('orders_cancel', $order->order_id) }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn hủy đơn hàng này?');">
+                                @csrf
+                                <button type="submit" class="px-8 py-2 text-sm text-red-700 border border-red-600 bg-red-50 rounded-lg hover:bg-red-500 hover:text-white transition duration-150 flex items-center justify-center whitespace-nowrap">
+                                    Hủy đơn
+                                </button>
+                            </form>
 
-                        {{-- TRƯỜNG HỢP 3: CÁC TRẠNG THÁI KHÁC --}}
+                            <button class="px-10 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-150 flex items-center justify-center whitespace-nowrap">
+                                Chi tiết đơn hàng
+                            </button>
+
+                        {{-- TRƯỜNG HỢP 4: CÁC TRẠNG THÁI KHÁC --}}
                         @else
                             <button class="px-10 py-2 text-sm text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-150 flex items-center justify-center whitespace-nowrap">
                                 Chi tiết đơn hàng

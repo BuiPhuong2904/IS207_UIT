@@ -64,7 +64,7 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
 
-            // 7 user trainer (CŨ)
+            // 7 user trainer 
             [
                 'full_name' => 'Lê Minh Châu',
                 'email' => 'chau.le@example.com',
@@ -505,6 +505,20 @@ class UserSeeder extends Seeder
                 'birth_date' => '1998-01-01',
                 'gender' => 'Nam',
                 'address' => 'Số 111, Đường Trần Quang Khải, Phường Tân Định, TP.HCM',
+                'image_url' => null,
+                'status' => 'active',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'full_name' => 'Bùi Phạm Bích Phương',
+                'email' => 'phuongbui290405@gmail.com',
+                'password' => Hash::make('userpass'),
+                'role' => 'member',
+                'phone' => '0901234567',
+                'birth_date' => '2005-05-17',
+                'gender' => 'Nữ',
+                'address' => 'Số 10, Đường Trần Hưng Đạo, Phường Tân Định, Thành phố Hồ Chí Minh',
                 'image_url' => null,
                 'status' => 'active',
                 'created_at' => now(),

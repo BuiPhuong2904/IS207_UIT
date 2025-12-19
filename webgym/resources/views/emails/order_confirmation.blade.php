@@ -35,10 +35,10 @@
                                         <table border="0" cellpadding="0" cellspacing="0">
                                             <tr>
                                                 <td style="padding-right: 15px;">
-                                                    <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762341326/logo_x0erjc.png" alt="Logo" width="70" height="70" style="border-radius: 4px; width: 70px; height: auto;">
+                                                    <img src="https://res.cloudinary.com/dna9qbejm/image/upload/v1762341326/logo_x0erjc.png" alt="Logo" width="70" height="70" style="border-radius: 4px; width: 90px; height: auto;">
                                                 </td>
                                                 <td valign="middle">
-                                                    <h1 style="font-size: 24px; font-weight: bold; color: #111827; margin: 0 0 5px 0; font-family: Helvetica, Arial, sans-serif;">Grynd</h1>
+                                                    <h1 style="font-size: 22px; font-weight: bold; color: #0D47A1; margin: 0; font-family: Helvetica, Arial, sans-serif;">GRYND</h1>
                                                     <p style="margin: 0; color: #6b7280; font-size: 14px;">yobae@gmail.com</p>
                                                     <p style="margin: 0; color: #6b7280; font-size: 14px;">012 345 6789</p>
                                                 </td>
@@ -56,9 +56,9 @@
                                 <tr>
                                     <td valign="top" width="60%" class="col-mobile" style="padding: 20px 20px 20px 0; border-right: 2px solid #f3f4f6;">
                                         <p style="text-transform: uppercase; font-size: 11px; font-weight: bold; color: #9ca3af; letter-spacing: 1px; margin: 0 0 10px 0;">Thực hiện thanh toán</p>
-                                        <p style="font-weight: bold; color: #111827; margin: 0 0 10px 0; font-size: 15px;">Grynd</p>
+                                        <p style="font-weight: bold; color: #0D47A1; margin: 0 0 5px 0; font-size: 15px;">GRYND</p>
                                         <table border="0" cellpadding="0" cellspacing="0" width="100%" style="font-size: 13px; color: #4b5563;">
-                                            <tr><td width="20" style="padding-bottom: 5px;">📍</td><td style="padding-bottom: 5px;">Đường Hàn Thuyên, KP34, P.Linh Xuân, TPHCM</td></tr>
+                                            <tr><td width="20" style="padding-bottom: 5px;">📍</td><td style="padding-bottom: 5px;">Đường Hàn Thuyên, Khu phố 34, Phường Linh Xuân, TPHCM</td></tr>
                                             <tr><td width="20" style="padding-bottom: 5px;">🌐</td><td style="padding-bottom: 5px;">www.yobae.vn</td></tr>
                                             <tr><td width="20">📞</td><td>0123 456 789</td></tr>
                                         </table>
@@ -121,21 +121,18 @@
                                             <tr>
                                                 <td align="left" style="padding-bottom: 10px; font-size: 14px; font-weight: bold; color: #374151;">Tổng tiền</td>
                                                 <td align="right" style="padding-bottom: 10px; font-size: 14px; font-weight: bold; color: #374151;">
-                                                    {{-- Sử dụng 'subtotal' nếu có, nếu không thì lấy tổng + giảm giá để tính ngược lại --}}
                                                     {{ number_format($data['subtotal'] ?? ($data['total_amount'] + ($data['discount_value'] ?? 0)), 0, ',', '.') }}
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td align="left" style="padding-bottom: 10px; font-size: 14px; font-weight: bold; color: #374151;">Giá giảm</td>
                                                 <td align="right" style="padding-bottom: 10px; font-size: 14px; font-weight: bold; color: #374151;">
-                                                    {{-- Lấy giá giảm từ data, mặc định là 0 --}}
                                                     {{ number_format($data['discount_value'] ?? 0, 0, ',', '.') }}
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td align="left" style="padding-bottom: 10px; font-size: 14px; font-weight: bold; color: #374151;">Mã giảm giá</td>
                                                 <td align="right" style="padding-bottom: 10px; font-size: 14px; font-weight: bold; color: #374151;">
-                                                    {{-- Lấy mã giảm giá từ data --}}
                                                     {{ $data['promotion_code'] ?? '--' }}
                                                 </td>
                                             </tr>
@@ -155,9 +152,8 @@
                                     <td style="background-color: #f9fafb; padding: 20px; border-radius: 6px;">
                                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                             <tr>
-                                                <td width="24" valign="top" style="font-size: 18px; padding-right: 10px;">ℹ️</td>
                                                 <td style="font-style: italic; color: #4b5563; font-size: 13px; line-height: 1.6;">
-                                                    Vui lòng xuất hóa đơn trong vòng 7 ngày kể từ lúc mua hàng.<br>
+                                                    Vui lòng yêu cầu xuất hóa đơn trong vòng 7 ngày kể từ lúc mua hàng.<br>
                                                     Cám ơn bạn đã ghé thăm dịch vụ của chúng tôi.
                                                 </td>
                                             </tr>
@@ -166,15 +162,18 @@
                                 </tr>
                             </table>
 
-                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top: 30px;">
+                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-top: 10px;">
                                 <tr>
-                                    <td style="padding-bottom: 20px;">
+                                    <td style="padding-bottom: 10px;">
                                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                             <tr>
-                                                <td width="1" style="white-space: nowrap; padding-right: 20px;">
+                                                <td width="1" style="white-space: nowrap; padding-right: 20px; vertical-align: middle;">
                                                     <h4 style="font-size: 12px; font-weight: bold; color: #6b7280; text-transform: uppercase; margin: 0; letter-spacing: 1px;">Thông tin khách hàng</h4>
                                                 </td>
-                                                <td width="99%" style="border-top: 1px solid #e5e7eb;"></td>
+                                                
+                                                <td width="99%" style="vertical-align: middle;">
+                                                    <div style="border-top: 1px solid #e5e7eb; font-size: 0; line-height: 0;">&nbsp;</div>
+                                                </td>
                                             </tr>
                                         </table>
                                     </td>
@@ -184,15 +183,15 @@
                                         <table border="0" cellpadding="0" cellspacing="0" width="100%">
                                             <tr>
                                                 <td valign="top" width="100%">
-                                                    <p style="font-weight: bold; color: #1f2937; text-transform: uppercase; font-size: 14px; margin: 0 0 8px 0;">
-                                                        {{ $data['customer_name'] ?? 'Khách lẻ' }}
+                                                    <p style="font-weight: bold; color: #1f2937; text-transform: uppercase; font-size: 14px; margin: 0;">
+                                                        {{ $data['customer_name'] ?? 'Khách vãng lai' }}
                                                     </p>
                                                     <div style="font-size: 13px; color: #6b7280; line-height: 1.6;">
                                                         @if(!empty($data['address']))
-                                                            <div style="margin-bottom: 4px;">{{ $data['address'] }}</div>
+                                                            <div>{{ $data['address'] }}</div>
                                                         @endif
                                                         @if(!empty($data['phone_number']))
-                                                            <div style="margin-bottom: 4px;">SĐT: {{ $data['phone_number'] }}</div>
+                                                            <div>SĐT: {{ $data['phone_number'] }}</div>
                                                         @endif
                                                         @if(!empty($data['email']))
                                                             <div>Email: {{ $data['email'] }}</div>

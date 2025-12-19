@@ -21,7 +21,7 @@
             
             <p class="text-gray-700 mb-10 text-center text-sm px-4 leading-relaxed">
                 Nhập email bạn đã đăng ký.<br>
-                Chúng tôi sẽ gửi mã xác minh gồm 6 số để đặt lại mật khẩu.
+                Chúng tôi sẽ gửi mã xác minh gồm 6 số.
             </p>
 
             @if(session('error'))

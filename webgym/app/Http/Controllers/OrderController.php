@@ -18,7 +18,7 @@ use App\Models\MembershipPackage;
 use App\Models\Payment;
 use App\Models\Cart;
 use App\Models\CartItem;
-use App\Models\ProductVariant; // [MỚI] Import để lấy weight/unit
+use App\Models\ProductVariant; 
 
 // Mailable
 use App\Mail\OrderInvoiceMail; 
@@ -229,66 +229,60 @@ class OrderController extends Controller
 
             DB::commit(); 
 
-            // --- E. GỬI EMAIL (CHỈ GỬI MAIL, KHÔNG PDF) ---
-            try {
-                $mailAddress = $request->address;
-                if ($request->filled('apartment_details')) {
-                    $mailAddress .= ', ' . $request->apartment_details;
-                }
-
-                $targetType = 'order';
-                if ($hasMembership && !$hasProduct) $targetType = 'membership';
-                if ($hasMembership && $hasProduct)  $targetType = 'combined';
-
-                // [QUAN TRỌNG] Lấy thêm weight và unit cho từng item
-                $mailItems = [];
-                foreach ($cartItems as $item) {
-                    // Mặc định lấy các trường cơ bản từ cart
-                    $newItem = $item;
-
-                    // Nếu là sản phẩm (có variant_id), query database để lấy weight/unit
-                    if (isset($item['variant_id']) && $item['variant_id']) {
-                        $variant = ProductVariant::find($item['variant_id']);
-                        if ($variant) {
-                            $newItem['weight'] = $variant->weight;
-                            $newItem['unit']   = $variant->unit;
-                        }
-                    }
-                    $mailItems[] = $newItem;
-                }
-
-                $mailData = [
-                    'order_code'     => $mainTrackingCode,
-                    'customer_name'  => $request->full_name,
-                    'email'          => $request->email,
-                    'phone_number'   => $request->phone_number,
-                    'address'        => $mailAddress,
-                    'total_amount'   => $calculatedTotal,
-                    'payment_method' => $request->payment_method,
-                    'date'           => now()->format('d/m/Y H:i'),
-                    'items'          => $mailItems, // Dùng mảng mới đã có weight/unit
-                    'target_type'    => $targetType,
-                    'subtotal'       => $subtotal, // Tổng tiền hàng (chưa trừ giảm giá)
-                    'discount_value' => $itemDiscount + $promotionDiscount, // Tổng tiền được giảm
-                    'promotion_code' => $validPromotionCode, // Mã code (nếu có)
-                ];
-
-                // Gửi mail Invoice
-                Mail::to($request->email)->send(new OrderInvoiceMail($mailData));
-
-            } catch (\Exception $e) {
-                // Log lỗi mail nhưng không chặn luồng chính
-                Log::error("LỖI GỬI EMAIL: " . $e->getMessage());
-                // Không dd() ở đây để user vẫn hoàn tất đơn hàng
-            }
-
-            // --- F. REDIRECT ---
+            // --- REDIRECT ---
             
             // COD 
             if ($request->payment_method === 'cod') {
                 if ($orderId) {
                     Order::where('order_id', $orderId)->update(['status' => 'pending']);
                 }
+
+                try {
+                    $mailAddress = $request->address;
+                    if ($request->filled('apartment_details')) {
+                        $mailAddress .= ', ' . $request->apartment_details;
+                    }
+                    
+                    $targetType = 'order';
+                    if ($hasMembership && !$hasProduct) $targetType = 'membership';
+                    if ($hasMembership && $hasProduct)  $targetType = 'combined';
+
+                    // Tái tạo items cho mail từ giỏ hàng
+                    $mailItems = [];
+                    foreach ($cartItems as $item) {
+                        $newItem = $item;
+                        // Query lại DB để lấy weight/unit cho chuẩn
+                        if (isset($item['variant_id']) && $item['variant_id']) {
+                            $variant = ProductVariant::find($item['variant_id']);
+                            if ($variant) {
+                                $newItem['weight'] = $variant->weight;
+                                $newItem['unit']   = $variant->unit;
+                            }
+                        }
+                        $mailItems[] = $newItem;
+                    }
+
+                    $mailData = [
+                        'order_code'     => $mainTrackingCode,
+                        'customer_name'  => $request->full_name,
+                        'email'          => $request->email,
+                        'phone_number'   => $request->phone_number,
+                        'address'        => $mailAddress,
+                        'total_amount'   => $calculatedTotal,
+                        'payment_method' => 'COD (Thanh toán khi nhận hàng)',
+                        'date'           => now()->format('d/m/Y H:i'),
+                        'items'          => $mailItems,
+                        'target_type'    => $targetType,
+                        'subtotal'       => $subtotal,
+                        'discount_value' => $itemDiscount + $promotionDiscount,
+                        'promotion_code' => $validPromotionCode,
+                    ];
+
+                    Mail::to($request->email)->send(new OrderInvoiceMail($mailData));
+                } catch (\Exception $e) {
+                    Log::error("LỖI GỬI EMAIL COD: " . $e->getMessage());
+                }
+                
                 return redirect()->route('order.thankyou', ['order_code' => $mainTrackingCode])
                                  ->with('success', 'Đặt hàng thành công! Hóa đơn đã được gửi về email.');
             }
@@ -308,7 +302,7 @@ class OrderController extends Controller
         }
     }
 
-    // 4. TRANG CẢM ƠN
+    // TRANG CẢM ƠN
     public function thankYou($orderCode)
     {
         $data = ['order_code' => $orderCode];
@@ -319,7 +313,7 @@ class OrderController extends Controller
                 ->where('order_code', $orderCode)
                 // ->where('user_id', $userId) 
                 ->first();
-            $data['type'] = 'product_combined';
+            $data['type'] = 'product';
         } 
         elseif (str_starts_with($orderCode, 'REG')) {
             $regId = str_replace('REG-', '', $orderCode);
