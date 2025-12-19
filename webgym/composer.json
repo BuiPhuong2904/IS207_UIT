@@ -7,12 +7,13 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "ext-curl": "*",
+        "barryvdh/laravel-dompdf": "^3.1",
         "cloudinary-labs/cloudinary-laravel": "^3.0",
         "cloudinary/cloudinary_php": "^3.1",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
-        "openai-php/client": "^0.17.1",
-        "ext-curl": "*"
+        "openai-php/client": "^0.17.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

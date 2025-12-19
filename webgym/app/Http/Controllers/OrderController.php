@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail; // Import Mail Facade
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
@@ -17,33 +18,32 @@ use App\Models\MembershipPackage;
 use App\Models\Payment;
 use App\Models\Cart;
 use App\Models\CartItem;
+use App\Models\ProductVariant; // [MỚI] Import để lấy weight/unit
 
-use App\Helpers\PromotionHelper; 
+// Mailable
+use App\Mail\OrderInvoiceMail; 
+
+use App\Helpers\PromotionHelper;
 
 class OrderController extends Controller
 {
     // 1. DANH SÁCH ĐƠN HÀNG (ADMIN)
     public function index(Request $request)
     {
-        $query = Order::with(['user', 'details.product.product']); // Eager loading
+        $query = Order::with(['user', 'details.product.product']);
 
-        // Lọc theo Ngày
         if ($request->filled('date_from')) {
             $query->whereDate('order_date', '>=', $request->date_from);
         }
         if ($request->filled('date_to')) {
             $query->whereDate('order_date', '<=', $request->date_to);
         }
-
-        // Lọc theo Giá
         if ($request->filled('price_from')) {
             $query->where('total_amount', '>=', $request->price_from);
         }
         if ($request->filled('price_to')) {
             $query->where('total_amount', '<=', $request->price_to);
         }
-
-        // Lọc theo Trạng thái
         if ($request->filled('status') && $request->status !== 'all') {
             $query->where('status', $request->status);
         }
@@ -82,7 +82,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         try {
-            // --- A. VALIDATE DỮ LIỆU ĐẦU VÀO ---
+            // --- A. VALIDATE ---
             $request->validate([
                 'full_name'       => 'required|string|max:255',
                 'phone_number'    => 'required|string|max:20',
@@ -102,16 +102,13 @@ class OrderController extends Controller
                 return back()->withErrors(['cart_items' => 'Giỏ hàng trống!'])->withInput();
             }
 
-            // --- B. TÍNH TOÁN LẠI GIÁ (BACKEND SECURITY) ---
-            // Tránh user sửa HTML để gửi giá sai lên server
+            // --- B. TÍNH TOÁN GIÁ ---
             $subtotal = collect($cartItems)->sum(fn($i) => ($i['unit_price'] ?? 0) * ($i['quantity'] ?? 1));
             
-            // Xử lý khuyến mãi
             $promotionDiscount = 0;
             $validPromotionCode = null;
 
             if ($request->filled('promotion_code')) {
-                // Giả sử class PromotionHelper tồn tại và hoạt động đúng
                 if (class_exists('App\Helpers\PromotionHelper')) {
                     $result = PromotionHelper::validateAndApply(
                         $request->promotion_code,
@@ -128,40 +125,28 @@ class OrderController extends Controller
                 }
             }
 
-            // Tổng item discount (nếu có giảm giá riêng từng sản phẩm)
             $itemDiscount = collect($cartItems)->sum(fn($i) => ($i['discount_value'] ?? 0) * ($i['quantity'] ?? 1));
-            
-            // Phí ship cứng (hoặc tính theo logic của bạn)
             $shippingFee = 30000;
             
-            // Công thức: Subtotal - Giảm giá SP - Voucher + Ship
-            // Lưu ý: Nếu mua Membership online thường không mất ship, logic này bạn tự cân nhắc
             $calculatedTotal = $subtotal - $itemDiscount - $promotionDiscount + $shippingFee;
 
-            // Kiểm tra chênh lệch giá (cho phép sai số nhỏ do làm tròn)
             if (abs($calculatedTotal - $request->total_amount) > 1000) {
-                return back()
-                    ->withErrors(['total_amount' => 'Giá trị đơn hàng thay đổi. Vui lòng tải lại trang!'])
-                    ->withInput();
+                return back()->withErrors(['total_amount' => 'Giá trị đơn hàng thay đổi.'])->withInput();
             }
 
-            // --- C. XỬ LÝ DATABASE (TRANSACTION) ---
+            // --- C. XỬ LÝ DATABASE ---
             DB::beginTransaction();
 
             $orderId = null;
             $registrationId = null;
-            $mainTrackingCode = null; // Mã dùng để track chung (ưu tiên mã đơn hàng)
-            
-            // Tạo mã Payment Code duy nhất
+            $mainTrackingCode = null; 
             $paymentCode = 'PAY-' . strtoupper(Str::random(10));
             
-            // Phân loại Cart
             $hasMembership = collect($cartItems)->contains('type', 'membership');
-            $hasProduct    = collect($cartItems)->contains('type', 'product'); // hoặc check nếu type != membership
+            $hasProduct    = collect($cartItems)->contains('type', 'product');
 
-            // 1. TẠO ORDER (Nếu có sản phẩm vật lý)
+            // 1. TẠO ORDER
             if ($hasProduct) {
-                // Tạo mã đơn hàng chuẩn
                 $todayPrefix = 'ORD' . date('Ymd');
                 $lastOrder = Order::where('order_code', 'like', $todayPrefix . '%')->orderBy('order_id', 'desc')->first();
                 $nextNumber = $lastOrder ? ((int)substr($lastOrder->order_code, -6)) + 1 : 1;
@@ -173,7 +158,7 @@ class OrderController extends Controller
                     'user_id'          => $user->id,
                     'order_code'       => $orderCode,
                     'order_date'       => now(),
-                    'total_amount'     => $calculatedTotal, // Order giữ tổng tiền thanh toán
+                    'total_amount'     => $calculatedTotal,
                     'status'           => 'pending',
                     'shipping_address' => $fullAddress,
                     'promotion_code'   => $validPromotionCode,
@@ -183,7 +168,6 @@ class OrderController extends Controller
                 $orderId = $order->order_id;
                 $mainTrackingCode = $orderCode;
 
-                // Lưu Order Detail
                 foreach ($cartItems as $item) {
                     if (($item['type'] ?? '') !== 'membership') {
                         OrderDetail::create([
@@ -198,7 +182,7 @@ class OrderController extends Controller
                 }
             }
 
-            // 2. TẠO PACKAGE REGISTRATION (Nếu có gói tập)
+            // 2. TẠO PACKAGE REGISTRATION
             if ($hasMembership) {
                 foreach ($cartItems as $item) {
                     if (($item['type'] ?? '') === 'membership') {
@@ -211,20 +195,15 @@ class OrderController extends Controller
                             'package_id' => $package->package_id,
                             'start_date' => Carbon::now(),
                             'end_date'   => Carbon::now()->addMonths($months),
-                            'status'     => 'pending', // Chờ thanh toán
-                            // Nếu muốn link gói tập vào order (để biết gói này thuộc đơn nào)
+                            'status'     => 'pending',
                             'order_id'   => $orderId, 
                         ]);
 
-                        // Lưu lại ID đăng ký cuối cùng để gán vào Payment (nếu cần)
                         $registrationId = $registration->registration_id;
                     }
                 }
-
-                // Nếu chỉ mua gói tập (không có SP), Tracking Code là REG-...
                 if (!$hasProduct) {
-                    $mainTrackingCode = 'REG-' . $registrationId; // Lấy cái cuối hoặc tạo mã riêng
-                    // Nếu không có Order, ta coi Payment Amount là toàn bộ bill
+                    $mainTrackingCode = 'REG-' . $registrationId;
                 }
             }
 
@@ -241,32 +220,81 @@ class OrderController extends Controller
                 'method'                  => $request->payment_method,
                 'payment_date'            => Carbon::now(),
                 'status'                  => 'pending',
-                'order_id'                => $orderId,       // Nullable
-                'package_registration_id' => $registrationId, // Nullable
+                'order_id'                => $orderId,       
+                'package_registration_id' => $registrationId,
             ]);
 
             // 4. XÓA GIỎ HÀNG
             $this->clearUserCart($user->id);
 
-            DB::commit();
+            DB::commit(); 
 
-            // --- D. XỬ LÝ THANH TOÁN (REDIRECT) ---
+            // --- E. GỬI EMAIL (CHỈ GỬI MAIL, KHÔNG PDF) ---
+            try {
+                $mailAddress = $request->address;
+                if ($request->filled('apartment_details')) {
+                    $mailAddress .= ', ' . $request->apartment_details;
+                }
+
+                $targetType = 'order';
+                if ($hasMembership && !$hasProduct) $targetType = 'membership';
+                if ($hasMembership && $hasProduct)  $targetType = 'combined';
+
+                // [QUAN TRỌNG] Lấy thêm weight và unit cho từng item
+                $mailItems = [];
+                foreach ($cartItems as $item) {
+                    // Mặc định lấy các trường cơ bản từ cart
+                    $newItem = $item;
+
+                    // Nếu là sản phẩm (có variant_id), query database để lấy weight/unit
+                    if (isset($item['variant_id']) && $item['variant_id']) {
+                        $variant = ProductVariant::find($item['variant_id']);
+                        if ($variant) {
+                            $newItem['weight'] = $variant->weight;
+                            $newItem['unit']   = $variant->unit;
+                        }
+                    }
+                    $mailItems[] = $newItem;
+                }
+
+                $mailData = [
+                    'order_code'     => $mainTrackingCode,
+                    'customer_name'  => $request->full_name,
+                    'email'          => $request->email,
+                    'phone_number'   => $request->phone_number,
+                    'address'        => $mailAddress,
+                    'total_amount'   => $calculatedTotal,
+                    'payment_method' => $request->payment_method,
+                    'date'           => now()->format('d/m/Y H:i'),
+                    'items'          => $mailItems, // Dùng mảng mới đã có weight/unit
+                    'target_type'    => $targetType,
+                    'subtotal'       => $subtotal, // Tổng tiền hàng (chưa trừ giảm giá)
+                    'discount_value' => $itemDiscount + $promotionDiscount, // Tổng tiền được giảm
+                    'promotion_code' => $validPromotionCode, // Mã code (nếu có)
+                ];
+
+                // Gửi mail Invoice
+                Mail::to($request->email)->send(new OrderInvoiceMail($mailData));
+
+            } catch (\Exception $e) {
+                // Log lỗi mail nhưng không chặn luồng chính
+                Log::error("LỖI GỬI EMAIL: " . $e->getMessage());
+                // Không dd() ở đây để user vẫn hoàn tất đơn hàng
+            }
+
+            // --- F. REDIRECT ---
             
-            // TH1: COD 
+            // COD 
             if ($request->payment_method === 'cod') {
                 if ($orderId) {
                     Order::where('order_id', $orderId)->update(['status' => 'pending']);
                 }
-                // Update payment status (COD thường chưa thu tiền ngay nên để pending hoặc xử lý theo nghiệp vụ)
-                // Payment::where('payment_code', $paymentCode)->update(['status' => 'pending']); 
-
                 return redirect()->route('order.thankyou', ['order_code' => $mainTrackingCode])
-                                 ->with('success', 'Đặt hàng thành công!');
+                                 ->with('success', 'Đặt hàng thành công! Hóa đơn đã được gửi về email.');
             }
 
-            // TH2: VNPAY
+            // VNPAY
             if ($request->payment_method === 'vnpay') {
-                // Dùng mã Payment Code hoặc Order Code để gửi sang VNPAY
                 $vnpayUrl = $this->createVnpayUrl($mainTrackingCode, $calculatedTotal, $request->ip());
                 return redirect()->away($vnpayUrl);
             }
@@ -280,17 +308,16 @@ class OrderController extends Controller
         }
     }
 
-    // 4. TRANG CẢM ƠN / CHI TIẾT ĐƠN VỪA ĐẶT
+    // 4. TRANG CẢM ƠN
     public function thankYou($orderCode)
     {
         $data = ['order_code' => $orderCode];
         $userId = Auth::id();
 
-        // Logic hiển thị tùy thuộc vào mã đơn
         if (str_starts_with($orderCode, 'ORD')) {
             $data['order'] = Order::with('details.product')
                 ->where('order_code', $orderCode)
-                ->where('user_id', $userId)
+                // ->where('user_id', $userId) 
                 ->first();
             $data['type'] = 'product_combined';
         } 
@@ -298,7 +325,7 @@ class OrderController extends Controller
             $regId = str_replace('REG-', '', $orderCode);
             $data['registration'] = PackageRegistration::with('package')
                 ->where('registration_id', $regId)
-                ->where('user_id', $userId)
+                // ->where('user_id', $userId)
                 ->first();
             $data['type'] = 'membership';
         }
@@ -306,14 +333,13 @@ class OrderController extends Controller
         return view('user.thankyou', $data);
     }
 
-    // --- HELPER FUNCTIONS ---
-
+    // --- HELPER ---
     private function clearUserCart($userId)
     {
         $cart = Cart::where('user_id', $userId)->where('status', 'active')->first();
         if ($cart) {
             CartItem::where('cart_id', $cart->cart_id)->delete();
-            $cart->delete(); // Hoặc giữ cart header, chỉ xóa item tùy logic
+            $cart->delete();
         }
     }
 
@@ -322,14 +348,13 @@ class OrderController extends Controller
         $vnp_TmnCode    = config('services.vnpay.tmn_code');
         $vnp_HashSecret = config('services.vnpay.hash_secret');
         $vnp_Url        = config('services.vnpay.url');
-        // Route trả về sau khi thanh toán xong
         $vnp_ReturnUrl  = route('payment.vnpay.return'); 
 
         $inputData = [
             'vnp_Version'    => '2.1.0',
             'vnp_Command'    => 'pay',
             'vnp_TmnCode'    => $vnp_TmnCode,
-            'vnp_Amount'     => $amount * 100, // VNPAY tính đơn vị đồng
+            'vnp_Amount'     => $amount * 100,
             'vnp_CreateDate' => date('YmdHis'),
             'vnp_CurrCode'   => 'VND',
             'vnp_IpAddr'     => $ipAddr,
@@ -337,7 +362,7 @@ class OrderController extends Controller
             'vnp_OrderInfo'  => "Thanh toan don hang $refCode",
             'vnp_OrderType'  => 'other',
             'vnp_ReturnUrl'  => $vnp_ReturnUrl,
-            'vnp_TxnRef'     => $refCode, // Mã tham chiếu (Order Code)
+            'vnp_TxnRef'     => $refCode,
         ];
 
         ksort($inputData);

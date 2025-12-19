@@ -145,7 +145,7 @@
             {{-- TỔNG CỘNG --}}
             <div class="flex justify-between items-center text-xl font-bold text-gray-900 mb-6 border-b pb-4">
                 <span>Tổng cộng</span>
-                <span class="text-blue-600">{{ number_format($total_amount) }}đ</span>
+                <span class="text-black">{{ number_format($total_amount) }}đ</span>
             </div>
 
             @if($promo_message)
