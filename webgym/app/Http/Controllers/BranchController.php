@@ -3,94 +3,70 @@
 namespace App\Http\Controllers;
 
 use App\Models\Branch;
-use App\Models\User; // Import Model User
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class BranchController extends Controller
 {
-    // List Branches
     public function index()
     {
-        // 1. Lấy danh sách chi nhánh, eager load 'manager' để hiển thị tên quản lý
-        $branches = Branch::with('manager')
-                          ->orderBy('branch_id', 'desc')
-                          ->paginate(10);
-
-        // 2. Lấy danh sách User để hiển thị trong Dropdown "Chọn quản lý"
-        $managers = User::select('id', 'full_name')->where('role', 'admin')->get(); 
-
-        return view('admin.branches', compact('branches', 'managers'));
+        $branches = Branch::with('manager')->paginate(10);
+        return view('admin.branches', compact('branches'));
     }
 
-    // Create Branch
     public function store(Request $request)
     {
-        // Validate dữ liệu từ AJAX gửi lên
-        $request->validate([
+        $validated = $request->validate([
             'branch_name' => 'required|string|max:255',
-            'address'     => 'required|string',
-            'phone'       => 'nullable|string|max:20',
-            'manager_id'  => 'nullable|exists:user,id', 
-            'is_active'   => 'boolean'
+            'address' => 'required|string',
+            'phone' => 'required|string|max:20',
+            'manager_id' => 'nullable|exists:users,id',
+            'is_active' => 'boolean'
         ]);
 
-        // Tạo mới
-        Branch::create([
-            'branch_name' => $request->branch_name,
-            'address'     => $request->address,
-            'phone'       => $request->phone,
-            'manager_id'  => $request->manager_id,
-            'is_active'   => $request->input('is_active', true),
-        ]);
+        $validated['is_active'] = $request->has('is_active') ? 1 : 0;
+
+        Branch::create($validated);
 
         return response()->json([
             'success' => true,
-            'message' => 'Thêm chi nhánh thành công!'
+            'message' => 'Thêm chi nhánh thành công'
         ]);
     }
 
-    // Update Branch
-    public function update(Request $request, $id)
+    public function show(Branch $branch)
     {
-        $branch = Branch::findOrFail($id);
+        $branch->load('manager');
+        return response()->json($branch);
+    }
 
-        $request->validate([
-            'branch_name' => 'required|string|max:255',
-            'address'     => 'required|string',
-            'phone'       => 'nullable|string|max:20',
-            'manager_id'  => 'nullable|exists:user,id',
-            'is_active'   => 'required'
+    public function update(Request $request, Branch $branch)
+    {
+        $validated = $request->validate([
+            'branch_name' => 'required|string|max: 255',
+            'address' => 'required|string',
+            'phone' => 'required|string|max:20',
+            'manager_id' => 'nullable|exists:users,id',
+            'is_active' => 'boolean'
         ]);
 
-        $branch->update([
-            'branch_name' => $request->branch_name,
-            'address'     => $request->address,
-            'phone'       => $request->phone,
-            'manager_id'  => $request->manager_id,
-            'is_active'   => (bool)$request->is_active,
-        ]);
+        $validated['is_active'] = $request->has('is_active') ? 1 : 0;
+
+        $branch->update($validated);
 
         return response()->json([
             'success' => true,
-            'message' => 'Cập nhật thành công!'
+            'message' => 'Cập nhật chi nhánh thành công'
         ]);
     }
 
-    // Delete Branch
-    public function destroy($id)
+    public function destroy(Branch $branch)
     {
-        $branch = Branch::findOrFail($id);
-        
-        // Kiểm tra xem chi nhánh có HLV không trước khi xóa
-        if($branch->trainers()->count() > 0) {
-            return response()->json(['success' => false, 'message' => 'Không thể xóa chi nhánh đang có HLV!'], 400);
-        }
-
         $branch->delete();
 
         return response()->json([
-            'success' => true, 
-            'message' => 'Đã xóa chi nhánh!'
+            'success' => true,
+            'message' => 'Xóa chi nhánh thành công'
         ]);
     }
 }

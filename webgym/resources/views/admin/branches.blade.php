@@ -1,6 +1,6 @@
 @extends('layouts.ad_layout')
 
-@section('title', 'Quản lý chi nhánh')
+@section('title', 'Quản lý Chi nhánh')
 
 @section('content')
 
@@ -8,465 +8,473 @@
 
 <div class="bg-white rounded-2xl shadow-sm p-6">
     
-    {{-- HEADER & BUTTONS --}}
     <div class="flex justify-between items-center mb-6">
-        <h1 class="font-montserrat text-2xl text-black font-semibold">Danh sách chi nhánh</h1>
+        <h1 class="font-montserrat text-2xl text-black font-semibold">Chi nhánh</h1>
         
         <div class="flex items-center space-x-4 font-open-sans">
-            {{-- Nút Thêm Chi nhánh --}}
             <button id="openAddModalBtn" class="bg-[#28A745] hover:bg-[#218838] text-white px-4 py-2 rounded-full flex items-center text-sm font-semibold transition-colors shadow-none">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
-                Thêm chi nhánh
+                Thêm 
             </button>
         </div>
     </div>
 
-    {{-- TABLE CONTENT --}}
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse table-auto font-open-sans">
             
             <thead class="font-montserrat text-[#1f1d1d] text-sm text-center">
                 <tr>
-                    <th class="py-4 px-4 w-[10%] truncate">Mã CN</th>
-                    <th class="py-4 px-4 w-[20%] truncate">Tên chi nhánh</th>
-                    <th class="py-4 px-4 w-[25%] truncate">Địa chỉ</th>
-                    <th class="py-4 px-4 w-[15%] truncate">SĐT</th>
-                    <th class="py-4 px-4 w-[15%] truncate">Quản lý</th>
-                    <th class="py-4 px-4 w-[15%] truncate">Trạng thái</th>
+                    <th class="py-4 px-4 w-[10%]">Mã CN</th>
+                    <th class="py-4 px-4 w-[20%]">Tên chi nhánh</th>
+                    <th class="py-4 px-4 w-[25%]">Địa chỉ</th>
+                    <th class="py-4 px-4 w-[15%]">Số điện thoại</th>
+                    <th class="py-4 px-4 w-[15%]">Người quản lý</th>
+                    <th class="py-4 px-4 w-[15%]">Trạng thái</th>
                 </tr>
             </thead>
 
-            <tbody id="branch-list-body" class="text-sm text-gray-700 text-center">
+            <tbody class="text-sm text-gray-700 text-center">
                 @foreach ($branches as $branch)
-                    @php
-                        $isOdd = $loop->odd;
-                        $rowBg = $isOdd ? 'bg-[#1976D2]/20' : 'bg-white';
-                        $roundLeft = $isOdd ? 'rounded-l-xl' : '';
-                        $roundRight = $isOdd ? 'rounded-r-xl' : '';
-                        
-                        // Giả sử relation trong Model Branch là public function manager() { return $this->belongsTo(User::class, 'manager_id'); }
-                        $managerName = $branch->manager ? $branch->manager->full_name : 'Chưa có';
-                    @endphp
+                @php
+                    $isOdd = $loop->odd;
+                    $rowBg = $isOdd ? 'bg-[#1976D2]/20' : 'bg-white';
+                    $roundLeft = $isOdd ? 'rounded-l-xl' : '';
+                    $roundRight = $isOdd ? 'rounded-r-xl' : '';
+                @endphp
 
-                    <tr class="{{ $rowBg }} cursor-pointer transition-colors modal-trigger group"
-                        id="row-{{ $branch->branch_id }}"
-                        data-branch_id="{{ $branch->branch_id }}"
-                        data-branch_name="{{ $branch->branch_name }}"
-                        data-address="{{ $branch->address }}"
-                        data-phone="{{ $branch->phone }}"
-                        data-manager_id="{{ $branch->manager_id }}"
-                        data-is_active="{{ $branch->is_active }}"
-                    >
-                        {{-- Mã CN --}}
-                        <td class="py-4 px-4 truncate align-middle {{ $roundLeft }} font-medium">
-                            CN{{ str_pad($branch->branch_id, 3, '0', STR_PAD_LEFT) }}
-                        </td>
+                <tr class="{{ $rowBg }} cursor-pointer transition-colors modal-trigger hover:opacity-80"
+                    data-id="{{ $branch->branch_id }}"
+                    data-name="{{ $branch->branch_name }}"
+                    data-address="{{ $branch->address }}"
+                    data-phone="{{ $branch->phone }}"
+                    data-manager-id="{{ $branch->manager_id ??  '' }}"
+                    data-manager="{{ $branch->manager ?  $branch->manager->full_name : '' }}"
+                    data-active="{{ $branch->is_active }}"
+                >
+                    <td class="py-4 px-4 {{ $roundLeft }} font-medium">
+                        CN{{ str_pad($branch->branch_id, 4, '0', STR_PAD_LEFT) }}
+                    </td>
 
-                        {{-- Tên chi nhánh --}}
-                        <td class="py-4 px-4 truncate align-middle font-medium">
-                            {{ $branch->branch_name }}
-                        </td>
+                    <td class="py-4 px-4 font-medium">
+                        {{ $branch->branch_name }}
+                    </td>
 
-                        {{-- Địa chỉ --}}
-                        <td class="py-4 px-4 text-left align-middle truncate max-w-xs" title="{{ $branch->address }}">
-                            {{ Str::limit($branch->address, 40) }}
-                        </td>
+                    <td class="py-4 px-4 truncate max-w-xs"
+                        title="{{ $branch->address }}">
+                        {{ $branch->address }}
+                    </td>
 
-                        {{-- SĐT --}}
-                        <td class="py-4 px-4 truncate align-middle font-medium">
-                            {{ $branch->phone ?? '-' }}
-                        </td>
+                    <td class="py-4 px-4">
+                        {{ $branch->phone }}
+                    </td>
 
-                        {{-- Quản lý --}}
-                        <td class="py-4 px-4 truncate align-middle">
-                            {{ $managerName }}
-                        </td>
+                    <td class="py-4 px-4">
+                        {{ $branch->manager ? $branch->manager->full_name : '—' }}
+                    </td>
 
-                        {{-- Trạng thái --}}
-                        <td class="py-4 px-4 truncate align-middle {{ $roundRight }}">
-                            @if ($branch->is_active)
-                                <span class="bg-[#28A745]/10 text-[#28A745]/70 py-1 px-3 rounded-full text-xs font-bold uppercase tracking-wide">
-                                    Hoạt động
-                                </span>
-                            @else
-                                <span class="bg-gray-100 text-gray-500 py-1 px-3 rounded-full text-xs font-bold uppercase tracking-wide">
-                                    Tạm đóng
-                                </span>
-                            @endif
-                        </td>
-                    </tr>
-                    
-                    {{-- Dòng rỗng tạo khoảng cách --}}
-                    <tr class="h-2"></tr> 
+                    {{-- Trạng thái --}}
+                    <td class="py-4 px-4 {{ $roundRight }}">
+                        @if($branch->is_active)
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700">
+                                <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                                Hoạt động
+                            </span>
+                        @else
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">
+                                <svg class="w-4 h-4 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                                </svg>
+                                Ngừng
+                            </span>
+                        @endif
+                    </td>
+                </tr>
+
+                <tr class="h-2"></tr>
                 @endforeach
             </tbody>
+
         </table>
 
-        {{-- Pagination --}}
         <div class="mt-6 flex justify-center">
-             {{ $branches->links() }} 
+            {{ $branches->links() }}
         </div>
     </div>
 </div>
 
-{{-- ----------------- MODAL 1: THÊM CHI NHÁNH ----------------- --}}
-<div id="addBranchModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center bg-black/40 transition-opacity">
-    <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-2xl transform transition-all scale-100">
-        <h2 class="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-[#0D47A1] to-[#42A5F5] bg-clip-text text-transparent font-montserrat">
-            THÊM CHI NHÁNH MỚI
-        </h2>
-        <form id="addBranchForm">
-            {{-- Thông tin chung --}}
-            <div class="space-y-5">
-                <div class="flex flex-col">
-                    <label class="text-sm font-semibold text-gray-700 mb-2">Tên chi nhánh <span class="text-red-500">*</span></label>
-                    <input type="text" id="add-branch_name" required class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none">
+<div id="addBranchModal"
+     class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+
+    <div class="bg-white w-full max-w-3xl rounded-3xl shadow-2xl overflow-hidden">
+
+        <div class="py-6 text-center border-b">
+            <h2 class="text-2xl font-bold text-blue-700 tracking-wide">
+                THÊM CHI NHÁNH
+            </h2>
+        </div>
+
+        <form id="addBranchForm" class="p-8 space-y-6">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                <div>
+                    <label class="text-sm font-medium text-gray-600">Tên chi nhánh <span class="text-red-500">*</span></label>
+                    <input id="add-branch_name"
+                           required
+                           class="w-full mt-1 rounded-lg border px-3 py-2">
                 </div>
 
-                <div class="flex flex-col">
-                    <label class="text-sm font-semibold text-gray-700 mb-2">Địa chỉ <span class="text-red-500">*</span></label>
-                    <input type="text" id="add-address" required class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none">
+                <div>
+                    <label class="text-sm font-medium text-gray-600">Số điện thoại <span class="text-red-500">*</span></label>
+                    <input id="add-phone"
+                           required
+                           class="w-full mt-1 rounded-lg border px-3 py-2">
                 </div>
 
-                <div class="flex items-center space-x-6">
-                    <div class="flex-1 flex flex-col">
-                        <label class="text-sm font-semibold text-gray-700 mb-2">Số điện thoại</label>
-                        <input type="text" id="add-phone" class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                    
-                    {{-- CUSTOM SELECT: QUẢN LÝ (Nếu có biến $managers từ controller) --}}
-                    <div class="flex-1 flex flex-col">
-                        <label class="text-sm font-semibold text-gray-700 mb-2">Người quản lý</label>
-                        <div class="relative custom-multiselect w-full" data-select-id="add-manager-custom" data-type="single">
-                            <select id="add-manager-custom-hidden-select" class="hidden">
-                                <option value="">-- Chưa chọn --</option>
-                                @foreach($managers as $manager) 
-                                    <option value="{{ $manager->id }}">{{ $manager->full_name }}</option>
-                                @endforeach
-                            </select>
-                            <button type="button" class="custom-multiselect-trigger w-full bg-white border border-gray-300 rounded-xl text-left px-4 py-2.5 flex items-center justify-between focus:ring-2 focus:ring-blue-500 outline-none">
-                                <span class="custom-multiselect-display text-gray-500">-- Chưa chọn --</span>
-                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
-                            </button>
-                            <div class="custom-multiselect-panel hidden absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden">
-                                <ul class="custom-multiselect-list max-h-48 overflow-y-auto">
-                                    {{-- Demo Static Options nếu chưa có biến managers --}}
-                                    <li class="px-4 py-2.5 hover:bg-blue-50 cursor-pointer custom-multiselect-option border-b border-gray-50" data-value="1">
-                                        <span class="text-sm font-medium text-gray-700">Admin (Mặc định)</span>
-                                    </li>
-                                    @foreach($managers as $manager)
-                                    <li class="px-4 py-2.5 hover:bg-blue-50 cursor-pointer custom-multiselect-option border-b border-gray-50" data-value="{{ $manager->id }}">
-                                        <span class="text-sm font-medium text-gray-700">{{ $manager->full_name }}</span>
-                                    </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
+                <div class="md:col-span-2">
+                    <label class="text-sm font-medium text-gray-600">Địa chỉ <span class="text-red-500">*</span></label>
+                    <input id="add-address"
+                           required
+                           class="w-full mt-1 rounded-lg border px-3 py-2">
                 </div>
+
+                <div>
+                    <label class="text-sm font-medium text-gray-600">Người quản lý</label>
+                    <select id="add-manager_id"
+                            class="w-full mt-1 rounded-lg border px-3 py-2">
+                        <option value="">-- Chọn người quản lý --</option>
+                        @foreach(\App\Models\User::where('role', 'admin')->get() as $manager)
+                        <option value="{{ $manager->id }}">{{ $manager->full_name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="flex items-center">
+                    <label class="text-sm font-medium text-gray-600 flex items-center cursor-pointer">
+                        <input type="checkbox" id="add-is_active" checked
+                               class="w-5 h-5 mr-2 rounded">
+                        Đang hoạt động
+                    </label>
+                </div>
+
             </div>
 
-            <div class="flex justify-center space-x-3 mt-8 pt-4 border-t border-gray-100">
-                <button type="button" class="close-modal px-6 py-2.5 bg-[#6c757d] hover:bg-[#5a6268] text-white font-semibold rounded-lg transition-colors focus:outline-none">
+            <div class="flex justify-between pt-6 border-t">
+                <button type="button"
+                        class="close-modal px-6 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 font-semibold">
                     Hủy
                 </button>
-                <button type="submit" class="px-6 py-2.5 bg-[#28A745] hover:bg-[#218838] text-white font-semibold rounded-lg transition-colors focus:outline-none shadow-md">
-                    Lưu chi nhánh
+
+                <button type="submit"
+                        class="px-6 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold">
+                    Thêm chi nhánh
                 </button>
             </div>
         </form>
     </div>
 </div>
 
-{{-- ----------------- MODAL 2: QUẢN LÝ CHI NHÁNH ----------------- --}}
-<div id="manageBranchModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center bg-black/40">
-    <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-2xl transform transition-all">
-        <h2 class="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-[#0D47A1] to-[#42A5F5] bg-clip-text text-transparent font-montserrat">
-            THÔNG TIN CHI NHÁNH
+<div id="manageBranchModal"
+     class="modal-container hidden fixed inset-0 z-50 items-center justify-center bg-black/40">
+
+    <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+
+        <h2 class="text-3xl font-bold text-center mb-6
+            bg-gradient-to-r from-[#0D47A1] to-[#42A5F5]
+            bg-clip-text text-transparent font-montserrat">
+            QUẢN LÝ CHI NHÁNH
         </h2>
+
         <form id="manageBranchForm">
-            <input type="hidden" id="current-branch_id">
+            <input type="hidden" id="current-branch-id">
 
-            <div class="space-y-5">
-                <div class="flex items-center space-x-4">
-                    <div class="w-1/3 flex flex-col">
-                        <label class="text-sm font-semibold text-gray-700 mb-2">Mã CN</label>
-                        <input type="text" id="manage-branch_code" class="w-full bg-gray-100 border border-gray-300 rounded-xl px-4 py-2.5 text-gray-500 font-mono" disabled>
+            <h3 class="text-xl font-semibold text-blue-700 mb-4 font-montserrat">
+                Thông tin chi nhánh
+            </h3>
+
+            <div class="space-y-4 mb-6">
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-sm font-semibold text-gray-700">Mã chi nhánh</label>
+                        <input id="manage-branch-code" disabled
+                               class="w-full bg-gray-100 border rounded-xl px-4 py-2.5 font-mono">
                     </div>
-                    <div class="w-2/3 flex flex-col">
-                        <label class="text-sm font-semibold text-gray-700 mb-2">Tên chi nhánh <span class="text-red-500">*</span></label>
-                        <input type="text" id="manage-branch_name" required class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-                </div>
-
-                <div class="flex flex-col">
-                    <label class="text-sm font-semibold text-gray-700 mb-2">Địa chỉ <span class="text-red-500">*</span></label>
-                    <input type="text" id="manage-address" required class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none">
-                </div>
-
-                <div class="flex items-center space-x-6">
-                    <div class="flex-1 flex flex-col">
-                        <label class="text-sm font-semibold text-gray-700 mb-2">Số điện thoại</label>
-                        <input type="text" id="manage-phone" class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-
-                    {{-- CUSTOM SELECT: MANAGER --}}
-                    <div class="flex-1 flex flex-col">
-                        <label class="text-sm font-semibold text-gray-700 mb-2">Người quản lý</label>
-                        <div class="relative custom-multiselect w-full" data-select-id="manage-manager-custom" data-type="single">
-                            <select id="manage-manager-custom-hidden-select" class="hidden">
-                                <option value="">-- Chưa chọn --</option>
-                                @foreach($managers as $manager) 
-                                    <option value="{{ $manager->id }}">{{ $manager->full_name }}</option>
-                                @endforeach
-                            </select>
-                            <button type="button" class="custom-multiselect-trigger w-full bg-white border border-gray-300 rounded-xl text-left px-4 py-2.5 flex items-center justify-between focus:ring-2 focus:ring-blue-500 outline-none">
-                                <span class="custom-multiselect-display text-gray-500">-- Chưa chọn --</span>
-                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
-                            </button>
-                            <div class="custom-multiselect-panel hidden absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden">
-                                <ul class="custom-multiselect-list max-h-48 overflow-y-auto">
-                                    <li class="px-4 py-2.5 hover:bg-blue-50 cursor-pointer custom-multiselect-option border-b border-gray-50" data-value="1">
-                                        <span class="text-sm font-medium text-gray-700">Admin (Mặc định)</span>
-                                    </li>
-                                    @foreach($managers as $manager)
-                                        <li class="px-4 py-2.5 hover:bg-blue-50 cursor-pointer custom-multiselect-option border-b border-gray-50" data-value="{{ $manager->id }}">
-                                            <span class="text-sm font-medium text-gray-700">{{ $manager->full_name }}</span>
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
+                    <div>
+                        <label class="text-sm font-semibold text-gray-700">Tên chi nhánh</label>
+                        <input id="manage-branch-name"
+                               class="w-full border rounded-xl px-4 py-2.5">
                     </div>
                 </div>
 
-                {{-- CUSTOM SELECT: TRẠNG THÁI --}}
-                <div class="flex flex-col">
-                    <label class="text-sm font-semibold text-gray-700 mb-2">Trạng thái hoạt động</label>
-                    <div class="relative custom-multiselect w-full" data-select-id="manage-status-custom" data-type="single">
-                        <select id="manage-status-custom-hidden-select" class="hidden">
-                            <option value="1">Hoạt động</option>
-                            <option value="0">Tạm đóng</option>
+                <div>
+                    <label class="text-sm font-semibold text-gray-700">Địa chỉ</label>
+                    <input id="manage-branch-address"
+                           class="w-full border rounded-xl px-4 py-2.5">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-sm font-semibold text-gray-700">Số điện thoại</label>
+                        <input id="manage-branch-phone"
+                               class="w-full border rounded-xl px-4 py-2.5">
+                    </div>
+                    <div>
+                        <label class="text-sm font-semibold text-gray-700">Người quản lý</label>
+                        <select id="manage-branch-manager"
+                                class="w-full border rounded-xl px-4 py-2.5">
+                            <option value="">-- Chọn người quản lý --</option>
+                            @foreach(\App\Models\User::where('role', 'admin')->get() as $manager)
+                            <option value="{{ $manager->id }}">{{ $manager->full_name }}</option>
+                            @endforeach
                         </select>
-                        <button type="button" class="custom-multiselect-trigger w-full bg-white border border-gray-300 rounded-xl text-left px-4 py-2.5 flex items-center justify-between focus:ring-2 focus:ring-blue-500 outline-none">
-                            <span class="custom-multiselect-display text-gray-500">Chọn trạng thái...</span>
-                            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" /></svg>
-                        </button>
-                        <div class="custom-multiselect-panel hidden absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-xl overflow-hidden">
-                            <ul class="custom-multiselect-list overflow-y-auto">
-                                <li class="px-4 py-2.5 hover:bg-green-50 cursor-pointer custom-multiselect-option border-b border-gray-50" data-value="1">
-                                    <div class="flex items-center"><span class="w-2 h-2 rounded-full bg-green-500 mr-2"></span><span class="text-sm font-medium text-gray-900">Hoạt động</span></div>
-                                </li>
-                                <li class="px-4 py-2.5 hover:bg-gray-50 cursor-pointer custom-multiselect-option" data-value="0">
-                                    <div class="flex items-center"><span class="w-2 h-2 rounded-full bg-gray-400 mr-2"></span><span class="text-sm font-medium text-gray-900">Tạm đóng</span></div>
-                                </li>
-                            </ul>
-                        </div>
                     </div>
                 </div>
+
+                <div class="flex items-center">
+                    <label class="text-sm font-semibold text-gray-700 flex items-center cursor-pointer">
+                        <input type="checkbox" id="manage-branch-active"
+                               class="w-5 h-5 mr-2 rounded">
+                        Đang hoạt động
+                    </label>
+                </div>
+
             </div>
 
-            <div class="flex justify-between items-center mt-8 pt-4 border-t border-gray-100">
-                <button type="button" id="btn-delete-branch" class="px-5 py-2.5 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 font-semibold transition-colors flex items-center">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+            <div class="flex justify-between pt-4 border-t">
+                <button type="button"
+                        id="deleteBranchBtn"
+                        class="px-6 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-lg font-semibold">
                     Xóa chi nhánh
                 </button>
+
                 <div class="flex space-x-3">
-                    <button type="button" class="close-modal px-6 py-2.5 bg-[#6c757d] hover:bg-[#5a6268] text-white font-semibold rounded-lg transition-colors focus:outline-none">
+                    <button type="button"
+                            class="close-modal px-6 py-2.5 bg-gray-500 hover:bg-gray-600 text-white rounded-lg">
                         Hủy
                     </button>
-                    <button type="submit" class="px-6 py-2.5 bg-[#28A745] hover:bg-[#218838] text-white font-semibold rounded-lg transition-colors focus:outline-none shadow-md">
-                        Cập nhật
+                    <button type="submit"
+                            class="px-6 py-2.5 bg-[#28A745] hover:bg-[#218838] text-white rounded-lg">
+                        Lưu thông tin
                     </button>
                 </div>
             </div>
+
         </form>
     </div>
 </div>
+
+<div id="notifyModal"
+     class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/50">
+
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 text-center">
+
+        <h3 id="notifyTitle"
+            class="text-xl font-bold mb-2 text-green-600">
+            Thông báo
+        </h3>
+
+        <p id="notifyMessage"
+           class="text-gray-700 mb-6">
+            Nội dung thông báo
+        </p>
+
+        <button id="notifyCloseBtn"
+                class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold">
+            OK
+        </button>
+    </div>
+</div>
+
 @endsection
 
 @push('scripts')
-<style>
-    /* === CUSTOM STYLES CHO CUSTOM SELECT COMPONENT === */
-    .custom-multiselect-option { @apply bg-white text-gray-700 transition-all duration-200 ease-in-out; }
-    .custom-multiselect-option:hover:not(.bg-blue-100) { @apply bg-blue-50 text-gray-900; }
-    .custom-multiselect-option.bg-blue-100 { @apply bg-blue-100 text-blue-800 font-medium; }
-</style>
-
 <script>
-    // --- 1. CUSTOM MULTISELECT LOGIC (REUSABLE) ---
-    function updateMultiselectDisplay(container) {
-        if (!container) return;
-        const select = container.querySelector('select');
-        const display = container.querySelector('.custom-multiselect-display');
-        const selected = select.options[select.selectedIndex];
-        const placeholder = display.dataset.placeholder || 'Chọn...';
-        
-        if (!selected || selected.value === "") {
-            display.textContent = placeholder;
-            display.classList.add('text-gray-500');
-        } else {
-            display.textContent = selected.text;
-            display.classList.remove('text-gray-500');
-        }
+function showNotify(message, type = 'success', callback = null) {
+    const modal = document.getElementById('notifyModal');
+    const title = document. getElementById('notifyTitle');
+    const msg   = document.getElementById('notifyMessage');
+    const btn   = document.getElementById('notifyCloseBtn');
+
+    title.textContent = type === 'error' ? 'Lỗi' : 'Thông báo';
+    title.className =
+        'text-xl font-bold mb-2 ' +
+        (type === 'error' ? 'text-red-600' : 'text-green-600');
+
+    msg.textContent = message;
+
+    modal.classList.remove('hidden');
+
+    btn.onclick = () => {
+        modal.classList. add('hidden');
+        if (typeof callback === 'function') callback();
+    };
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    const manageBranchModal = document.getElementById('manageBranchModal');
+    const addBtn   = document.getElementById('openAddModalBtn');
+    const addModal = document.getElementById('addBranchModal');
+
+    function openModal(m) {
+        m.classList.remove('hidden');
+        m.classList.add('flex');
     }
 
-    function setCustomMultiselectValues(container, value) {
-        if (!container) return;
-        const select = container.querySelector('select');
-        const valStr = String(value).trim();
-        
-        Array.from(select.options).forEach(opt => opt.selected = (String(opt.value).trim() === valStr));
-        
-        const list = container.querySelector('.custom-multiselect-list');
-        if (list) {
-            list.querySelectorAll('.custom-multiselect-option').forEach(li => {
-                li.classList.remove('bg-blue-100');
-                if (String(li.dataset.value).trim() === valStr) li.classList.add('bg-blue-100');
-            });
-        }
-        updateMultiselectDisplay(container);
+    function closeModal(m) {
+        m.classList.add('hidden');
+        m.classList.remove('flex');
     }
 
-    function initializeCustomMultiselects() {
-        document.querySelectorAll('.custom-multiselect').forEach(container => {
-            const trigger = container.querySelector('.custom-multiselect-trigger');
-            const panel = container.querySelector('.custom-multiselect-panel');
-            const list = container.querySelector('.custom-multiselect-list');
-            const select = container.querySelector('select');
-            const display = container.querySelector('.custom-multiselect-display');
+    addBtn.addEventListener('click', function () {
+        openModal(addModal);
+    });
 
-            if (display) display.dataset.placeholder = display.textContent;
+    addModal.querySelectorAll('.close-modal').forEach(btn => {
+        btn.addEventListener('click', () => closeModal(addModal));
+    });
 
-            trigger?.addEventListener('click', (e) => {
-                e.stopPropagation();
-                document.querySelectorAll('.custom-multiselect-panel').forEach(p => { if(p !== panel) p.classList.add('hidden'); });
-                panel?.classList.toggle('hidden');
-            });
+    addModal.addEventListener('click', e => {
+        if (e.target === addModal) closeModal(addModal);
+    });
 
-            list?.querySelectorAll('.custom-multiselect-option').forEach(li => {
-                li.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    const val = li.dataset.value;
-                    Array.from(select.options).forEach(opt => opt.selected = (opt.value === val));
-                    list.querySelectorAll('.custom-multiselect-option').forEach(l => l.classList.remove('bg-blue-100'));
-                    li.classList.add('bg-blue-100');
-                    panel?.classList.add('hidden');
-                    updateMultiselectDisplay(container);
-                });
-            });
-            updateMultiselectDisplay(container);
-        });
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.custom-multiselect')) document.querySelectorAll('.custom-multiselect-panel').forEach(p => p.classList.add('hidden'));
-        });
-    }
+    document.querySelectorAll('.close-modal')
+        .forEach(b => b.onclick = () => closeModal(b. closest('.modal-container')));
 
-    // --- 2. MAIN APP LOGIC ---
-    document.addEventListener('DOMContentLoaded', function () {
-        initializeCustomMultiselects();
-
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        const addModal = document.getElementById('addBranchModal');
-        const manageModal = document.getElementById('manageBranchModal');
-        const addForm = document.getElementById('addBranchForm');
-        const manageForm = document.getElementById('manageBranchForm');
-
-        // Helpers Modal
-        function closeModal(m) { m.classList.add('hidden'); m.classList.remove('flex'); }
-        function openModal(m) { m.classList.remove('hidden'); m.classList.add('flex'); }
-
-        document.querySelectorAll('.close-modal').forEach(b => b.addEventListener('click', () => closeModal(b.closest('.modal-container'))));
-        document.querySelectorAll('.modal-container').forEach(m => m.addEventListener('click', e => e.target === m && closeModal(m)));
-
-        // Open ADD Modal
-        document.getElementById('openAddModalBtn').onclick = () => {
-            addForm.reset();
-            setCustomMultiselectValues(document.querySelector('[data-select-id="add-manager-custom"]'), '');
-            openModal(addModal);
-        };
-
-        // Open MANAGE Modal (Click row)
-        document.getElementById('branch-list-body').addEventListener('click', e => {
-            const row = e.target.closest('tr.modal-trigger');
-            if (!row) return;
+    document.querySelectorAll('tr.modal-trigger').forEach(row => {
+        row.onclick = () => {
             const d = row.dataset;
-            
-            document.getElementById('current-branch_id').value = d.branch_id;
-            document.getElementById('manage-branch_code').value = 'CN' + String(d.branch_id).padStart(3, '0');
-            document.getElementById('manage-branch_name').value = d.branch_name || '';
-            document.getElementById('manage-address').value = d.address || '';
-            document.getElementById('manage-phone').value = d.phone || '';
-            
-            setCustomMultiselectValues(document.querySelector('[data-select-id="manage-manager-custom"]'), d.manager_id || '');
-            setCustomMultiselectValues(document.querySelector('[data-select-id="manage-status-custom"]'), d.is_active);
-            
-            openModal(manageModal);
-        });
 
-        // --- SUBMIT ADD FORM ---
-        addForm.onsubmit = async (e) => {
-            e.preventDefault();
-            const fd = new FormData();
-            fd.append('branch_name', document.getElementById('add-branch_name').value);
-            fd.append('address', document.getElementById('add-address').value);
-            fd.append('phone', document.getElementById('add-phone').value);
-            fd.append('manager_id', document.getElementById('add-manager-custom-hidden-select').value);
-            fd.append('is_active', 1); // Default active khi tạo mới
+            document.getElementById('current-branch-id').value = d.id;
+            document.getElementById('manage-branch-code').value =
+                'CN' + String(d.id).padStart(4, '0');
+            document.getElementById('manage-branch-name').value = d.name || '';
+            document.getElementById('manage-branch-address').value = d.address || '';
+            document. getElementById('manage-branch-phone').value = d.phone || '';
+            document.getElementById('manage-branch-manager').value = d.managerId || '';
+            document.getElementById('manage-branch-active').checked = d.active == '1';
 
-            try {
-                const res = await fetch('/admin/branches', { method: 'POST', headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' }, body: fd });
-                const json = await res.json();
-                if(!res.ok) {
-                    let msg = 'Lỗi thêm: ';
-                    if(json.errors) msg += Object.values(json.errors).join('\n');
-                    else msg += json.message;
-                    alert(msg);
-                } else {
-                    alert('Thêm chi nhánh thành công!');
-                    location.reload();
-                }
-            } catch (err) { alert('Lỗi server'); console.error(err); }
-        };
-
-        // --- SUBMIT MANAGE FORM ---
-        manageForm.onsubmit = async (e) => {
-            e.preventDefault();
-            const id = document.getElementById('current-branch_id').value;
-            const fd = new FormData();
-            fd.append('_method', 'PUT');
-            fd.append('branch_name', document.getElementById('manage-branch_name').value);
-            fd.append('address', document.getElementById('manage-address').value);
-            fd.append('phone', document.getElementById('manage-phone').value);
-            fd.append('manager_id', document.getElementById('manage-manager-custom-hidden-select').value);
-            fd.append('is_active', document.getElementById('manage-status-custom-hidden-select').value);
-
-            try {
-                const res = await fetch(`/admin/branches/${id}`, { method: 'POST', headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' }, body: fd });
-                const json = await res.json();
-                if(!res.ok) {
-                    let msg = 'Lỗi cập nhật: ';
-                    if(json.errors) msg += Object.values(json.errors).join('\n');
-                    else msg += json.message;
-                    alert(msg);
-                } else {
-                    alert('Cập nhật thành công!');
-                    location.reload();
-                }
-            } catch (err) { alert('Lỗi server'); console.error(err); }
-        };
-
-        // --- DELETE ACTION ---
-        document.getElementById('btn-delete-branch').onclick = async () => {
-            if(!confirm('Bạn chắc chắn muốn xóa chi nhánh này?')) return;
-            try {
-                const res = await fetch(`/admin/branches/${document.getElementById('current-branch_id').value}`, { method: 'DELETE', headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' } });
-                if(res.ok) { alert('Xóa thành công!'); location.reload(); }
-                else alert('Lỗi xóa');
-            } catch { alert('Lỗi server'); }
+            openModal(manageBranchModal);
         };
     });
+
+    document.getElementById('addBranchForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const fd = new FormData();
+        fd.append('branch_name', document.getElementById('add-branch_name').value);
+        fd.append('address', document.getElementById('add-address').value);
+        fd.append('phone', document.getElementById('add-phone').value);
+        fd.append('manager_id', document.getElementById('add-manager_id').value);
+        fd.append('is_active', document.getElementById('add-is_active').checked ? '1' : '0');
+
+        try {
+            const res = await fetch('/admin/branches', {
+                method:  'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                },
+                body: fd
+            });
+
+            const data = await res.json();
+
+            if (! res.ok) {
+                const errors = data.errors || {};
+                const errorMsg = Object.values(errors).flat().join('\n') || data.message || 'Có lỗi xảy ra';
+                showNotify(errorMsg, 'error');
+                return;
+            }
+
+            showNotify('Thêm chi nhánh thành công', 'success', () => {
+                location.reload();
+            });
+
+        } catch (err) {
+            showNotify('Có lỗi xảy ra', 'error');
+            console.error(err);
+        }
+    });
+
+    document.getElementById('manageBranchForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const id = document.getElementById('current-branch-id').value;
+
+        const fd = new FormData();
+        fd.append('_method', 'PUT');
+        fd.append('branch_name', document.getElementById('manage-branch-name').value);
+        fd.append('address', document.getElementById('manage-branch-address').value);
+        fd.append('phone', document.getElementById('manage-branch-phone').value);
+        fd.append('manager_id', document.getElementById('manage-branch-manager').value);
+        fd.append('is_active', document.getElementById('manage-branch-active').checked ? '1' : '0');
+
+        try {
+            const res = await fetch(`/admin/branches/${id}`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                },
+                body: fd
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                const errors = data.errors || {};
+                const errorMsg = Object.values(errors).flat().join('\n') || data.message || 'Có lỗi xảy ra';
+                showNotify(errorMsg, 'error');
+                return;
+            }
+
+            showNotify('Cập nhật chi nhánh thành công', 'success', () => {
+                location.reload();
+            });
+
+        } catch (err) {
+            showNotify('Có lỗi xảy ra', 'error');
+            console.error(err);
+        }
+    });
+
+    document.getElementById('deleteBranchBtn').addEventListener('click', async () => {
+        if (! confirm('Bạn có chắc chắn muốn xóa chi nhánh này? ')) return;
+
+        const id = document.getElementById('current-branch-id').value;
+
+        try {
+            const res = await fetch(`/admin/branches/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': document. querySelector('meta[name="csrf-token"]').content,
+                    'Accept': 'application/json'
+                }
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                showNotify(data.message || 'Có lỗi xảy ra', 'error');
+                return;
+            }
+
+            showNotify('Xóa chi nhánh thành công', 'success', () => {
+                location.reload();
+            });
+
+        } catch (err) {
+            showNotify('Có lỗi xảy ra', 'error');
+            console.error(err);
+        }
+    });
+
+});
 </script>
 @endpush

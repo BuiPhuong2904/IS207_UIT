@@ -8,201 +8,180 @@
 
 <div class="bg-white rounded-2xl shadow-sm p-6">
     
-    {{-- HEADER & BUTTONS --}}
     <div class="flex justify-between items-center mb-6">
-        <h1 class="font-montserrat text-2xl text-black font-semibold">Danh sách khách hàng</h1>
+        <h1 class="font-montserrat text-2xl text-black font-semibold">Khách hàng thành viên</h1>
         
         <div class="flex items-center space-x-4 font-open-sans">
-            {{-- Dropdown lọc --}}
             <div class="flex items-center text-black cursor-pointer hover:text-gray-900">
-                <span class="mr-1 text-sm font-medium">Trạng thái</span>
+                <span class="mr-1 text-sm font-medium">Hôm nay</span>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                 </svg>
             </div>
 
-            {{-- Nút Thêm Khách Hàng --}}
             <button id="openAddModalBtn" class="bg-[#28A745] hover:bg-[#218838] text-white px-4 py-2 rounded-full flex items-center text-sm font-semibold transition-colors shadow-none">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
-                Thêm khách hàng
+                Thêm 
             </button>
         </div>
     </div>
 
-    {{-- TABLE CONTENT --}}
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse table-auto font-open-sans">
             
             <thead class="font-montserrat text-[#1f1d1d] text-sm text-center">
                 <tr>
-                    <th class="py-4 px-4 w-[10%] truncate">ID</th>
-                    <th class="py-4 px-4 w-[20%] truncate">Họ và tên</th>
-                    <th class="py-4 px-4 w-[20%] truncate">Email</th>
-                    <th class="py-4 px-4 w-[15%] truncate">Số điện thoại</th>
-                    <th class="py-4 px-4 w-[10%] truncate">Ngày sinh</th>
-                    <th class="py-4 px-4 flex-1 truncate">Địa chỉ</th>
-                    <th class="py-4 px-4 w-[15%] truncate">Trạng thái</th>
+                    <th class="py-4 px-4 w-[10%]">Mã KH</th>
+                    <th class="py-4 px-4 w-[15%]">Họ và tên</th>
+                    <th class="py-4 px-4 w-[20%]">Email</th>
+                    <th class="py-4 px-4 w-[12%]">SĐT</th>
+                    <th class="py-4 px-4 flex-1">Địa chỉ</th>
                 </tr>
             </thead>
 
-            <tbody id="customer-list-body" class="text-sm text-gray-700 text-center">
-                @forelse ($customers as $customer)
-                    @php
-                        $isOdd = $loop->odd;
-                        $rowBg = $isOdd ? 'bg-[#1976D2]/20' : 'bg-white';
-                        $roundLeft = $isOdd ? 'rounded-l-xl' : '';
-                        $roundRight = $isOdd ? 'rounded-r-xl' : '';
-                        $formattedDate = $customer->birth_date ? \Carbon\Carbon::parse($customer->birth_date)->format('Y-m-d') : '';
-                    @endphp
+            <tbody class="text-sm text-gray-700 text-center">
+                @foreach ($customers as $customer)
+                @php
+                    $isOdd = $loop->odd;
+                    $rowBg = $isOdd ? 'bg-[#1976D2]/20' : 'bg-white';
+                    $roundLeft = $isOdd ? 'rounded-l-xl' : '';
+                    $roundRight = $isOdd ? 'rounded-r-xl' : '';
+                @endphp
 
-                    <tr class="{{ $rowBg }} cursor-pointer transition-colors modal-trigger group"
-                        id="row-{{ $customer->id }}"
-                        data-id="{{ $customer->id }}"
-                        data-full_name="{{ $customer->full_name }}"
-                        data-email="{{ $customer->email }}"
-                        data-phone="{{ $customer->phone ?? '' }}"
-                        data-birth_date="{{ $formattedDate }}"
-                        data-gender="{{ $customer->gender ?? 'Nam' }}"
-                        data-address="{{ $customer->address ?? '' }}"
-                        data-status="{{ $customer->status ?? 'active' }}"
-                        data-image_url="{{ $customer->image_url ?? asset('images/default-avatar.png') }}"
-                    >
-                        {{-- ID --}}
-                        <td class="py-4 px-4 truncate align-middle {{ $roundLeft }} font-medium">
-                            KH{{ str_pad($customer->id, 4, '0', STR_PAD_LEFT) }}
-                        </td>
+                <tr class="{{ $rowBg }} cursor-pointer transition-colors modal-trigger"
+                    data-id="{{ $customer->id }}"
+                    data-name="{{ $customer->full_name }}"
+                    data-email="{{ $customer->email }}"
+                    data-phone="{{ $customer->phone }}"
+                    data-address="{{ $customer->address }}"
+                    data-avatar="{{ $customer->image_url }}"
+                    data-packages="{{ 
+                        $customer->packageRegistrations
+                            ->pluck('package.package_name')
+                            ->join(', ')
+                    }}"
+                    data-classes="{{ 
+                        $customer->classRegistrations->count() > 0 
+                            ? $customer->classRegistrations->pluck('id')->join(', ')
+                            : 'Chưa tham gia'
+                    }}"
+                >
 
-                        {{-- Họ tên --}}
-                        <td class="py-4 px-4 truncate align-middle font-medium">
-                            {{ $customer->full_name }}
-                        </td>
 
-                        {{-- Email --}}
-                        <td class="py-4 px-4 truncate align-middle">
-                            {{ $customer->email }}
-                        </td>
+                    <td class="py-4 px-4 {{ $roundLeft }} font-medium">
+                        KH{{ str_pad($customer->id, 4, '0', STR_PAD_LEFT) }}
+                    </td>
 
-                        {{-- SĐT --}}
-                        <td class="py-4 px-4 truncate align-middle font-medium">
-                            {{ $customer->phone ?? '—' }}
-                        </td>
+                    <td class="py-4 px-4 font-medium">
+                        {{ $customer->full_name }}
+                    </td>
 
-                        {{-- Ngày sinh --}}
-                        <td class="py-4 px-4 truncate align-middle">
-                            {{ $formattedDate ?: '—' }}
-                        </td>
+                    <td class="py-4 px-4">
+                        {{ $customer->email }}
+                    </td>
 
-                        {{-- Địa chỉ --}}
-                        <td class="py-4 px-4 align-middle text-left max-w-xs truncate" title="{{ $customer->address }}">
-                            {{ $customer->address ?? '—' }}
-                        </td>
+                    <td class="py-4 px-4">
+                        {{ $customer->phone ?? '—' }}
+                    </td>
 
-                        {{-- Trạng thái --}}
-                        <td class="py-4 px-4 truncate align-middle {{ $roundRight }}">
-                            @if ($customer->status == 'active')
-                                <span class="bg-[#28A745]/10 text-[#28A745]/70 py-1 px-3 rounded-full text-xs font-bold uppercase tracking-wide">
-                                    Hoạt động
-                                </span>
-                            @else
-                                <span class="bg-gray-100 text-gray-500 py-1 px-3 rounded-full text-xs font-bold uppercase tracking-wide">
-                                    Bị khóa
-                                </span>
-                            @endif
-                        </td>
-                    </tr>
-                    
-                    <tr class="h-2"></tr> 
-                @empty
-                    <tr>
-                        <td colspan="7" class="text-center py-8 text-gray-500 italic">Chưa có khách hàng nào.</td>
-                    </tr>
-                @endforelse
-            </tbody>
+                    <td class="py-4 px-4 truncate text-center max-w-xs"
+                        title="{{ $customer->address }}">
+                        {{ $customer->address ?? '—' }}
+                    </td>
+                </tr>
+
+                <tr class="h-2"></tr>
+                @endforeach
+                </tbody>
+
         </table>
 
-        @if(method_exists($customers, 'links'))
         <div class="mt-6 flex justify-center">
-             {{ $customers->links() }} 
+            {{ $customers->links() }}
         </div>
-        @endif
     </div>
 </div>
 
-{{-- ----------------- MODAL 1: THÊM KHÁCH HÀNG ----------------- --}}
-<div id="addCustomerModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center bg-black/40 transition-opacity">
-    <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto transform transition-all scale-100">
-        <h2 class="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-[#0D47A1] to-[#42A5F5] bg-clip-text text-transparent font-montserrat">
-            THÊM KHÁCH HÀNG MỚI
-        </h2>
-        <form id="addCustomerForm">
-            <h3 class="text-xl font-semibold text-blue-700 mb-4 font-montserrat">Thông tin cơ bản</h3>
-            <div class="flex space-x-6 mb-6">
-                <div class="w-40 flex-shrink-0 flex flex-col items-center">
-                    <div class="w-40 h-40 bg-gray-100 rounded-2xl flex items-center justify-center mb-3 border-2 border-dashed border-gray-300 overflow-hidden">
-                        <img id="add-image_url_preview" src="{{ asset('images/default-avatar.png') }}" class="w-full h-full object-cover">
-                    </div>
-                    <button type="button" id="add-upload-btn" class="w-full px-4 py-2 bg-blue-50 text-blue-600 text-sm font-semibold rounded-lg hover:bg-blue-100 transition-colors">Upload ảnh</button>
-                    <input type="file" id="add-image_url" class="hidden" accept="image/*">
-                </div>
+<div id="addUserModal"
+     class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
 
-                <div class="flex-1 flex flex-col space-y-4">
-                    <div class="flex items-center">
-                        <label class="w-24 flex-shrink-0 text-sm font-semibold text-gray-700">Họ và tên <span class="text-red-500">*</span></label>
-                        <input type="text" id="add-full_name" required class="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
+    <div class="bg-white w-full max-w-5xl rounded-3xl shadow-2xl overflow-hidden">
 
-                    <div class="flex items-center space-x-6">
-                        <div class="flex items-center flex-1">
-                            <label class="w-24 flex-shrink-0 text-sm font-semibold text-gray-700">Ngày sinh</label>
-                            <input type="date" id="add-birth_date" class="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none">
+        <div class="py-6 text-center border-b">
+            <h2 class="text-2xl font-bold text-blue-700 tracking-wide">
+                THÊM KHÁCH HÀNG
+            </h2>
+        </div>
+
+        <form id="addUserForm" class="p-8 space-y-8">
+
+            <div>
+                <h3 class="text-lg font-semibold text-blue-700 mb-4">
+                    Thông tin cá nhân
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+                    <div class="flex flex-col items-center">
+                        <div class="w-36 h-36 rounded-xl overflow-hidden border bg-gray-100">
+                            <img id="add-user-avatar"
+                                 src="https://via.placeholder.com/150"
+                                 class="w-full h-full object-cover">
                         </div>
-                        <div class="flex items-center flex-1"> 
-                            <label class="w-24 flex-shrink-0 text-sm font-semibold text-gray-700">Giới tính</label>
-                            <div class="flex items-center space-x-4 flex-1"> 
-                                <label class="flex items-center cursor-pointer"><input type="radio" name="add-gender" value="Nam" class="mr-2 accent-blue-600" checked> Nam</label>
-                                <label class="flex items-center cursor-pointer"><input type="radio" name="add-gender" value="Nữ" class="mr-2 accent-blue-600"> Nữ</label>
-                                <label class="flex items-center cursor-pointer"><input type="radio" name="add-gender" value="Khác" class="mr-2 accent-blue-600"> Khác</label>
-                            </div>
-                        </div>
+                        <span class="mt-2 text-xs text-gray-500">Ảnh đại diện</span>
                     </div>
 
-                    <div class="flex items-center space-x-6">
-                        <div class="flex items-center flex-1">
-                            <label class="w-24 flex-shrink-0 text-sm font-semibold text-gray-700">Mật khẩu <span class="text-red-500">*</span></label>
-                            <input type="password" id="add-password" required class="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none">
-                        </div>
-                        <div class="flex items-center flex-1">
-                            <label class="w-24 flex-shrink-0 text-sm font-semibold text-gray-700">Xác nhận <span class="text-red-500">*</span></label>
-                            <input type="password" id="add-password_confirmation" required class="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none">
-                        </div>
-                    </div>
+                    <div class="md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-4">
 
-                    <div class="flex items-center">
-                        <label class="w-24 flex-shrink-0 text-sm font-semibold text-gray-700">Email <span class="text-red-500">*</span></label>
-                        <input type="email" id="add-email" required class="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
-
-                    <div class="flex items-center space-x-6">
-                        <div class="flex items-center flex-1">
-                            <label class="w-24 flex-shrink-0 text-sm font-semibold text-gray-700">SĐT</label>
-                            <input type="tel" id="add-phone" class="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <div>
+                            <label class="text-sm font-medium text-gray-600">Họ và tên</label>
+                            <input id="add-full_name"
+                                   required
+                                   class="w-full mt-1 rounded-lg border px-3 py-2">
                         </div>
-                    </div>
 
-                    <div class="flex items-center">
-                        <label class="w-24 flex-shrink-0 text-sm font-semibold text-gray-700">Địa chỉ</label>
-                        <input type="text" id="add-address" class="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <div>
+                            <label class="text-sm font-medium text-gray-600">Email</label>
+                            <input id="add-email"
+                                   type="email"
+                                   required
+                                   class="w-full mt-1 rounded-lg border px-3 py-2">
+                        </div>
+
+                        <div>
+                            <label class="text-sm font-medium text-gray-600">Mật khẩu</label>
+                            <input id="add-password"
+                                   type="password"
+                                   required
+                                   class="w-full mt-1 rounded-lg border px-3 py-2">
+                        </div>
+
+                        <div>
+                            <label class="text-sm font-medium text-gray-600">SĐT</label>
+                            <input id="add-phone"
+                                   class="w-full mt-1 rounded-lg border px-3 py-2">
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="text-sm font-medium text-gray-600">Địa chỉ</label>
+                            <input id="add-address"
+                                   class="w-full mt-1 rounded-lg border px-3 py-2">
+                        </div>
+
                     </div>
                 </div>
             </div>
 
-            <div class="flex justify-center space-x-3 mt-8 pt-4 border-t border-gray-100">
-                <button type="button" class="close-modal px-6 py-2.5 bg-[#6c757d] hover:bg-[#5a6268] text-white font-semibold rounded-lg transition-colors focus:outline-none">
+            <div class="flex justify-between pt-6 border-t">
+                <button type="button"
+                        class="close-modal px-6 py-2 rounded-lg bg-gray-300 hover:bg-gray-400 font-semibold">
                     Hủy
                 </button>
-                <button type="submit" class="px-6 py-2.5 bg-[#28A745] hover:bg-[#218838] text-white font-semibold rounded-lg transition-colors focus:outline-none shadow-md">
+
+                <button type="submit"
+                        class="px-6 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white font-semibold">
                     Thêm khách hàng
                 </button>
             </div>
@@ -210,262 +189,292 @@
     </div>
 </div>
 
-{{-- ----------------- MODAL 2: QUẢN LÝ / CHỈNH SỬA KHÁCH HÀNG ----------------- --}}
-<div id="manageCustomerModal" class="modal-container hidden fixed inset-0 z-50 items-center justify-center bg-black/40">
-    <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto transform transition-all">
-        <h2 class="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-[#0D47A1] to-[#42A5F5] bg-clip-text text-transparent font-montserrat">
+<div id="manageUserModal"
+     class="modal-container hidden fixed inset-0 z-50 items-center justify-center bg-black/40">
+
+    <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+
+        <h2 class="text-3xl font-bold text-center mb-6
+            bg-gradient-to-r from-[#0D47A1] to-[#42A5F5]
+            bg-clip-text text-transparent font-montserrat">
             QUẢN LÝ KHÁCH HÀNG
         </h2>
-        <form id="manageCustomerForm">
-            <input type="hidden" id="current-customer_id">
 
-            <h3 class="text-xl font-semibold text-blue-700 mb-4 font-montserrat">Thông tin chi tiết</h3>
+        <form id="manageUserForm">
+            <input type="hidden" id="current-user-id">
+
+            <h3 class="text-xl font-semibold text-blue-700 mb-4 font-montserrat">
+                Thông tin cá nhân
+            </h3>
+
             <div class="flex space-x-6 mb-6">
-                {{-- Cột Ảnh --}}
+
                 <div class="w-40 flex-shrink-0 flex flex-col items-center">
-                    <div class="w-40 h-40 bg-gray-100 rounded-2xl flex items-center justify-center mb-3 border-2 border-dashed border-gray-300 overflow-hidden">
-                        <img id="manage-image_url_preview" src="" class="w-full h-full object-cover">
+                    <div class="w-40 h-40 bg-gray-100 rounded-2xl
+                        flex items-center justify-center mb-3
+                        border-2 border-dashed border-gray-300 overflow-hidden">
+                        <img id="manage-user-avatar"
+                             src="{{ asset('images/default-avatar.png') }}"
+                             class="w-full h-full object-cover">
                     </div>
-                    <button type="button" id="manage-upload-btn" class="w-full px-4 py-2 bg-blue-50 text-blue-600 text-sm font-semibold rounded-lg hover:bg-blue-100 transition-colors">Upload ảnh</button>
-                    <input type="file" id="manage-image_url_input" class="hidden" accept="image/*">
                 </div>
 
-                {{-- Cột Form --}}
                 <div class="flex-1 flex flex-col space-y-4">
+
                     <div class="flex items-center space-x-6">
-                        <div class="flex items-center flex-1">
-                            <label class="w-24 flex-shrink-0 text-sm font-semibold text-gray-700">ID</label>
-                            <input type="text" id="manage-display_id" class="flex-1 bg-gray-100 border border-gray-300 rounded-xl px-4 py-2.5 text-gray-500 font-mono" disabled>
+                        <div class="flex-1">
+                            <label class="text-sm font-semibold text-gray-700">ID</label>
+                            <input id="manage-user-code" disabled
+                                   class="w-full bg-gray-100 border rounded-xl px-4 py-2.5 font-mono">
                         </div>
-                        <div class="flex items-center flex-1">
-                            <label class="w-20 flex-shrink-0 text-sm font-semibold text-gray-700">Họ tên <span class="text-red-500">*</span></label>
-                            <input type="text" id="manage-full_name" required class="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <div class="flex-1">
+                            <label class="text-sm font-semibold text-gray-700">Họ và tên</label>
+                            <input id="manage-user-name"
+                                   class="w-full border rounded-xl px-4 py-2.5">
                         </div>
                     </div>
 
                     <div class="flex items-center space-x-6">
-                        <div class="flex items-center flex-1">
-                            <label class="w-24 flex-shrink-0 text-sm font-semibold text-gray-700">Ngày sinh</label>
-                            <input type="date" id="manage-birth_date" class="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <div class="flex-1">
+                            <label class="text-sm font-semibold text-gray-700">Email</label>
+                            <input id="manage-user-email"
+                                   class="w-full border rounded-xl px-4 py-2.5">
                         </div>
-                        <div class="flex items-center flex-1"> 
-                            <label class="w-20 flex-shrink-0 text-sm font-semibold text-gray-700">Giới tính</label>
-                            <div class="flex items-center space-x-4 flex-1"> 
-                                <label class="flex items-center cursor-pointer"><input type="radio" name="manage-gender" value="Nam" id="manage-gender-male" class="mr-2 accent-blue-600"> Nam</label>
-                                <label class="flex items-center cursor-pointer"><input type="radio" name="manage-gender" value="Nữ" id="manage-gender-female" class="mr-2 accent-blue-600"> Nữ</label>
-                                <label class="flex items-center cursor-pointer"><input type="radio" name="manage-gender" value="Khác" id="manage-gender-other" class="mr-2 accent-blue-600"> Khác</label>
-                            </div>
+                        <div class="flex-1">
+                            <label class="text-sm font-semibold text-gray-700">SĐT</label>
+                            <input id="manage-user-phone"
+                                   class="w-full border rounded-xl px-4 py-2.5">
                         </div>
                     </div>
 
-                    <div class="flex items-center space-x-6">
-                        <div class="flex items-center flex-1">
-                            <label class="w-24 flex-shrink-0 text-sm font-semibold text-gray-700">Mật khẩu</label>
-                            <input type="password" 
-                                id="manage-password" 
-                                placeholder="********" 
-                                readonly
-                                class="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 outline-none bg-gray-100 cursor-not-allowed text-gray-500">
-                        </div>
-                        {{-- SELECT TRẠNG THÁI  --}}
-                        <div class="flex items-center flex-1">
-                            <label class="w-20 flex-shrink-0 text-sm font-semibold text-gray-700">Trạng thái</label>
-                            <select id="manage-status" class="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none bg-white">
-                                <option value="active">Hoạt động</option>
-                                <option value="inactive">Bị khóa</option>
-                            </select>
-                        </div>
+                    <div>
+                        <label class="text-sm font-semibold text-gray-700">Địa chỉ</label>
+                        <input id="manage-user-address"
+                               class="w-full border rounded-xl px-4 py-2.5">
                     </div>
 
-                    <div class="flex items-center space-x-6">
-                        <div class="flex items-center flex-1">
-                            <label class="w-24 flex-shrink-0 text-sm font-semibold text-gray-700">Email <span class="text-red-500">*</span></label>
-                            <input type="email" id="manage-email" required class="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none">
-                        </div>
-                         <div class="flex items-center flex-1">
-                            <label class="w-20 flex-shrink-0 text-sm font-semibold text-gray-700">SĐT</label>
-                            <input type="text" id="manage-phone" class="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none">
-                        </div>
-                    </div>
-
-                    <div class="flex items-center">
-                        <label class="w-24 flex-shrink-0 text-sm font-semibold text-gray-700">Địa chỉ</label>
-                        <input type="text" id="manage-address" class="flex-1 border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500 outline-none">
-                    </div>
                 </div>
             </div>
 
-            <div class="flex justify-between items-center mt-8 pt-4 border-t border-gray-100">
-                <button type="button" id="btn-delete-customer" class="px-5 py-2.5 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 font-semibold transition-colors flex items-center">
-                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                    Xóa khách hàng
+            <h3 class="text-xl font-semibold text-blue-700 mb-4 font-montserrat">
+                Thông tin chung
+            </h3>
+
+            <div class="space-y-4 mb-6">
+                <div>
+                    <label class="text-sm font-semibold text-gray-700">
+                        Gói tập đã đăng ký
+                    </label>
+                    <input id="manage-user-packages" readonly
+                           class="w-full bg-gray-100 border rounded-xl px-4 py-2.5">
+                </div>
+
+                <div>
+                    <label class="text-sm font-semibold text-gray-700">
+                        Lớp học hiện hoạt
+                    </label>
+                    <input id="manage-user-classes" readonly
+                           class="w-full bg-gray-100 border rounded-xl px-4 py-2.5">
+                </div>
+            </div>
+
+            <div class="flex justify-end space-x-3 pt-4 border-t">
+                <button type="button"
+                        class="close-modal px-6 py-2.5 bg-gray-500 hover:bg-gray-600 text-white rounded-lg">
+                    Hủy
                 </button>
-                <div class="flex space-x-3">
-                    <button type="button" class="close-modal px-6 py-2.5 bg-[#6c757d] hover:bg-[#5a6268] text-white font-semibold rounded-lg transition-colors focus:outline-none">
-                        Hủy
-                    </button>
-                    <button type="submit" class="px-6 py-2.5 bg-[#28A745] hover:bg-[#218838] text-white font-semibold rounded-lg transition-colors focus:outline-none shadow-md">
-                        Cập nhật
-                    </button>
-                </div>
+                <button type="submit"
+                        class="px-6 py-2.5 bg-[#28A745] hover:bg-[#218838] text-white rounded-lg">
+                    Lưu thông tin
+                </button>
             </div>
+
         </form>
     </div>
 </div>
+
+<div id="notifyModal"
+     class="hidden fixed inset-0 z-[9999] flex items-center justify-center bg-black/50">
+
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 text-center">
+
+        <h3 id="notifyTitle"
+            class="text-xl font-bold mb-2 text-green-600">
+            Thông báo
+        </h3>
+
+        <p id="notifyMessage"
+           class="text-gray-700 mb-6">
+            Nội dung thông báo
+        </p>
+
+        <button id="notifyCloseBtn"
+                class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold">
+            OK
+        </button>
+    </div>
+</div>
+
+
 @endsection
 
 @push('scripts')
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        const addModal = document.getElementById('addCustomerModal');
-        const manageModal = document.getElementById('manageCustomerModal');
-        const addForm = document.getElementById('addCustomerForm');
-        const manageForm = document.getElementById('manageCustomerForm');
-        const defaultAvatar = '{{ asset('images/default-avatar.png') }}';
+// ================= MODAL NOTIFY =================
+function showNotify(message, type = 'success', callback = null) {
+    const modal = document.getElementById('notifyModal');
+    const title = document.getElementById('notifyTitle');
+    const msg   = document.getElementById('notifyMessage');
+    const btn   = document.getElementById('notifyCloseBtn');
 
-        // --- 1. LOGIC PREVIEW ẢNH ---
-        function setupPreview(btnId, inputId, previewId) {
-            const btn = document.getElementById(btnId);
-            const input = document.getElementById(inputId);
-            const preview = document.getElementById(previewId);
-            if (btn && input) {
-                btn.onclick = () => input.click();
-                input.onchange = e => {
-                    if (e.target.files[0]) {
-                        const r = new FileReader();
-                        r.onload = ev => preview.src = ev.target.result;
-                        r.readAsDataURL(e.target.files[0]);
-                    }
-                };
-            }
-        }
-        setupPreview('add-upload-btn', 'add-image_url', 'add-image_url_preview');
-        setupPreview('manage-upload-btn', 'manage-image_url_input', 'manage-image_url_preview');
+    title.textContent = type === 'error' ? 'Lỗi' : 'Thông báo';
+    title.className =
+        'text-xl font-bold mb-2 ' +
+        (type === 'error' ? 'text-red-600' : 'text-green-600');
 
-        // --- 2. HELPERS MODAL ---
-        function closeModal(m) { m.classList.add('hidden'); m.classList.remove('flex'); }
-        function openModal(m) { m.classList.remove('hidden'); m.classList.add('flex'); }
+    msg.textContent = message;
 
-        document.querySelectorAll('.close-modal').forEach(b => b.addEventListener('click', () => closeModal(b.closest('.modal-container'))));
-        document.querySelectorAll('.modal-container').forEach(m => m.addEventListener('click', e => e.target === m && closeModal(m)));
+    modal.classList.remove('hidden');
 
-        // --- 3. OPEN ADD MODAL ---
-        document.getElementById('openAddModalBtn').onclick = () => {
-            addForm.reset();
-            document.getElementById('add-image_url_preview').src = defaultAvatar;
-            openModal(addModal);
-        };
+    btn.onclick = () => {
+        modal.classList.add('hidden');
+        if (typeof callback === 'function') callback();
+    };
+}
 
-        // --- 4. OPEN MANAGE MODAL (Click row) ---
-        document.getElementById('customer-list-body').addEventListener('click', e => {
-            const row = e.target.closest('tr.modal-trigger');
-            if (!row) return;
+document.addEventListener('DOMContentLoaded', () => {
+
+    const manageUserModal = document.getElementById('manageUserModal');
+    const addBtn   = document.getElementById('openAddModalBtn');
+    const addModal = document.getElementById('addUserModal');
+
+    function openModal(m) {
+        m.classList.remove('hidden');
+        m.classList.add('flex');
+    }
+
+    function closeModal(m) {
+        m.classList.add('hidden');
+        m.classList.remove('flex');
+    }
+
+    addBtn.addEventListener('click', function () {
+        openModal(addModal);
+    });
+
+    addModal.querySelectorAll('.close-modal').forEach(btn => {
+        btn.addEventListener('click', () => closeModal(addModal));
+    });
+
+    addModal.addEventListener('click', e => {
+        if (e.target === addModal) closeModal(addModal);
+    });
+
+    document.querySelectorAll('.close-modal')
+        .forEach(b => b.onclick = () => closeModal(b.closest('.modal-container')));
+
+    document.querySelectorAll('tr.modal-trigger').forEach(row => {
+        row.onclick = () => {
             const d = row.dataset;
-            
-            // Đổ dữ liệu vào modal Edit
-            document.getElementById('current-customer_id').value = d.id;
-            document.getElementById('manage-display_id').value = 'KH' + String(d.id).padStart(4, '0');
-            document.getElementById('manage-full_name').value = d.full_name || '';
-            document.getElementById('manage-email').value = d.email || '';
-            document.getElementById('manage-phone').value = d.phone || '';
-            document.getElementById('manage-address').value = d.address || '';
-            document.getElementById('manage-birth_date').value = d.birth_date || '';
-            document.getElementById('manage-password').value = '';
-            
-            // Xử lý status (mặc định active nếu null)
-            document.getElementById('manage-status').value = d.status || 'active';
 
-            // Xử lý radio giới tính
-            if (d.gender === 'Nam') document.getElementById('manage-gender-male').checked = true;
-            else if (d.gender === 'Nữ') document.getElementById('manage-gender-female').checked = true;
-            else document.getElementById('manage-gender-other').checked = true;
-            
-            // Xử lý ảnh
-            document.getElementById('manage-image_url_preview').src = d.image_url || defaultAvatar;
-            
-            openModal(manageModal);
-        });
+            document.getElementById('current-user-id').value = d.id;
+            document.getElementById('manage-user-code').value =
+                'KH' + String(d.id).padStart(4, '0');
+            document.getElementById('manage-user-name').value = d.name || '';
+            document.getElementById('manage-user-email').value = d.email || '';
+            document.getElementById('manage-user-phone').value = d.phone || '';
+            document.getElementById('manage-user-address').value = d.address || '';
+            document.getElementById('manage-user-packages').value =
+                d.packages || 'Chưa đăng ký';
+            document.getElementById('manage-user-classes').value =
+                d.classes || 'Chưa tham gia';
+                document.getElementById('manage-user-avatar').src =
+            d.avatar && d.avatar !== ''
+                ? d.avatar
+                : '/images/default-avatar.png';
 
-        // --- 5. SUBMIT ADD FORM (AJAX) ---
-        addForm.onsubmit = async (e) => {
-            e.preventDefault();
-            const pass = document.getElementById('add-password').value;
-            const confirmPass = document.getElementById('add-password_confirmation').value;
-            if (pass !== confirmPass) { alert('Mật khẩu xác nhận không khớp!'); return; }
-
-            const fd = new FormData();
-            fd.append('full_name', document.getElementById('add-full_name').value);
-            fd.append('email', document.getElementById('add-email').value);
-            fd.append('password', pass);
-            fd.append('phone', document.getElementById('add-phone').value);
-            fd.append('address', document.getElementById('add-address').value);
-            fd.append('gender', document.querySelector('input[name="add-gender"]:checked').value);
-            fd.append('birth_date', document.getElementById('add-birth_date').value);
-            // Default active khi tạo mới
-            fd.append('status', 'active');
-            
-            if(document.getElementById('add-image_url').files[0]) fd.append('image', document.getElementById('add-image_url').files[0]);
-
-            try {
-                const res = await fetch('{{ route("admin.customers.store") }}', { 
-                    method: 'POST', headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' }, body: fd 
-                });
-                const json = await res.json();
-                if(!res.ok) {
-                    let msg = 'Lỗi thêm: ';
-                    if(json.errors) msg += Object.values(json.errors).flat().join('\n'); else msg += json.message;
-                    alert(msg);
-                } else { alert('Thêm khách hàng thành công!'); location.reload(); }
-            } catch (err) { alert('Lỗi hệ thống.'); console.error(err); }
-        };
-
-        // --- 6. SUBMIT MANAGE FORM (AJAX UPDATE) ---
-        manageForm.onsubmit = async (e) => {
-            e.preventDefault();
-            const id = document.getElementById('current-customer_id').value;
-            const fd = new FormData();
-            fd.append('_method', 'PUT');
-            fd.append('full_name', document.getElementById('manage-full_name').value);
-            fd.append('email', document.getElementById('manage-email').value);
-            fd.append('phone', document.getElementById('manage-phone').value);
-            fd.append('address', document.getElementById('manage-address').value);
-            fd.append('gender', document.querySelector('input[name="manage-gender"]:checked').value);
-            fd.append('birth_date', document.getElementById('manage-birth_date').value);
-            
-            // Gửi thêm status
-            fd.append('status', document.getElementById('manage-status').value);
-
-            const pass = document.getElementById('manage-password').value;
-            if(pass) fd.append('password', pass);
-
-            if(document.getElementById('manage-image_url_input').files[0]) fd.append('image', document.getElementById('manage-image_url_input').files[0]);
-
-            try {
-                const res = await fetch(`/admin/customers/${id}`, { 
-                    method: 'POST', headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' }, body: fd 
-                });
-                const json = await res.json();
-                if(!res.ok) {
-                    let msg = 'Lỗi cập nhật: ';
-                    if(json.errors) msg += Object.values(json.errors).flat().join('\n'); else msg += json.message;
-                    alert(msg);
-                } else { alert('Cập nhật thành công!'); location.reload(); }
-            } catch (err) { alert('Lỗi hệ thống.'); console.error(err); }
-        };
-
-        // --- 7. DELETE ACTION ---
-        document.getElementById('btn-delete-customer').onclick = async () => {
-            if(!confirm('Bạn có chắc chắn muốn xóa khách hàng này không?')) return;
-            const id = document.getElementById('current-customer_id').value;
-            try {
-                const res = await fetch(`/admin/customers/${id}`, { 
-                    method: 'DELETE', headers: { 'X-CSRF-TOKEN': csrfToken, 'Accept': 'application/json' } 
-                });
-                if(res.ok) { alert('Xóa thành công!'); location.reload(); } 
-                else { const json = await res.json(); alert(json.message || 'Lỗi khi xóa.'); }
-            } catch { alert('Lỗi hệ thống.'); }
+            openModal(manageUserModal);
         };
     });
+
+    document.getElementById('addUserForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const fd = new FormData();
+    fd.append('full_name', document.getElementById('add-full_name').value);
+    fd.append('email', document.getElementById('add-email').value);
+    fd.append('password', document.getElementById('add-password').value);
+    fd.append('phone', document.getElementById('add-phone').value);
+    fd.append('address', document.getElementById('add-address').value);
+
+    try {
+        const res = await fetch('/admin/customers', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            },
+            body: fd
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(Object.values(data.errors || {}).join('\n'));
+            return;
+        }
+
+        showNotify('Thêm khách hàng thành công', 'success', () => {
+            location.reload();
+        });
+
+    } catch (err) {
+        Object.values(data.errors || {}).flat()
+            .forEach(msg => showNotify(msg, 'error'));
+        console.error(err);
+    }
+});
+
+document.getElementById('manageUserForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const id = document.getElementById('current-user-id').value;
+
+    const fd = new FormData();
+    fd.append('_method', 'PUT');
+    fd.append('full_name', document.getElementById('manage-user-name').value);
+    fd.append('email', document.getElementById('manage-user-email').value);
+    fd.append('phone', document.getElementById('manage-user-phone').value);
+    fd.append('address', document.getElementById('manage-user-address').value);
+
+    try {
+        const res = await fetch(`/admin/customers/${id}`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            },
+            body: fd
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            alert(Object.values(data.errors || {}).join('\n'));
+            return;
+        }
+
+        showNotify('Lưu thông tin khách hàng thành công', 'success', () => {
+            location.reload();
+        });
+
+    } catch (err) {
+        Object.values(data.errors || {}).flat()
+            .forEach(msg => showNotify(msg, 'error'));
+        console.error(err);
+    }
+});
+
+});
 </script>
 @endpush

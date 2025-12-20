@@ -2,141 +2,180 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\RentalTransaction;
 use App\Models\RentalItem;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 
 class BorrowReturnController extends Controller
 {
-    // 1. Danh sách
-    public function index()
+    public function index(Request $request)
     {
-        $transactions = RentalTransaction::with(['user', 'item'])
-            ->orderBy('transaction_id', 'desc')
-            ->paginate(10);
+        $filter = $request->get('filter', 'all');
 
-        $users = User::select('id', 'full_name', 'phone')->get();
-        
-        // Lấy danh sách Chi nhánh hoạt động
-        $branches = \App\Models\Branch::where('is_active', true)->get();
+        $query = RentalTransaction::with([
+            'user:id,full_name',
+            'item:item_id,item_name'
+        ]);
 
-        // Lấy vật phẩm active 
-        $items = RentalItem::where('status', 'active')
-            ->where('quantity_available', '>', 0)
+        if ($filter === 'today') {
+            $query->whereDate('borrow_date', today());
+        }
+
+        if ($filter === '7days') {
+            $query->whereDate('borrow_date', '>=', now()->subDays(7));
+        }
+
+        if ($filter === 'unreturned') {
+            $query->where('status', 'borrowed');
+        }
+
+        $transactions = $query
+            ->orderByDesc('borrow_date')
             ->get();
 
-        return view('admin.borrow_return', compact('transactions', 'users', 'items', 'branches'));
+        // ✅ Sửa role từ 'user' → 'member'
+        $customers = User::where('role', 'member')
+            ->where('status', 'active') // ✅ Thêm filter active
+            ->select('id', 'full_name')
+            ->orderBy('full_name')
+            ->get();
+
+        // ✅ Sửa status từ 'available' → 'active'
+        $items = RentalItem:: where('status', 'active')
+            ->select('item_id', 'item_name', 'quantity_available')
+            ->orderBy('item_name')
+            ->get();
+
+        return view('admin.borrow_return', compact(
+            'transactions',
+            'customers',
+            'items',
+            'filter'
+        ));
     }
 
-    // 2. Tạo mới (Mượn đồ)
     public function store(Request $request)
     {
-        $request->validate([
+        // ✅ Sửa validation:  users → user
+        $data = $request->validate([
             'user_id'     => 'required|exists:user,id',
             'item_id'     => 'required|exists:rental_item,item_id',
             'quantity'    => 'required|integer|min:1',
             'borrow_date' => 'required|date',
+            'return_date' => 'nullable|date|after_or_equal:borrow_date',
+            'status'      => 'required|in: borrowed,returned',
             'note'        => 'nullable|string',
         ]);
 
-        DB::beginTransaction();
-        try {
-            $item = RentalItem::find($request->item_id);
-
-            // Kiểm tra tồn kho
-            if ($item->quantity_available < $request->quantity) {
-                return response()->json(['success' => false, 'message' => 'Số lượng trong kho không đủ!'], 400);
-            }
-
-            // Tạo giao dịch
-            $transaction = RentalTransaction::create([
-                'user_id'     => $request->user_id,
-                'item_id'     => $request->item_id,
-                'quantity'    => $request->quantity,
-                'borrow_date' => $request->borrow_date,
-                'status'      => 'renting', 
-                'note'        => $request->note,
-            ]);
-
-            // Trừ kho
-            $item->decrement('quantity_available', $request->quantity);
-
-            DB::commit();
-            return response()->json(['success' => true, 'message' => 'Tạo phiếu mượn thành công!']);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json(['success' => false, 'message' => 'Lỗi: ' . $e->getMessage()], 500);
+        // ✅ Kiểm tra số lượng khả dụng
+        $item = RentalItem::findOrFail($data['item_id']);
+        
+        if ($item->quantity_available < $data['quantity']) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Số lượng vượt quá khả dụng!  Chỉ còn ' . $item->quantity_available . ' ' . $item->item_name
+            ], 400);
         }
+
+        // ✅ Tạo transaction
+        $transaction = RentalTransaction::create($data);
+
+        // ✅ Trừ số lượng (chỉ khi status = borrowed)
+        if ($data['status'] === 'borrowed') {
+            $item->decrement('quantity_available', $data['quantity']);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Thêm giao dịch thành công!',
+            'data' => $transaction
+        ], 201);
     }
 
-    // 3. Cập nhật (Sửa / Trả đồ)
     public function update(Request $request, $id)
     {
         $transaction = RentalTransaction::findOrFail($id);
+        $oldQty = $transaction->quantity;
+        $oldStatus = $transaction->status;
+        $oldItemId = $transaction->item_id;
 
-        $request->validate([
-            'status' => 'required|in:renting,returned',
-            'note'   => 'nullable|string',
+        // ✅ Sửa validation
+        $data = $request->validate([
+            'user_id'     => 'required|exists:user,id',
+            'item_id'     => 'required|exists:rental_item,item_id',
+            'quantity'    => 'required|integer|min:1',
+            'borrow_date' => 'required|date',
+            'return_date' => 'nullable|date|after_or_equal:borrow_date',
+            'status'      => 'required|in: borrowed,returned',
+            'note'        => 'nullable|string',
         ]);
 
-        DB::beginTransaction();
-        try {
-            // Logic Trả đồ: Nếu chuyển từ 'renting' sang 'returned'
-            if ($transaction->status == 'renting' && $request->status == 'returned') {
-                $transaction->return_date = Carbon::now(); 
-                
-                // Cộng lại kho
-                $item = RentalItem::find($transaction->item_id);
-                if($item) {
-                    $item->increment('quantity_available', $transaction->quantity);
-                }
+        $item = RentalItem::findOrFail($data['item_id']);
+
+        // ✅ Xử lý thay đổi trạng thái:  borrowed → returned
+        if ($oldStatus === 'borrowed' && $data['status'] === 'returned') {
+            // Hoàn trả số lượng
+            $oldItem = RentalItem::find($oldItemId);
+            if ($oldItem) {
+                $oldItem->increment('quantity_available', $oldQty);
             }
             
-            // Logic Hoàn tác (nếu lỡ bấm trả nhầm): Từ 'returned' sang 'renting'
-            if ($transaction->status == 'returned' && $request->status == 'renting') {
-                $transaction->return_date = null;
-                $item = RentalItem::find($transaction->item_id);
-                if($item) {
-                    // Kiểm tra xem có đủ hàng để trừ lại không 
-                    if ($item->quantity_available >= $transaction->quantity) {
-                        $item->decrement('quantity_available', $transaction->quantity);
-                    } else {
-                        return response()->json(['success' => false, 'message' => 'Kho không đủ để hoàn tác trạng thái!'], 400);
+            // Set ngày trả
+            if (! $data['return_date']) {
+                $data['return_date'] = Carbon::now()->format('Y-m-d');
+            }
+        }
+
+        // ✅ Xử lý thay đổi số lượng (nếu vẫn borrowed)
+        if ($oldStatus === 'borrowed' && $data['status'] === 'borrowed') {
+            if ($data['quantity'] != $oldQty) {
+                $diff = $data['quantity'] - $oldQty;
+                
+                if ($diff > 0) {
+                    // Mượn thêm
+                    if ($item->quantity_available < $diff) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => 'Số lượng không đủ!'
+                        ], 400);
                     }
+                    $item->decrement('quantity_available', $diff);
+                } else {
+                    // Giảm số lượng mượn
+                    $item->increment('quantity_available', abs($diff));
                 }
             }
-
-            $transaction->status = $request->status;
-            $transaction->note = $request->note;
-            $transaction->save();
-
-            DB::commit();
-            return response()->json(['success' => true, 'message' => 'Cập nhật thành công!']);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json(['success' => false, 'message' => 'Lỗi: ' . $e->getMessage()], 500);
         }
+
+        // ✅ Xử lý thay đổi trạng thái:  returned → borrowed
+        if ($oldStatus === 'returned' && $data['status'] === 'borrowed') {
+            if ($item->quantity_available < $data['quantity']) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Số lượng không đủ!'
+                ], 400);
+            }
+            $item->decrement('quantity_available', $data['quantity']);
+        }
+
+        $transaction->update($data);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Cập nhật giao dịch thành công! ',
+            'data' => $transaction
+        ], 200);
     }
 
-    // 4. Xóa
-    public function destroy($id)
+    public function show($id)
     {
-        $transaction = RentalTransaction::findOrFail($id);
-
-        // Nếu xóa đơn đang thuê, phải trả lại kho
-        if ($transaction->status == 'renting') {
-            $item = RentalItem::find($transaction->item_id);
-            if($item) {
-                $item->increment('quantity_available', $transaction->quantity);
-            }
-        }
-
-        $transaction->delete();
-        return response()->json(['success' => true, 'message' => 'Đã xóa giao dịch!']);
+        $transaction = RentalTransaction:: with(['user', 'item'])->findOrFail($id);
+        
+        return response()->json([
+            'success' => true,
+            'data' => $transaction
+        ]);
     }
 }

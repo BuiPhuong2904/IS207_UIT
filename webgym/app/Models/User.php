@@ -2,17 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Notifications\Notifiable;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 // use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
+
+    const ROLE_ADMIN = 'admin';
+    const ROLE_USER = 'user';
 
     protected $table = 'user';
     protected $primaryKey = 'id';
@@ -21,9 +22,17 @@ class User extends Authenticatable
         'birth_date', 'gender', 'address','image_url', 'status'
     ];
 
+    protected $hidden = [
+        'password','remember_token'
+    ];
+
     public function trainer()
     {
         return $this->hasOne(Trainer::class, 'user_id');
+    }
+
+    public function isAdmin() {
+        return $this->role === self::ROLE_ADMIN;
     }
 
     public function packageRegistrations()
