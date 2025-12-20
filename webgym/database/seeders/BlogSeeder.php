@@ -48,7 +48,7 @@ class BlogSeeder extends Seeder
                 'is_published' => true,
                 'published_at' => Carbon::create(2025, 12, 18),
                 'tags' => 'khuyen-mai',
-                'image_url' => 'https://images.unsplash.com/photo-1519834785169-98be25ec3f84?q=80&w=800&auto=format&fit=crop',
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1766214503/anh1_u919ih.jpg',
             ],
             [
                 'title' => 'Flash Sale 12.12: Săn Deal Gói Tập Chỉ Từ 199k',
@@ -132,7 +132,7 @@ class BlogSeeder extends Seeder
                 'is_published' => true,
                 'published_at' => Carbon::create(2025, 12, 19),
                 'tags' => 'thong-bao',
-                'image_url' => 'https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=800&auto=format&fit=crop',
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1766214395/tet_c1a8j6.jpg',
             ],
             [
                 'title' => 'Bảo Trì Hệ Thống Phòng Xông Hơi',
@@ -152,7 +152,7 @@ class BlogSeeder extends Seeder
                 'is_published' => true,
                 'published_at' => Carbon::create(2025, 12, 15),
                 'tags' => 'thong-bao',
-                'image_url' => 'https://images.unsplash.com/photo-1599447421405-075710001bc2?q=80&w=800&auto=format&fit=crop',
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1766214721/anh3_ujs63q.jpg',
             ],
             [
                 'title' => 'Cập Nhật Nội Quy Phòng Tập Mới Nhất 2026',
@@ -204,7 +204,7 @@ class BlogSeeder extends Seeder
                 'is_published' => true,
                 'published_at' => Carbon::create(2025, 12, 16),
                 'tags' => 'story',
-                'image_url' => 'https://images.unsplash.com/photo-1621460245131-b0622792d439?q=80&w=800&auto=format&fit=crop',
+                'image_url' => 'https://res.cloudinary.com/dna9qbejm/image/upload/v1766214674/anh2_ae2ie7.jpg',
             ],
         ];
 
