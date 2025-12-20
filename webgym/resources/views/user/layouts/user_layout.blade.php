@@ -71,7 +71,7 @@
                         Liên hệ hỗ trợ
                     </button>
                     <button class="chatbot-suggestion text-xs text-[#1976D2] bg-blue-50 border border-blue-200 rounded-full px-2.5 py-1 hover:bg-blue-100 transition-colors">
-                        Huấn luyện viên cá nhân
+                        Huấn luyện viên
                     </button>
                 </div>
                 

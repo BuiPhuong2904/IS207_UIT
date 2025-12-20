@@ -92,7 +92,7 @@ class PaymentController extends Controller
             $payment->update([
                 'status'       => 'completed',
                 'method'       => 'vnpay',
-                'payment_date' => now(),
+                'payment_date' => now('Asia/Ho_Chi_Minh'),
             ]);
 
             // Cập nhật Order
@@ -154,7 +154,7 @@ class PaymentController extends Controller
                     'address'        => $address,
                     'total_amount'   => $totalAmount,
                     'payment_method' => 'VNPAY', 
-                    'date'           => now()->format('d/m/Y H:i'),
+                    'date'           => now('Asia/Ho_Chi_Minh')->format('d/m/Y H:i'),
                     'items'          => $mailItems,
                     'target_type'    => $targetType,
                     'subtotal'       => $subtotal,

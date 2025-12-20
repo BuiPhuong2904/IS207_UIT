@@ -306,7 +306,7 @@
                 if(data.success) {
                     item.quantity = newQty;
                     // Update UI text số lượng
-                    button.closest('.flex').querySelector('.item-quantity').textContent = newQty;
+                    button.parentElement.querySelector('.item-quantity').textContent = newQty;
                     // Tính lại tiền
                     updateSummary();
                 } else {
