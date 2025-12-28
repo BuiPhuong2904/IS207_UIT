@@ -20,7 +20,7 @@ class ClassScheduleSeeder extends Seeder
         DB::table('class_registration')->truncate();
         DB::table('class_schedule')->truncate();
 
-        $today = Carbon::parse('2025-12-15');
+        $today = Carbon::parse('2025-12-22');
 
         // Tạo lịch học
         DB::table('class_schedule')->insert([
