@@ -48,8 +48,8 @@ Xây dựng hệ thống website B2C toàn diện cho phòng tập Gym, tích h�
 **Điểm nhấn:**
 Dự án tích hợp **AI Chatbot** (sử dụng Google Gemini API) để hỗ trợ trả lời câu hỏi thường gặp và **Hệ thống gợi ý sản phẩm** (Recommendation System) để nâng cao trải nghiệm người dùng.
 
-**UI/UX Prototype:**
-Figma: https://www.figma.com/design/Ukp1oP7JSziuZPLoydSGBY/IS207_WEB?node-id=0-1&t=l32xW0NF2gWmGd76-1
+**UI/UX Prototype:** 
+[Xem chi tiết bản thiết kế trên Figma](https://www.figma.com/design/Ukp1oP7JSziuZPLoydSGBY/IS207_WEB?node-id=0-1&t=l32xW0NF2gWmGd76-1)
 
 ## CÔNG NGHỆ SỬ DỤNG
 <a name="congnghe"></a>
